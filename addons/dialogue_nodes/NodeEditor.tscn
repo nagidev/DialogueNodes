@@ -1,0 +1,181 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/NodeEditor.gd" type="Script" id=1]
+[ext_resource path="res://Theme.theme" type="Theme" id=2]
+
+[node name="NodeEditor" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 300 )
+size_flags_vertical = 3
+theme = ExtResource( 2 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Main" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ToolBar" type="HBoxContainer" parent="Main"]
+margin_right = 1024.0
+margin_bottom = 22.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="FileMenu" type="MenuButton" parent="Main/ToolBar"]
+margin_right = 35.0
+margin_bottom = 22.0
+keep_pressed_outside = true
+text = "File"
+items = [ "New Dialogue Tree", null, 0, false, false, 0, 0, null, "", false, "Save Dialogue Tree", null, 0, false, false, 1, 0, null, "", false, "Close Dialogue Tree", null, 0, false, false, 2, 0, null, "", false ]
+switch_on_hover = true
+
+[node name="AddMenu" type="MenuButton" parent="Main/ToolBar"]
+margin_left = 39.0
+margin_right = 114.0
+margin_bottom = 22.0
+keep_pressed_outside = true
+text = "Add Node"
+items = [ "Add Start Node", null, 0, false, false, 0, 0, null, "", false, "Add Dialogue Node", null, 0, false, false, 1, 0, null, "", false, "Add End Node", null, 0, false, false, 2, 0, null, "", false, "Add Comment Node", null, 0, false, false, 3, 0, null, "", false ]
+switch_on_hover = true
+
+[node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
+margin_left = 118.0
+margin_right = 154.0
+margin_bottom = 22.0
+keep_pressed_outside = true
+text = "Run"
+items = [ "Run this tree", null, 0, false, false, 0, 0, null, "", false, "Run from file", null, 0, false, false, 1, 0, null, "", false ]
+switch_on_hover = true
+
+[node name="TestButton" type="ToolButton" parent="Main/ToolBar"]
+margin_left = 158.0
+margin_right = 238.0
+margin_bottom = 22.0
+text = "Quick Test"
+
+[node name="Graph" type="GraphEdit" parent="Main"]
+margin_top = 26.0
+margin_right = 1024.0
+margin_bottom = 600.0
+size_flags_vertical = 3
+right_disconnects = true
+scroll_offset = Vector2( -75, -200 )
+use_snap = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SaveDialog" type="FileDialog" parent="."]
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 700.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 400, 300 )
+rect_pivot_offset = Vector2( 200, 150 )
+resizable = true
+access = 2
+filters = PoolStringArray( "*.json; Dialogue JSON File" )
+current_dir = "D:/Godot/GodotProjects/AddonTest"
+current_path = "D:/Godot/GodotProjects/AddonTest/"
+
+[node name="LoadDialog" type="FileDialog" parent="."]
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 700.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 400, 300 )
+rect_pivot_offset = Vector2( 200, 150 )
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+filters = PoolStringArray( "*.json; Dialogue JSON File" )
+current_dir = "D:/Godot/GodotProjects/AddonTest"
+current_path = "D:/Godot/GodotProjects/AddonTest/"
+
+[node name="Demo" type="PopupDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -279.5
+margin_top = -167.5
+margin_right = 279.5
+margin_bottom = 167.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Speaker" type="Label" parent="Demo"]
+anchor_right = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = 40.0
+text = "Speaker"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dialogue" type="RichTextLabel" parent="Demo"]
+anchor_right = 1.0
+margin_left = 20.0
+margin_top = 40.0
+margin_right = -20.0
+margin_bottom = 255.0
+bbcode_enabled = true
+bbcode_text = "This is a test dialogue. Make a [u]node tree[/u] to test it out!"
+text = "This is a test dialogue. Make a node tree to test it out!"
+
+[node name="Options" type="HBoxContainer" parent="Demo"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -68.0
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Option1" type="Button" parent="Demo/Options"]
+margin_left = 145.0
+margin_right = 209.0
+margin_bottom = 68.0
+text = "Option1"
+
+[node name="Option2" type="Button" parent="Demo/Options"]
+margin_left = 213.0
+margin_right = 277.0
+margin_bottom = 68.0
+disabled = true
+text = "Option2"
+
+[node name="Option3" type="Button" parent="Demo/Options"]
+margin_left = 281.0
+margin_right = 345.0
+margin_bottom = 68.0
+disabled = true
+text = "Option3"
+
+[node name="Option4" type="Button" parent="Demo/Options"]
+margin_left = 349.0
+margin_right = 413.0
+margin_bottom = 68.0
+disabled = true
+text = "Option4"
+[connection signal="pressed" from="Main/ToolBar/TestButton" to="." method="_on_test_pressed"]
+[connection signal="connection_request" from="Main/Graph" to="." method="_on_node_connection_request"]
+[connection signal="delete_nodes_request" from="Main/Graph" to="." method="_on_delete_nodes_request"]
+[connection signal="disconnection_request" from="Main/Graph" to="." method="_on_node_disconnection_request"]
+[connection signal="node_selected" from="Main/Graph" to="." method="_on_node_selected"]
+[connection signal="file_selected" from="SaveDialog" to="." method="_on_SaveDialog_file_selected"]
+[connection signal="file_selected" from="LoadDialog" to="." method="_on_LoadDemo_file_selected"]

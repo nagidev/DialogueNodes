@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/nodes/baseNode.gd" type="Script" id=1]
+
+[node name="StartNode" type="GraphNode"]
+margin_right = 150.0
+margin_bottom = 70.0
+title = "Start"
+show_close = true
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 134.0
+margin_bottom = 38.0
+text = "Start of tree"
+align = 1
+valign = 2

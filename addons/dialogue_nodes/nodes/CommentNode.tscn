@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/nodes/baseNode.gd" type="Script" id=1]
+
+[node name="CommentNode" type="GraphNode"]
+margin_right = 300.0
+margin_bottom = 200.0
+title = "Comment"
+show_close = true
+resizable = true
+comment = true
+slot/0/left_enabled = false
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+nodeType = "Comment"
+
+[node name="Comment" type="TextEdit" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 284.0
+margin_bottom = 204.0
+rect_min_size = Vector2( 0, 180 )
+text = "You don't really have to connect these!"

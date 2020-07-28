@@ -1,0 +1,66 @@
+{
+    "2": {
+        "Dialogue": "Hey there! D'you wanna learn how to write like [rainbow]THIS??",
+        "Options": {
+            "0": {
+                "Link": "4",
+                "Text": "Yeah!"
+            },
+            "1": {
+                "Link": "6",
+                "Text": "No thanks"
+            }
+        },
+        "Speaker": "Bhgt"
+    },
+    "3": "End",
+    "4": {
+        "Dialogue": "[rainbow][wave]Awesome!![/wave][/rainbow]\nSo, all I used was [u]Bb Codes[/u].\nThey have a syntax like this:\n[ bb code name ] your text here [/ bb code name ]",
+        "Options": {
+            "0": {
+                "Link": "5",
+                "Text": "Teach me more!"
+            },
+            "1": {
+                "Link": "6",
+                "Text": "Sorry, I lost interest"
+            }
+        },
+        "Speaker": "Bhgt"
+    },
+    "5": {
+        "Dialogue": "[u] Bb codes[/u] have different names for different purposes.\nu for [u]underline[/u]\n\nshake for [shake]scared people[/shake]\n\nwave for [wave]ghooost sounds[/wave]\n\ntornado for [tornado]dunno why[/tornado]\n\nrainbow for [rainbow]SPARKLES![/rainbow]\n\nCombine them all for [rainbow][shake][wave][tornado]MORE MADNESS!!",
+        "Options": {
+            "0": {
+                "Link": "7",
+                "Text": "Okay"
+            }
+        },
+        "Speaker": "Bhgt"
+    },
+    "6": {
+        "Dialogue": "[shake]Too bad\n: (",
+        "Options": {
+            "0": {
+                "Link": "4",
+                "Text": "On second thought..."
+            },
+            "1": {
+                "Link": "3",
+                "Text": "Sorry, bye"
+            }
+        },
+        "Speaker": "Bhgt"
+    },
+    "7": {
+        "Dialogue": "The text above produces this:\n[shake][rainbow] PARTAY [/rainbow][/shake]",
+        "Options": {
+            "0": {
+                "Link": "3",
+                "Text": "Awesome!"
+            }
+        },
+        "Speaker": "[shake][rainbow] PARTAY [/rainbow][/shake]"
+    },
+    "Start": "2"
+}
