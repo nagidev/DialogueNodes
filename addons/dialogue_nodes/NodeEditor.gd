@@ -22,6 +22,7 @@ onready var addMenu = $Main/ToolBar/AddMenu
 onready var runMenu = $Main/ToolBar/RunMenu
 onready var graph = $Main/Graph
 onready var demo = $Demo
+onready var tween = $Demo/Tween
 
 
 func _ready():
@@ -161,6 +162,9 @@ func updateDemo():
 				options.get_child(i).disconnect('pressed', self, '_on_option_pressed')
 			# Add updated connection
 			options.get_child(i).connect('pressed', self, '_on_option_pressed', [demoOption['Link']])
+		
+		tween.interpolate_property(demo.get_node("Dialogue"), 'percent_visible', 0, 1, demo.get_node("Dialogue").text.length()*0.05, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
+		tween.start()
 
 
 func toDict(nodeName, dict= {}):
@@ -349,8 +353,9 @@ func _on_test_pressed():
 
 
 func _on_option_pressed(nextNode):
-	demoIndex = nextNode
-	updateDemo()
+	if not tween.is_active():
+		demoIndex = nextNode
+		updateDemo()
 
 
 func _on_speaker_changed(newSpeaker):
@@ -388,5 +393,8 @@ func _on_LoadTree_file_selected(path):
 	output = parse_json(file.get_as_text())
 	if typeof(output) == TYPE_DICTIONARY:
 		demoDict = output
-		loadTree('Start')
+		$LoadAlertDialog.popup_centered()
 
+
+func _on_LoadAlert_confirmed():
+	loadTree('Start')

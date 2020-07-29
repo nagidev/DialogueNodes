@@ -1,0 +1,1 @@
+{"2":{"Dialogue":"Hi there! This is a basic example of a dialogue tree.\nSomewhat of a hello world!","Offset":{"X":204,"Y":-60},"Options":{"0":{"Link":"3","Text":"Next"}},"Speaker":"Fred"},"3":{"Link":"End","Offset":{"X":592,"Y":-15}},"Start":{"Id":"1","Link":"2","Offset":{"X":0,"Y":0}}}
