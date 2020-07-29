@@ -199,6 +199,7 @@ margin_left = -90.0
 margin_top = -34.0
 margin_right = 90.0
 margin_bottom = 34.0
+popup_exclusive = true
 dialog_text = "File loaded successfully."
 [connection signal="pressed" from="Main/ToolBar/TestButton" to="." method="_on_test_pressed"]
 [connection signal="connection_request" from="Main/Graph" to="." method="_on_node_connection_request"]
@@ -208,4 +209,4 @@ dialog_text = "File loaded successfully."
 [connection signal="file_selected" from="SaveDialog" to="." method="_on_SaveDialog_file_selected"]
 [connection signal="file_selected" from="LoadDemoDialog" to="." method="_on_LoadDemo_file_selected"]
 [connection signal="file_selected" from="LoadTreeDialog" to="." method="_on_LoadTree_file_selected"]
-[connection signal="confirmed" from="LoadAlertDialog" to="." method="_on_LoadAlert_confirmed"]
+[connection signal="popup_hide" from="LoadAlertDialog" to="." method="_on_LoadAlert_confirmed"]

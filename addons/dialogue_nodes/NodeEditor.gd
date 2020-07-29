@@ -353,7 +353,11 @@ func _on_test_pressed():
 
 
 func _on_option_pressed(nextNode):
-	if not tween.is_active():
+	if tween.is_active():
+		tween.remove(demo.get_node("Dialogue"))
+		tween.set_active(false)
+		demo.get_node("Dialogue").percent_visible = 1
+	else:
 		demoIndex = nextNode
 		updateDemo()
 
