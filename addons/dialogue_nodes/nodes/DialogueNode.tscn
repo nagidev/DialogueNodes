@@ -51,49 +51,49 @@ __meta__ = {
 nodeType = "Dialogue"
 
 [node name="SpeakerLabel" type="Label" parent="."]
-margin_left = 16.0
+margin_left = 28.0
 margin_top = 24.0
-margin_right = 284.0
-margin_bottom = 38.0
+margin_right = 272.0
+margin_bottom = 46.0
 text = "Speaker"
 
 [node name="Speaker" type="LineEdit" parent="."]
-margin_left = 16.0
-margin_top = 39.0
-margin_right = 284.0
-margin_bottom = 69.0
+margin_left = 28.0
+margin_top = 47.0
+margin_right = 272.0
+margin_bottom = 77.0
 rect_min_size = Vector2( 0, 30 )
 
 [node name="DialogueLabel" type="Label" parent="."]
-margin_left = 16.0
-margin_top = 70.0
-margin_right = 284.0
-margin_bottom = 84.0
+margin_left = 28.0
+margin_top = 78.0
+margin_right = 272.0
+margin_bottom = 100.0
 text = "Dialogue"
 
 [node name="Dialogue" type="TextEdit" parent="."]
-margin_left = 16.0
-margin_top = 85.0
-margin_right = 284.0
-margin_bottom = 155.0
+margin_left = 28.0
+margin_top = 101.0
+margin_right = 272.0
+margin_bottom = 171.0
 rect_min_size = Vector2( 0, 70 )
 size_flags_vertical = 3
 wrap_enabled = true
 
 [node name="OptionsToggle" type="CheckButton" parent="."]
-margin_left = 16.0
-margin_top = 156.0
-margin_right = 284.0
-margin_bottom = 196.0
+margin_left = 28.0
+margin_top = 172.0
+margin_right = 272.0
+margin_bottom = 206.0
 text = "Options"
 flat = true
 
 [node name="Options" type="VBoxContainer" parent="."]
 visible = false
-margin_left = 16.0
-margin_top = 197.0
-margin_right = 284.0
-margin_bottom = 227.0
+margin_left = 28.0
+margin_top = 207.0
+margin_right = 272.0
+margin_bottom = 237.0
 size_flags_horizontal = 9
 size_flags_vertical = 9
 

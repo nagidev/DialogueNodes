@@ -32,14 +32,22 @@ func _ready():
 	runMenu.get_popup().connect("id_pressed", self, '_on_run_menu_pressed')
 
 
-func addNode(node):
+func addNode(node, nodeId= ''):
 	var nodeInstance = node.instance()
 	
 	nodeInstance.connect('close_request', self, '_on_node_close_request', [nodeInstance])
 	nodeInstance.connect('dragged', self, '_on_node_dragged')
-	nodeInstance.name = '1'
-	graph.add_child(nodeInstance, true)
-	nodeInstance.title += ' - ' + nodeInstance.name
+	
+	# Default naming
+	if nodeId == '':
+		nodeInstance.name = '1'
+		graph.add_child(nodeInstance, true)
+		nodeInstance.title += ' - ' + nodeInstance.name
+	else:
+		nodeInstance.name = nodeId
+		graph.add_child(nodeInstance, false)
+		nodeInstance.title += ' - ' + nodeInstance.name
+	
 	nodeInstance.offset = lastPosition + Vector2(20, 20) * lastOffset
 	
 	lastOffset += 1
@@ -51,6 +59,8 @@ func addNode(node):
 	elif node == DialogueNode:
 		nodeInstance.connect('speakerChanged', self, '_on_speaker_changed')
 		nodeInstance.setSpeaker(lastSpeaker)
+	
+	return nodeInstance
 
 
 func removeNode(node):
@@ -115,15 +125,15 @@ func startDemo():
 	if isTreeComplete():
 		demoDict = toDict(start.name)
 		if demoDict != null:
-			demoIndex = demoDict['Start']
+			demoIndex = demoDict['Start']['Link']
 			updateDemo()
 	demo.popup_centered()
 
 
 func updateDemo():
-	# demoDict demoIndex
-	if demoDict[demoIndex] is String and (demoDict.has(demoIndex) and demoDict[demoIndex] == 'End'):
-		demo.hide()
+	if demoDict.has(demoIndex) and demoDict[demoIndex].has('Link'):
+		if demoDict[demoIndex]['Link'] == 'End':
+			demo.hide()
 	else:
 		var currentDialogue = demoDict[demoIndex]
 		var options = demo.get_node("Options")
@@ -162,8 +172,13 @@ func toDict(nodeName, dict= {}):
 			'Start':
 				# First after start
 				var firstNode = getNextNode(nodeName)[0]
-				dict['Start'] = firstNode
+				var startNode = {}
 				
+				startNode['Id'] = nodeName
+				startNode['Link'] = firstNode
+				startNode['Offset'] = {'X': currentNode.offset.x, 'Y': currentNode.offset.y}
+				
+				dict['Start'] = startNode
 				return toDict(firstNode, dict)
 				
 			'Dialogue':
@@ -193,6 +208,7 @@ func toDict(nodeName, dict= {}):
 				dialogue['Speaker'] = currentNode.getSpeaker()
 				dialogue['Dialogue'] = currentNode.getDialogue()
 				dialogue['Options'] = options
+				dialogue['Offset'] = {'X': currentNode.offset.x, 'Y': currentNode.offset.y}
 				dict[nodeName] = dialogue
 				
 				for next in optionLinks:
@@ -204,7 +220,12 @@ func toDict(nodeName, dict= {}):
 				return dict
 				
 			'End':
-				dict[nodeName] = 'End'
+				var endNode = {}
+				
+				endNode['Link'] = 'End'
+				endNode['Offset'] = {'X': currentNode.offset.x, 'Y': currentNode.offset.y}
+				
+				dict[nodeName] = endNode
 				
 				print('Finished converting tree to dictionary.')
 				
@@ -219,6 +240,47 @@ func toDict(nodeName, dict= {}):
 				return dict
 
 
+func loadTree(nodeIndex, from= null, from_slot= -1):
+	if demoDict.has(nodeIndex):
+		var instance
+		var node = demoDict[nodeIndex]
+		var offset = Vector2(node['Offset']['X'], node['Offset']['Y'])
+		
+		if nodeIndex == 'Start':
+			# Start
+			instance = addNode(StartNode, node['Id'])
+			
+			loadTree(node['Link'], node['Id'], 0)
+		elif node.has('Link') and node['Link'] == 'End':
+			# End
+			instance = addNode(EndNode, nodeIndex)
+			
+			# Connection
+			if from != null and int(from_slot) > -1:
+				graph.connect_node(from, int(from_slot), nodeIndex, 0)
+			
+		else:
+			# Dialogue
+			instance = addNode(DialogueNode, nodeIndex)
+			
+			instance.setSpeaker(node['Speaker'])
+			instance.setDialogue(node['Dialogue'])
+			instance.options.visible = true
+			instance.optionsToggle.pressed = true
+			for opId in node['Options']:
+				var option = node['Options'][opId]
+				instance.addOption(option['Text'])
+				if not graph.has_node(option['Link']):
+					loadTree(option['Link'], nodeIndex, opId)
+				else:
+					graph.connect_node(nodeIndex, int(opId), option['Link'], 0)
+			
+			# Connection
+			if from != null and int(from_slot) > -1:
+				graph.connect_node(from, int(from_slot), nodeIndex, 0)
+		instance.offset = offset
+
+
 func _on_file_menu_pressed(id):
 	match id:
 		0:
@@ -226,6 +288,8 @@ func _on_file_menu_pressed(id):
 		1:
 			$SaveDialog.popup_centered()
 		2:
+			$LoadTreeDialog.popup_centered()
+		3:
 			clearGraph()
 
 
@@ -246,7 +310,7 @@ func _on_run_menu_pressed(id):
 		0:
 			startDemo()
 		1:
-			$LoadDialog.popup_centered()
+			$LoadDemoDialog.popup_centered()
 
 
 func _on_node_close_request(node):
@@ -309,6 +373,20 @@ func _on_LoadDemo_file_selected(path):
 	output = parse_json(file.get_as_text())
 	if typeof(output) == TYPE_DICTIONARY:
 		demoDict = output
-		demoIndex = output['Start']
+		demoIndex = output['Start']['Link']
 		updateDemo()
 		demo.popup_centered()
+
+
+func _on_LoadTree_file_selected(path):
+	var file = File.new()
+	var output
+	
+	clearGraph()
+	
+	file.open(path, File.READ)
+	output = parse_json(file.get_as_text())
+	if typeof(output) == TYPE_DICTIONARY:
+		demoDict = output
+		loadTree('Start')
+
