@@ -34,7 +34,7 @@ margin_right = 35.0
 margin_bottom = 22.0
 keep_pressed_outside = true
 text = "File"
-items = [ "New Dialogue Tree", null, 0, false, false, 0, 0, null, "", false, "Save Dialogue Tree", null, 0, false, false, 1, 0, null, "", false, "Close Dialogue Tree", null, 0, false, false, 2, 0, null, "", false ]
+items = [ "New Tree", null, 0, false, false, 0, 0, null, "", false, "Export Tree", null, 0, false, false, 1, 0, null, "", false, "Load Tree", null, 0, false, false, 2, 0, null, "", false, "Close Tree", null, 0, false, false, 3, 0, null, "", false ]
 switch_on_hover = true
 
 [node name="AddMenu" type="MenuButton" parent="Main/ToolBar"]
@@ -86,7 +86,22 @@ filters = PoolStringArray( "*.json; Dialogue JSON File" )
 current_dir = "D:/Godot/GodotProjects/AddonTest"
 current_path = "D:/Godot/GodotProjects/AddonTest/"
 
-[node name="LoadDialog" type="FileDialog" parent="."]
+[node name="LoadDemoDialog" type="FileDialog" parent="."]
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 700.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 400, 300 )
+rect_pivot_offset = Vector2( 200, 150 )
+window_title = "Open a File"
+resizable = true
+mode = 0
+access = 2
+filters = PoolStringArray( "*.json; Dialogue JSON File" )
+current_dir = "D:/Godot/GodotProjects/AddonTest"
+current_path = "D:/Godot/GodotProjects/AddonTest/"
+
+[node name="LoadTreeDialog" type="FileDialog" parent="."]
 margin_left = 200.0
 margin_top = 200.0
 margin_right = 700.0
@@ -178,4 +193,5 @@ text = "Option4"
 [connection signal="disconnection_request" from="Main/Graph" to="." method="_on_node_disconnection_request"]
 [connection signal="node_selected" from="Main/Graph" to="." method="_on_node_selected"]
 [connection signal="file_selected" from="SaveDialog" to="." method="_on_SaveDialog_file_selected"]
-[connection signal="file_selected" from="LoadDialog" to="." method="_on_LoadDemo_file_selected"]
+[connection signal="file_selected" from="LoadDemoDialog" to="." method="_on_LoadDemo_file_selected"]
+[connection signal="file_selected" from="LoadTreeDialog" to="." method="_on_LoadTree_file_selected"]

@@ -43,6 +43,36 @@ func addEmptyOption():
 	options.add_child(newOption)
 
 
+func addOption(optionText):
+	var count = options.get_child_count()
+	var newOption
+	
+	# Get the last option containing no text
+	for i in range(min(count, 4)):
+		if options.get_child(i).text == '':
+			newOption = options.get_child(i)
+			set_slot(i, i==0, 0, WHITE, true, 0, Colors[i])
+			addEmptyOption()
+			break
+	
+	newOption.text = optionText
+	newOption.disconnect('text_entered', self, '_on_option_added')
+	newOption.disconnect('focus_exited', self, '_on_option_focus_exited')
+	newOption.connect('text_entered', self, '_on_option_added', [newOption])
+	newOption.connect('focus_exited', self, '_on_option_focus_exited', [newOption])
+	
+	updateUI()
+
+
+func removeOption(newOption):
+	if options.get_child_count()>1:
+			newOption.queue_free()
+			if countEmptyOptions() == 1:
+				addEmptyOption()
+			# Update placeholder text
+			updateUI(0)
+
+
 func getOptionNames():
 	var optionNames = []
 	
@@ -52,10 +82,6 @@ func getOptionNames():
 				optionNames.append(node.text)
 	
 	return optionNames
-
-
-func _on_options_toggled(pressed):
-	options.visible = pressed
 
 
 func getSpeaker():
@@ -70,15 +96,18 @@ func getDialogue():
 	return dialogue.text
 
 
+func setDialogue(newDialogue):
+	dialogue.text = newDialogue
+
+
+func _on_options_toggled(pressed):
+	options.visible = pressed
+
+
 func _on_option_added(newText, currentOption):
 	
 	if newText == '':
-		if options.get_child_count()>1:
-			currentOption.queue_free()
-			if countEmptyOptions() == 1:
-				addEmptyOption()
-			# Update placeholder text
-			updateUI(0)
+		removeOption(currentOption)
 	elif countEmptyOptions() == 0 and options.get_child_count() < 4:
 		addEmptyOption()
 		# Update placeholder text
@@ -90,12 +119,7 @@ func _on_option_added(newText, currentOption):
 
 func _on_option_focus_exited(currentOption):
 	if currentOption.text == '':
-		if options.get_child_count()>1:
-			currentOption.queue_free()
-			if countEmptyOptions() == 1:
-				addEmptyOption()
-			# Update placeholder text
-			updateUI(0)
+		removeOption(currentOption)
 
 
 func _on_Speaker_changed(newText):
