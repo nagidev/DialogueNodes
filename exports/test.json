@@ -1,1 +1,0 @@
-{"2":{"Dialogue":"I'm a speaker","Offset":{"X":200,"Y":-109},"Options":{"0":{"Link":"3","Text":"Next"}},"Speaker":"Fred"},"3":{"Link":"End","Offset":{"X":588,"Y":-16}},"Comments":{"4":{"Offset":{"X":-57,"Y":85},"Text":"I'm a comment, LOL"}},"Start":{"Id":"1","Link":"2","Offset":{"X":0,"Y":0}}}

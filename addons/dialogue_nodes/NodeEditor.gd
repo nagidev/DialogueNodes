@@ -18,19 +18,24 @@ var demoIndex # The dict index of current dialogue
 var lastSpeaker = '' # The last speaker from the last dialogue node changed
 var lastPosition = Vector2.ZERO # The position of the last moved node
 var lastOffset = 0 # Offset index
+var lastPath = ''
 
 onready var fileMenu = $Main/ToolBar/FileMenu
 onready var addMenu = $Main/ToolBar/AddMenu
 onready var runMenu = $Main/ToolBar/RunMenu
-onready var graph = $Main/Graph
+onready var graph = $Main/Workspace/Graph
+onready var sidePanel = $Main/Workspace/SidePanel
+onready var sidePanelToggle = $Main/Statusbar/PanelToggle
+onready var fileName = $Main/Statusbar/FileName
 onready var demo = $Demo
 onready var tween = $Demo/Tween
 
 
 func _ready():
 	start = null
+	selected = null
 	commentNodes = []
-
+	
 	fileMenu.get_popup().connect("id_pressed", self, '_on_file_menu_pressed')
 	addMenu.get_popup().connect("id_pressed", self, '_on_add_menu_pressed')
 	runMenu.get_popup().connect("id_pressed", self, '_on_run_menu_pressed')
@@ -60,13 +65,33 @@ func addNode(node, nodeId= ''):
 		if start == null:
 			start = nodeInstance
 			addMenu.get_popup().set_item_disabled(0, true)
+			$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = true
 	elif node == DialogueNode:
 		nodeInstance.connect('speakerChanged', self, '_on_speaker_changed')
+		nodeInstance.connect('slotRemoved', self, '_on_slot_removed', [nodeInstance.name])
 		nodeInstance.setSpeaker(lastSpeaker)
 	elif node == CommentNode:
 		commentNodes.append(nodeInstance.name)
 	
 	return nodeInstance
+
+
+func duplicateNode(node):
+	match node.getType():
+			'End', 'Dialogue':
+				var nodeInstance = node.duplicate()
+				
+				nodeInstance.offset += Vector2(20, 20)
+				
+				graph.add_child(nodeInstance, true)
+				
+				removeAllConnections(nodeInstance.name, nodeInstance.name)
+				
+				nodeInstance.connect('close_request', self, '_on_node_close_request', [nodeInstance])
+				nodeInstance.connect('dragged', self, '_on_node_dragged')
+				
+				node.selected = false
+				selected = nodeInstance
 
 
 func removeNode(node):
@@ -77,6 +102,7 @@ func removeNode(node):
 	if node == start:
 		start = null
 		addMenu.get_popup().set_item_disabled(0, false)
+		$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = false
 	elif commentNodes.has(node.name):
 		commentNodes.erase(node.name)
 
@@ -140,9 +166,11 @@ func startDemo():
 
 
 func updateDemo():
-	if demoDict.has(demoIndex) and demoDict[demoIndex].has('Link'):
+	if (demoDict.has(demoIndex) and demoDict[demoIndex].has('Link')):
 		if demoDict[demoIndex]['Link'] == 'End':
-			demo.hide()
+			stopDemo()
+	elif not demoDict.has(demoIndex):
+		stopDemo()
 	else:
 		var currentDialogue = demoDict[demoIndex]
 		var options = demo.get_node("Options")
@@ -173,6 +201,18 @@ func updateDemo():
 		
 		tween.interpolate_property(demo.get_node("Dialogue"), 'percent_visible', 0, 1, demo.get_node("Dialogue").text.length()*0.05, Tween.TRANS_LINEAR, Tween.EASE_IN_OUT)
 		tween.start()
+
+
+func stopDemo():
+	# Reset to default values
+	demo.get_node("Speaker").text = 'Speaker'
+	demo.get_node("Dialogue").bbcode_text = 'This is a test dialogue. Make a [u]node tree[/u] to test it out!'
+	
+	for option in demo.get_node("Options").get_children():
+		option.text = 'Next'
+	
+	demoDict.clear()
+	demo.hide()
 
 
 func toDict(nodeName, dict= {}):
@@ -263,6 +303,18 @@ func toDict(nodeName, dict= {}):
 				return dict
 
 
+func saveTree(path= lastPath):
+	if path == '':
+		print('No file to save')
+		return
+	var dict = toDict(start.name)
+	var file = File.new()
+	file.open(path, File.WRITE)
+	file.store_line(to_json(dict))
+	file.close()
+	print('Saved: ' + path)
+
+
 func loadTree(nodeIndex, from= null, from_slot= -1):
 	if demoDict.has(nodeIndex):
 		var instance
@@ -322,12 +374,14 @@ func _on_file_menu_pressed(id):
 	match id:
 		0:
 			clearGraph()
+			fileName.text = ''
 		1:
 			$SaveDialog.popup_centered()
 		2:
 			$LoadTreeDialog.popup_centered()
 		3:
 			clearGraph()
+			fileName.text = ''
 
 
 func _on_add_menu_pressed(id):
@@ -340,6 +394,22 @@ func _on_add_menu_pressed(id):
 			addNode(EndNode)
 		3:
 			addNode(CommentNode)
+
+
+func _on_StartShortcut_pressed():
+	addNode(StartNode)
+
+
+func _on_DialogueShortcut_pressed():
+	addNode(DialogueNode)
+
+
+func _on_EndShortcut_pressed():
+	addNode(EndNode)
+
+
+func _on_CommentShortcut_pressed():
+	addNode(CommentNode)
 
 
 func _on_run_menu_pressed(id):
@@ -358,6 +428,7 @@ func _on_node_dragged(from, to):
 	lastPosition = to
 	lastOffset = 1
 
+
 func _on_node_connection_request(from, from_slot, to, to_slot):
 	if from != to:
 		# Remove previous connections
@@ -374,6 +445,11 @@ func _on_delete_nodes_request():
 	if selected != null:
 		removeNode(selected)
 		selected = null
+
+
+func _on_duplicate_nodes_request():
+	if selected != null:
+		duplicateNode(selected)
 
 
 func _on_node_selected(node):
@@ -399,12 +475,18 @@ func _on_speaker_changed(newSpeaker):
 	lastSpeaker = newSpeaker
 
 
+func _on_slot_removed(slot_left, slot_right, nodeName):
+	for connection in graph.get_connection_list():
+		if (connection['from'] == nodeName and connection['from_port'] == slot_right) or (connection['to'] == nodeName and connection['to_port'] == slot_left):
+			graph.disconnect_node(
+				connection['from'], connection['from_port'], connection['to'], connection['to_port']
+			)
+			graph.get_node(nodeName).setSlot(slot_right, slot_right==0)
+
+
 func _on_SaveDialog_file_selected(path):
-	var dict = toDict(start.name)
-	var file = File.new()
-	file.open(path, File.WRITE)
-	file.store_line(to_json(dict))
-	file.close()
+	lastPath = path
+	saveTree(path)
 
 
 func _on_LoadDemo_file_selected(path):
@@ -430,9 +512,17 @@ func _on_LoadTree_file_selected(path):
 	file.open(path, File.READ)
 	output = parse_json(file.get_as_text())
 	if typeof(output) == TYPE_DICTIONARY:
+		lastPath = path
 		demoDict = output
+		fileName.text = $LoadTreeDialog.current_file
+		
 		$LoadAlertDialog.popup_centered()
+		
 
 
 func _on_LoadAlert_confirmed():
 	loadTree('Start')
+
+
+func _on_PanelToggle_toggled(button_pressed):
+	sidePanel.visible = button_pressed

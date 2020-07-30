@@ -16,9 +16,8 @@ func _enter_tree():
 func _exit_tree():
 	#remove_control_from_bottom_panel(scene)
 	# Remove from main viewport
-	if scene:
+	if scene != null:
 		scene.queue_free()
-	scene.free()
 	print('Plugin Disabled')
 
 
@@ -37,3 +36,10 @@ func get_plugin_name():
 
 func get_plugin_icon():
 	return get_editor_interface().get_base_control().get_icon("Script", "EditorIcons")
+
+
+func save_external_data():
+	if scene != null:
+		scene.saveTree()
+		print('Tree exists')
+	print('Tried to save')
