@@ -41,5 +41,3 @@ func get_plugin_icon():
 func save_external_data():
 	if scene != null:
 		scene.saveTree()
-		print('Tree exists')
-	print('Tried to save')

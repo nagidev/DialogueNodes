@@ -85,6 +85,8 @@ func duplicateNode(node):
 				
 				graph.add_child(nodeInstance, true)
 				
+				nodeInstance.title = node.getType() + ' - ' + nodeInstance.name
+				
 				removeAllConnections(nodeInstance.name, nodeInstance.name)
 				
 				nodeInstance.connect('close_request', self, '_on_node_close_request', [nodeInstance])
@@ -105,7 +107,10 @@ func removeNode(node):
 		$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = false
 	elif commentNodes.has(node.name):
 		commentNodes.erase(node.name)
-
+	
+	if node == selected:
+		selected = null
+	
 	node.queue_free()
 
 
@@ -254,8 +259,8 @@ func toDict(nodeName, dict= {}):
 				var optionLinks = getNextNode(currentNode.name)
 				
 				if optionLinks.size() == 0:
+					print('Tree contains loose ends. Aborting node: ' + nodeName)
 					dict[nodeName] = 'End'
-					print('Tree contains loose ends aborting.')
 					return null
 				else:
 					options['0'] = {
@@ -293,8 +298,6 @@ func toDict(nodeName, dict= {}):
 				
 				dict[nodeName] = endNode
 				
-				print('Finished converting tree to dictionary.')
-				
 				return dict
 				
 			_:
@@ -312,7 +315,6 @@ func saveTree(path= lastPath):
 	file.open(path, File.WRITE)
 	file.store_line(to_json(dict))
 	file.close()
-	print('Saved: ' + path)
 
 
 func loadTree(nodeIndex, from= null, from_slot= -1):
@@ -481,7 +483,7 @@ func _on_slot_removed(slot_left, slot_right, nodeName):
 			graph.disconnect_node(
 				connection['from'], connection['from_port'], connection['to'], connection['to_port']
 			)
-			graph.get_node(nodeName).setSlot(slot_right, slot_right==0)
+	graph.get_node(nodeName).setSlot(slot_right, slot_right==0)
 
 
 func _on_SaveDialog_file_selected(path):
