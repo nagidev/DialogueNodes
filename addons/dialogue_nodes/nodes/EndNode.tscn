@@ -20,10 +20,10 @@ __meta__ = {
 nodeType = "End"
 
 [node name="Label" type="Label" parent="."]
-margin_left = 16.0
+margin_left = 28.0
 margin_top = 24.0
-margin_right = 134.0
-margin_bottom = 38.0
+margin_right = 122.0
+margin_bottom = 46.0
 text = "End of tree"
 align = 1
 valign = 2

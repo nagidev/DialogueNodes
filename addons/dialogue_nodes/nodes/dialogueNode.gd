@@ -2,6 +2,7 @@ tool
 extends "res://addons/dialogue_nodes/nodes/baseNode.gd"
 
 signal speakerChanged(newSpeaker)
+signal slotRemoved(slot_left, slot_right)
 
 onready var speaker = $Speaker
 onready var dialogue = $Dialogue
@@ -16,15 +17,24 @@ func _ready():
 
 
 func updateUI(off=1):
-	clear_all_slots()
+	var key = 0
 	
 	for i in range(options.get_child_count()):
-		options.get_child(i).placeholder_text = 'Option ' + str(i+off)
-		options.get_child(i).set('custom_colors/font_color', Color(Colors[i+off-1]))
-		if i == 0:
-			set_slot(i, true, 0, WHITE, true, 0, Color(Colors[i]))
-		elif options.get_child(i).text != '':
-			set_slot(i, false, 0, WHITE, true, 0, Color(Colors[i]))
+		if options.get_child(i).editable:
+			options.get_child(i).placeholder_text = 'Option ' + str(key + 1)
+			options.get_child(i).set('custom_colors/font_color', Color(Colors[key]))
+			
+			if key == 0:
+				set_slot(key, true, 0, WHITE, true, 0, Color(Colors[key]))
+			elif options.get_child(i).text != '':
+				set_slot(key, false, 0, WHITE, true, 0, Color(Colors[key]))
+			
+			key = min(key + 1, 3)
+			
+		else:
+			emit_signal("slotRemoved", -1, options.get_child_count()-2)
+	
+	update()
 
 
 func countEmptyOptions():
@@ -37,6 +47,7 @@ func countEmptyOptions():
 
 func addEmptyOption():
 	var newOption = options.get_child(0).duplicate()
+	newOption.editable = true
 	newOption.text = ''
 	newOption.connect('text_entered', self, '_on_option_added', [newOption])
 	newOption.connect('focus_exited', self, '_on_option_focus_exited', [newOption])
@@ -55,6 +66,7 @@ func addOption(optionText):
 			addEmptyOption()
 			break
 	
+	newOption.editable = true
 	newOption.text = optionText
 	newOption.disconnect('text_entered', self, '_on_option_added')
 	newOption.disconnect('focus_exited', self, '_on_option_focus_exited')
@@ -66,6 +78,7 @@ func addOption(optionText):
 
 func removeOption(newOption):
 	if options.get_child_count()>1:
+			newOption.editable = false
 			newOption.queue_free()
 			if countEmptyOptions() == 1:
 				addEmptyOption()
@@ -98,6 +111,11 @@ func getDialogue():
 
 func setDialogue(newDialogue):
 	dialogue.text = newDialogue
+
+
+func setSlot(id, left= false, right= false):
+	if id < 4:
+		set_slot(id, left, 0, WHITE, right, 0, Color(Colors[id]))
 
 
 func _on_options_toggled(pressed):
