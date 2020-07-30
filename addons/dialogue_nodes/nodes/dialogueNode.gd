@@ -16,7 +16,7 @@ func _ready():
 	option.connect('focus_exited', self, '_on_option_focus_exited', [option])
 
 
-func updateUI(off=1):
+func updateUI():
 	var key = 0
 	
 	for i in range(options.get_child_count()):
@@ -83,7 +83,7 @@ func removeOption(newOption):
 			if countEmptyOptions() == 1:
 				addEmptyOption()
 			# Update placeholder text
-			updateUI(0)
+			updateUI()
 
 
 func getOptionNames():

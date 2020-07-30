@@ -238,8 +238,8 @@ __meta__ = {
 }
 
 [node name="Option1" type="Button" parent="Demo/Options"]
-margin_left = 145.0
-margin_right = 209.0
+margin_left = 258.0
+margin_right = 300.0
 margin_bottom = 68.0
 text = "Next"
 
