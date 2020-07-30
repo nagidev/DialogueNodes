@@ -1,14 +1,12 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=2 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/NodeEditor.gd" type="Script" id=1]
-[ext_resource path="res://Theme.theme" type="Theme" id=2]
 
 [node name="NodeEditor" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 rect_min_size = Vector2( 0, 300 )
 size_flags_vertical = 3
-theme = ExtResource( 2 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -199,7 +197,6 @@ margin_left = -90.0
 margin_top = -34.0
 margin_right = 90.0
 margin_bottom = 34.0
-popup_exclusive = true
 dialog_text = "File loaded successfully."
 [connection signal="pressed" from="Main/ToolBar/TestButton" to="." method="_on_test_pressed"]
 [connection signal="connection_request" from="Main/Graph" to="." method="_on_node_connection_request"]
