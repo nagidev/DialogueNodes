@@ -9,6 +9,8 @@ var CommentNode = preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn")
 
 var start  # The start node. Only one allowed in a graph.
 var selected  # The selected node.
+var commentNodes # The names of all comment nodes
+var commentsLoaded # True when done loading comments from file
 var currentNode # The demo node to display
 var demoDict # The dictionary of dialogue tree for demo
 var demoIndex # The dict index of current dialogue
@@ -27,6 +29,7 @@ onready var tween = $Demo/Tween
 
 func _ready():
 	start = null
+	commentNodes = []
 
 	fileMenu.get_popup().connect("id_pressed", self, '_on_file_menu_pressed')
 	addMenu.get_popup().connect("id_pressed", self, '_on_add_menu_pressed')
@@ -60,6 +63,8 @@ func addNode(node, nodeId= ''):
 	elif node == DialogueNode:
 		nodeInstance.connect('speakerChanged', self, '_on_speaker_changed')
 		nodeInstance.setSpeaker(lastSpeaker)
+	elif node == CommentNode:
+		commentNodes.append(nodeInstance.name)
 	
 	return nodeInstance
 
@@ -72,6 +77,8 @@ func removeNode(node):
 	if node == start:
 		start = null
 		addMenu.get_popup().set_item_disabled(0, false)
+	elif commentNodes.has(node.name):
+		commentNodes.erase(node.name)
 
 	node.queue_free()
 
@@ -99,6 +106,7 @@ func clearGraph():
 			removeNode(child)
 	start = null
 	selected = null
+	commentNodes.clear()
 
 
 func getNextNode(nodeName):
@@ -172,6 +180,20 @@ func toDict(nodeName, dict= {}):
 	if isTreeComplete():
 		currentNode = graph.get_node(nodeName)
 		
+		# Save comments
+		if not dict.has('Comments'):
+			var comments = {}
+			
+			for commentName in commentNodes:
+				var commentNode = graph.get_node(commentName)
+				var comment = {}
+				comment['Offset'] = {'X': commentNode.offset.x, 'Y': commentNode.offset.y}
+				comment['Text'] = commentNode.getCommentText()
+				comments[commentName] = comment
+			
+			dict['Comments'] = comments
+		
+		# Save node tree
 		match currentNode.getType():
 			'Start':
 				# First after start
@@ -235,9 +257,6 @@ func toDict(nodeName, dict= {}):
 				
 				return dict
 				
-			'Comment':
-				return dict
-				
 			_:
 				print('Unknown type. Ending traversal of this branch')
 				
@@ -283,6 +302,20 @@ func loadTree(nodeIndex, from= null, from_slot= -1):
 			if from != null and int(from_slot) > -1:
 				graph.connect_node(from, int(from_slot), nodeIndex, 0)
 		instance.offset = offset
+	
+	# Comments
+	if demoDict.has('Comments') and not commentsLoaded:
+		var comments = demoDict['Comments']
+		var instance
+		
+		for i in comments:
+			commentNodes.append(i)
+			
+			instance = addNode(CommentNode, i)
+			instance.offset = Vector2(comments[i]['Offset']['X'], comments[i]['Offset']['Y'])
+			instance.setCommentText(comments[i]['Text'])
+		
+		commentsLoaded = true
 
 
 func _on_file_menu_pressed(id):
@@ -392,6 +425,7 @@ func _on_LoadTree_file_selected(path):
 	var output
 	
 	clearGraph()
+	commentsLoaded = false
 	
 	file.open(path, File.READ)
 	output = parse_json(file.get_as_text())
