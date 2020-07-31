@@ -156,7 +156,9 @@ margin_right = 700.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 400, 300 )
 rect_pivot_offset = Vector2( 200, 150 )
+window_title = "Save Dialogue Tree"
 resizable = true
+mode_overrides_title = false
 access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
 current_dir = "D:/Godot/GodotProjects/AddonTest"
@@ -169,8 +171,9 @@ margin_right = 700.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 400, 300 )
 rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Open a File"
+window_title = "Open File to Run"
 resizable = true
+mode_overrides_title = false
 mode = 0
 access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
@@ -184,8 +187,9 @@ margin_right = 700.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 400, 300 )
 rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Open a File"
+window_title = "Open Dialogue Tree"
 resizable = true
+mode_overrides_title = false
 mode = 0
 access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
@@ -276,6 +280,17 @@ margin_top = -34.0
 margin_right = 90.0
 margin_bottom = 34.0
 dialog_text = "File loaded successfully."
+
+[node name="SaveAlertDialog" type="AcceptDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -125.5
+margin_top = -34.0
+margin_right = 125.5
+margin_bottom = 34.0
+dialog_text = "Tree is incomplete. Unable to save."
 [connection signal="pressed" from="Main/ToolBar/TestButton" to="." method="_on_test_pressed"]
 [connection signal="pressed" from="Main/Workspace/SidePanel/AddShortcuts/StartShortcut" to="." method="_on_StartShortcut_pressed"]
 [connection signal="pressed" from="Main/Workspace/SidePanel/AddShortcuts/DialogueShortcut" to="." method="_on_DialogueShortcut_pressed"]

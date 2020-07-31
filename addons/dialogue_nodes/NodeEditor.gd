@@ -19,6 +19,7 @@ var lastSpeaker = '' # The last speaker from the last dialogue node changed
 var lastPosition = Vector2.ZERO # The position of the last moved node
 var lastOffset = 0 # Offset index
 var lastPath = ''
+var lastFile = ''
 
 onready var fileMenu = $Main/ToolBar/FileMenu
 onready var addMenu = $Main/ToolBar/AddMenu
@@ -46,6 +47,7 @@ func addNode(node, nodeId= ''):
 	
 	nodeInstance.connect('close_request', self, '_on_node_close_request', [nodeInstance])
 	nodeInstance.connect('dragged', self, '_on_node_dragged')
+	nodeInstance.connect('nodeModified', self, '_on_node_modified')
 	
 	# Default naming
 	if nodeId == '':
@@ -306,15 +308,26 @@ func toDict(nodeName, dict= {}):
 				return dict
 
 
-func saveTree(path= lastPath):
-	if path == '':
-		print('No file to save')
+func saveTree(path= lastPath, editing= false):
+	if not isTreeComplete():
+		if editing:
+			$SaveAlertDialog.popup_centered()
 		return
+	elif path == '':
+		if lastPath != '':
+			path = lastPath
+		elif editing:
+			$SaveDialog.popup_centered()
+			return
+		else:
+			return
+	
 	var dict = toDict(start.name)
 	var file = File.new()
 	file.open(path, File.WRITE)
 	file.store_line(to_json(dict))
 	file.close()
+	fileName.text = lastFile
 
 
 func loadTree(nodeIndex, from= null, from_slot= -1):
@@ -377,6 +390,7 @@ func _on_file_menu_pressed(id):
 		0:
 			clearGraph()
 			fileName.text = ''
+			lastPath = ''
 		1:
 			$SaveDialog.popup_centered()
 		2:
@@ -384,6 +398,7 @@ func _on_file_menu_pressed(id):
 		3:
 			clearGraph()
 			fileName.text = ''
+			lastPath = ''
 
 
 func _on_add_menu_pressed(id):
@@ -396,6 +411,7 @@ func _on_add_menu_pressed(id):
 			addNode(EndNode)
 		3:
 			addNode(CommentNode)
+	_on_node_modified()
 
 
 func _on_StartShortcut_pressed():
@@ -437,10 +453,14 @@ func _on_node_connection_request(from, from_slot, to, to_slot):
 		removeInvalidConnections(from, from_slot)
 		# Make new connection
 		graph.connect_node(from, from_slot, to, to_slot)
+		
+		_on_node_modified()
 
 
 func _on_node_disconnection_request(from, from_slot, to, to_slot):
 	graph.disconnect_node(from, from_slot, to, to_slot)
+	
+	_on_node_modified()
 
 
 func _on_delete_nodes_request():
@@ -457,6 +477,13 @@ func _on_duplicate_nodes_request():
 func _on_node_selected(node):
 	selected = node
 	lastPosition = node.offset
+
+
+func _on_node_modified():
+	if lastFile != '':
+		fileName.text = lastFile + '*'
+	else:
+		fileName.text = ''
 
 
 func _on_test_pressed():
@@ -487,8 +514,11 @@ func _on_slot_removed(slot_left, slot_right, nodeName):
 
 
 func _on_SaveDialog_file_selected(path):
-	lastPath = path
-	saveTree(path)
+	if isTreeComplete():
+		lastPath = path
+		lastFile = $SaveDialog.current_file
+		saveTree(path)
+		fileName.text = $SaveDialog.current_file
 
 
 func _on_LoadDemo_file_selected(path):
@@ -515,6 +545,7 @@ func _on_LoadTree_file_selected(path):
 	output = parse_json(file.get_as_text())
 	if typeof(output) == TYPE_DICTIONARY:
 		lastPath = path
+		lastFile = $LoadTreeDialog.current_file
 		demoDict = output
 		fileName.text = $LoadTreeDialog.current_file
 		

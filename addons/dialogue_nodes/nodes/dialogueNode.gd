@@ -11,9 +11,12 @@ onready var options = $Options
 onready var option = $Options/Option1
 
 func _ready():
-	optionsToggle.connect("toggled", self, '_on_options_toggled')
-	option.connect("text_entered", self, '_on_option_added', [option])
+	optionsToggle.connect('toggled', self, '_on_options_toggled')
+	option.connect('text_entered', self, '_on_option_added', [option])
 	option.connect('focus_exited', self, '_on_option_focus_exited', [option])
+	option.connect('text_changed', self, '_on_modified')
+	speaker.connect("text_changed", self, "_on_modified")
+	dialogue.connect("text_changed", self, "_on_modified")
 
 
 func updateUI():
@@ -51,6 +54,7 @@ func addEmptyOption():
 	newOption.text = ''
 	newOption.connect('text_entered', self, '_on_option_added', [newOption])
 	newOption.connect('focus_exited', self, '_on_option_focus_exited', [newOption])
+	newOption.connect('text_changed', self, '_on_modified')
 	options.add_child(newOption)
 
 
