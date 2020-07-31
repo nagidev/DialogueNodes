@@ -391,6 +391,7 @@ func _on_file_menu_pressed(id):
 			clearGraph()
 			fileName.text = ''
 			lastPath = ''
+			lastFile = ''
 		1:
 			$SaveDialog.popup_centered()
 		2:
@@ -399,6 +400,7 @@ func _on_file_menu_pressed(id):
 			clearGraph()
 			fileName.text = ''
 			lastPath = ''
+			lastFile = ''
 
 
 func _on_add_menu_pressed(id):
