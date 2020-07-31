@@ -19,10 +19,6 @@ config/name="DialogueNodes"
 run/main_scene="res://addons/dialogue_nodes/NodeEditor.tscn"
 config/icon="res://icon.png"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "dialogue_nodes" )
-
 [gui]
 
 theme/custom="res://Theme.theme"

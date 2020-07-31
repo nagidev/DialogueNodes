@@ -331,6 +331,18 @@ func saveTree(path= lastPath, editing= false):
 
 
 func loadTree(nodeIndex, from= null, from_slot= -1):
+	# Comments
+	if demoDict.has('Comments') and not commentsLoaded:
+		var comments = demoDict['Comments']
+		var instance
+		
+		for i in comments:
+			instance = addNode(CommentNode, i)
+			instance.offset = Vector2(comments[i]['Offset']['X'], comments[i]['Offset']['Y'])
+			instance.setCommentText(comments[i]['Text'])
+		
+		commentsLoaded = true
+	
 	if demoDict.has(nodeIndex):
 		var instance
 		var node = demoDict[nodeIndex]
@@ -369,20 +381,6 @@ func loadTree(nodeIndex, from= null, from_slot= -1):
 			if from != null and int(from_slot) > -1:
 				graph.connect_node(from, int(from_slot), nodeIndex, 0)
 		instance.offset = offset
-	
-	# Comments
-	if demoDict.has('Comments') and not commentsLoaded:
-		var comments = demoDict['Comments']
-		var instance
-		
-		for i in comments:
-			commentNodes.append(i)
-			
-			instance = addNode(CommentNode, i)
-			instance.offset = Vector2(comments[i]['Offset']['X'], comments[i]['Offset']['Y'])
-			instance.setCommentText(comments[i]['Text'])
-		
-		commentsLoaded = true
 
 
 func _on_file_menu_pressed(id):
@@ -545,6 +543,7 @@ func _on_LoadTree_file_selected(path):
 	
 	file.open(path, File.READ)
 	output = parse_json(file.get_as_text())
+	
 	if typeof(output) == TYPE_DICTIONARY:
 		lastPath = path
 		lastFile = $LoadTreeDialog.current_file
