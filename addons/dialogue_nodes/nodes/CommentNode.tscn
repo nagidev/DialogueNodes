@@ -20,6 +20,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+nodeType = "Comment"
 
 [node name="Comment" type="TextEdit" parent="."]
 margin_left = 28.0

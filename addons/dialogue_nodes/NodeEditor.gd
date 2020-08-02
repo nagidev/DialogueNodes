@@ -7,7 +7,7 @@ var DialogueNode = preload("res://addons/dialogue_nodes/nodes/DialogueNode.tscn"
 var EndNode = preload("res://addons/dialogue_nodes/nodes/EndNode.tscn")
 var CommentNode = preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn")
 
-var start  # The start node. Only one allowed in a graph.
+var startNodes # Stores all the start nodes' names
 var selected  # The selected node.
 var commentNodes # The names of all comment nodes
 var commentsLoaded # True when done loading comments from file
@@ -33,9 +33,9 @@ onready var tween = $Demo/Tween
 
 
 func _ready():
-	start = null
 	selected = null
 	commentNodes = []
+	startNodes = []
 	
 	fileMenu.get_popup().connect("id_pressed", self, '_on_file_menu_pressed')
 	addMenu.get_popup().connect("id_pressed", self, '_on_add_menu_pressed')
@@ -53,7 +53,7 @@ func addNode(node, nodeId= ''):
 	if nodeId == '':
 		nodeInstance.name = '1'
 		graph.add_child(nodeInstance, true)
-		nodeInstance.title += ' - ' + nodeInstance.name
+		nodeInstance.title = nodeInstance.getType() + ' - ' + nodeInstance.name
 	else:
 		nodeInstance.name = nodeId
 		graph.add_child(nodeInstance, false)
@@ -64,10 +64,11 @@ func addNode(node, nodeId= ''):
 	lastOffset += 1
 	
 	if node == StartNode:
-		if start == null:
-			start = nodeInstance
-			addMenu.get_popup().set_item_disabled(0, true)
-			$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = true
+		startNodes.append(nodeInstance.name)
+#		if start == null:
+#			start = nodeInstance
+#			addMenu.get_popup().set_item_disabled(0, true)
+#			$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = true
 	elif node == DialogueNode:
 		nodeInstance.connect('speakerChanged', self, '_on_speaker_changed')
 		nodeInstance.connect('slotRemoved', self, '_on_slot_removed', [nodeInstance.name])
@@ -79,23 +80,47 @@ func addNode(node, nodeId= ''):
 
 
 func duplicateNode(node):
+	
+	var nodeInstance = null
+	
 	match node.getType():
-			'End', 'Dialogue':
-				var nodeInstance = node.duplicate()
-				
-				nodeInstance.offset += Vector2(20, 20)
-				
-				graph.add_child(nodeInstance, true)
-				
-				nodeInstance.title = node.getType() + ' - ' + nodeInstance.name
-				
-				removeAllConnections(nodeInstance.name, nodeInstance.name)
-				
-				nodeInstance.connect('close_request', self, '_on_node_close_request', [nodeInstance])
-				nodeInstance.connect('dragged', self, '_on_node_dragged')
-				
-				node.selected = false
-				selected = nodeInstance
+		'Start':
+			nodeInstance = addNode(StartNode)
+			nodeInstance.get_node('ID').text = nodeInstance.name
+			startNodes.append(nodeInstance.name)
+		'Dialogue':
+			nodeInstance = addNode(DialogueNode)
+			
+			nodeInstance.setSpeaker(node.getSpeaker())
+			nodeInstance.setDialogue(node.getDialogue())
+			
+			nodeInstance.options.visible = node.options.visible
+			nodeInstance.optionsToggle.pressed = node.optionsToggle.pressed
+			
+			for optionName in node.getOptionNames():
+				nodeInstance.addOption(optionName)
+			
+		'End':
+			nodeInstance = addNode(EndNode)
+		'Comment':
+			nodeInstance = addNode(CommentNode)
+			
+			nodeInstance.setCommentText(node.getCommentText())
+			
+			commentNodes.append(nodeInstance.name)
+	
+	if nodeInstance == null:
+		return
+	
+	nodeInstance.offset = node.offset + Vector2(20, 20)
+	nodeInstance.title = node.getType() + ' - ' + nodeInstance.name
+	
+	removeAllConnections(nodeInstance.name, nodeInstance.name)
+	
+	node.selected = false
+	nodeInstance.selected = true
+	selected = nodeInstance
+	
 
 
 func removeNode(node):
@@ -103,10 +128,14 @@ func removeNode(node):
 	removeAllConnections(node.name, node.name)
 
 	# Enable menu options if disabled
-	if node == start:
-		start = null
-		addMenu.get_popup().set_item_disabled(0, false)
-		$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = false
+#	if node == start:
+#		start = null
+#		addMenu.get_popup().set_item_disabled(0, false)
+#		$Main/Workspace/SidePanel/AddShortcuts/StartShortcut.disabled = false
+	# Remove from startNodes if present
+	if startNodes.has(node.name):
+			startNodes.erase(node.name)
+	# Remove from commentNodes if present
 	elif commentNodes.has(node.name):
 		commentNodes.erase(node.name)
 	
@@ -137,7 +166,7 @@ func clearGraph():
 	for child in graph.get_children():
 		if child is GraphNode:
 			removeNode(child)
-	start = null
+#	start = null
 	selected = null
 	commentNodes.clear()
 
@@ -160,14 +189,17 @@ func sortBySlot(a, b):
 
 
 func isTreeComplete():
-	return (start != null and getNextNode(start.name).size() > 0)
+	for start in startNodes:
+		if getNextNode(start).size() == 0:
+			return false
+	return startNodes.size() > 0
 
 
-func startDemo():
-	if isTreeComplete():
-		demoDict = toDict(start.name)
+func startDemo(selectedNode):
+	if isTreeComplete() and selected.getType() == 'Start':
+		demoDict = toDict()
 		if demoDict != null:
-			demoIndex = demoDict['Start']['Link']
+			demoIndex = demoDict[selectedNode.name]['Link']
 			updateDemo()
 	demo.popup_centered()
 
@@ -175,10 +207,12 @@ func startDemo():
 func updateDemo():
 	if (demoDict.has(demoIndex) and demoDict[demoIndex].has('Link')):
 		if demoDict[demoIndex]['Link'] == 'End':
+			# End
 			stopDemo()
 	elif not demoDict.has(demoIndex):
 		stopDemo()
 	else:
+		# Dialogue
 		var currentDialogue = demoDict[demoIndex]
 		var options = demo.get_node("Options")
 		
@@ -222,9 +256,21 @@ func stopDemo():
 	demo.hide()
 
 
-func toDict(nodeName, dict= {}):
+func toDict(nodeName= '', dict= {}):
+	# Initial step
+	if nodeName == '':
+		dict['Start'] = {}
+	
+		for start in startNodes:
+			selected = graph.get_node(start)
+			var newDict = toDict(start, dict)
+			if newDict != null:
+				dict['Start'][selected.getID()] = start
+				dict = newDict
+		
+		return dict
 	# If tree is complete, i.e. start -> node/s -> end
-	if isTreeComplete():
+	elif isTreeComplete():
 		currentNode = graph.get_node(nodeName)
 		
 		# Save comments
@@ -247,11 +293,11 @@ func toDict(nodeName, dict= {}):
 				var firstNode = getNextNode(nodeName)[0]
 				var startNode = {}
 				
-				startNode['Id'] = nodeName
+				startNode['StartID'] = currentNode.getID()
 				startNode['Link'] = firstNode
 				startNode['Offset'] = {'X': currentNode.offset.x, 'Y': currentNode.offset.y}
 				
-				dict['Start'] = startNode
+				dict[nodeName] = startNode
 				return toDict(firstNode, dict)
 				
 			'Dialogue':
@@ -306,6 +352,8 @@ func toDict(nodeName, dict= {}):
 				print('Unknown type. Ending traversal of this branch')
 				
 				return dict
+	else:
+		return null
 
 
 func saveTree(path= lastPath, editing= false):
@@ -322,7 +370,7 @@ func saveTree(path= lastPath, editing= false):
 		else:
 			return
 	
-	var dict = toDict(start.name)
+	var dict = toDict()
 	var file = File.new()
 	file.open(path, File.WRITE)
 	file.store_line(to_json(dict))
@@ -343,16 +391,21 @@ func loadTree(nodeIndex, from= null, from_slot= -1):
 		
 		commentsLoaded = true
 	
-	if demoDict.has(nodeIndex):
+	if nodeIndex == 'Start':
+		# Load each tree in 'Start'
+		for key in demoDict['Start']:
+			loadTree(demoDict['Start'][key])
+	elif demoDict.has(nodeIndex):
 		var instance
 		var node = demoDict[nodeIndex]
 		var offset = Vector2(node['Offset']['X'], node['Offset']['Y'])
 		
-		if nodeIndex == 'Start':
+		if node.has('StartID'):
 			# Start
-			instance = addNode(StartNode, node['Id'])
+			instance = addNode(StartNode, nodeIndex)
+			instance.setID(node['StartID'])
 			
-			loadTree(node['Link'], node['Id'], 0)
+			loadTree(node['Link'], nodeIndex, 0)
 		elif node.has('Link') and node['Link'] == 'End':
 			# End
 			instance = addNode(EndNode, nodeIndex)
@@ -381,6 +434,8 @@ func loadTree(nodeIndex, from= null, from_slot= -1):
 			if from != null and int(from_slot) > -1:
 				graph.connect_node(from, int(from_slot), nodeIndex, 0)
 		instance.offset = offset
+	
+	lastOffset = 1
 
 
 func _on_file_menu_pressed(id):
@@ -433,7 +488,7 @@ func _on_CommentShortcut_pressed():
 func _on_run_menu_pressed(id):
 	match id:
 		0:
-			startDemo()
+			startDemo(selected)
 		1:
 			$LoadDemoDialog.popup_centered()
 
@@ -477,6 +532,7 @@ func _on_duplicate_nodes_request():
 func _on_node_selected(node):
 	selected = node
 	lastPosition = node.offset
+	lastOffset = 0
 
 
 func _on_node_modified():
@@ -487,7 +543,7 @@ func _on_node_modified():
 
 
 func _on_test_pressed():
-	startDemo()
+	startDemo(selected)
 
 
 func _on_option_pressed(nextNode):
@@ -529,7 +585,7 @@ func _on_LoadDemo_file_selected(path):
 	output = parse_json(file.get_as_text())
 	if typeof(output) == TYPE_DICTIONARY:
 		demoDict = output
-		demoIndex = output['Start']['Link']
+		demoIndex = output[output['Start'][output['Start'].keys()[0]]]['Link']
 		updateDemo()
 		demo.popup_centered()
 

@@ -123,7 +123,7 @@ margin_bottom = 548.0
 rect_min_size = Vector2( 400, 0 )
 size_flags_vertical = 3
 right_disconnects = true
-scroll_offset = Vector2( -208, -226 )
+scroll_offset = Vector2( -50, -50 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
