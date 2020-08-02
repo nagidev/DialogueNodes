@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/dialogue_nodes/nodes/baseNode.gd" type="Script" id=1]
+[ext_resource path="res://addons/dialogue_nodes/nodes/startNode.gd" type="Script" id=1]
 
 [node name="StartNode" type="GraphNode"]
 margin_right = 150.0
@@ -13,6 +13,12 @@ slot/0/left_color = Color( 1, 1, 1, 1 )
 slot/0/right_enabled = true
 slot/0/right_type = 0
 slot/0/right_color = Color( 0.933333, 0.933333, 0.933333, 1 )
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color( 1, 1, 1, 1 )
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -23,6 +29,14 @@ margin_left = 28.0
 margin_top = 24.0
 margin_right = 122.0
 margin_bottom = 46.0
-text = "Start of tree"
-align = 1
-valign = 2
+text = "Start of Tree"
+
+[node name="ID" type="LineEdit" parent="."]
+margin_left = 28.0
+margin_top = 47.0
+margin_right = 122.0
+margin_bottom = 69.0
+hint_tooltip = "The Tree ID stores the link to the first node of the tree structure.
+This is used to call the particular dialogue tree.
+If empty, it defaults to the node number."
+placeholder_text = "Tree ID"
