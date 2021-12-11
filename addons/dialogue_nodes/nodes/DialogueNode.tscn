@@ -3,17 +3,17 @@
 [ext_resource path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" type="Script" id=1]
 
 [node name="DialogueNode" type="GraphNode"]
-margin_right = 300.0
-margin_bottom = 233.0
+margin_right = 200.0
+margin_bottom = 200.0
 title = "Dialogue"
 show_close = true
 resizable = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
-slot/0/left_color = Color( 0.933333, 0.933333, 0.933333, 1 )
-slot/0/right_enabled = true
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
 slot/0/right_type = 0
-slot/0/right_color = Color( 0.329412, 0.878431, 0.631373, 1 )
+slot/0/right_color = Color( 1, 1, 1, 1 )
 slot/1/left_enabled = false
 slot/1/left_type = 0
 slot/1/left_color = Color( 1, 1, 1, 1 )
@@ -38,69 +38,44 @@ slot/4/left_color = Color( 1, 1, 1, 1 )
 slot/4/right_enabled = false
 slot/4/right_type = 0
 slot/4/right_color = Color( 1, 1, 1, 1 )
-slot/5/left_enabled = false
-slot/5/left_type = 0
-slot/5/left_color = Color( 1, 1, 1, 1 )
-slot/5/right_enabled = false
-slot/5/right_type = 0
-slot/5/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-nodeType = "Dialogue"
 
 [node name="SpeakerLabel" type="Label" parent="."]
 margin_left = 28.0
 margin_top = 24.0
-margin_right = 272.0
+margin_right = 172.0
 margin_bottom = 46.0
 text = "Speaker"
 
 [node name="Speaker" type="LineEdit" parent="."]
 margin_left = 28.0
 margin_top = 47.0
-margin_right = 272.0
-margin_bottom = 77.0
-rect_min_size = Vector2( 0, 30 )
+margin_right = 172.0
+margin_bottom = 69.0
+hint_tooltip = "The name of the speaker shown in the dialogues."
 
 [node name="DialogueLabel" type="Label" parent="."]
 margin_left = 28.0
-margin_top = 78.0
-margin_right = 272.0
-margin_bottom = 100.0
+margin_top = 70.0
+margin_right = 172.0
+margin_bottom = 92.0
 text = "Dialogue"
 
 [node name="Dialogue" type="TextEdit" parent="."]
 margin_left = 28.0
-margin_top = 101.0
-margin_right = 272.0
-margin_bottom = 171.0
-rect_min_size = Vector2( 0, 70 )
-size_flags_vertical = 3
-wrap_enabled = true
+margin_top = 93.0
+margin_right = 172.0
+margin_bottom = 101.0
+hint_tooltip = "TODO : write awesome hint"
 
-[node name="OptionsToggle" type="CheckButton" parent="."]
+[node name="Option1" type="LineEdit" parent="."]
 margin_left = 28.0
-margin_top = 172.0
-margin_right = 272.0
-margin_bottom = 206.0
-text = "Options"
-flat = true
+margin_top = 102.0
+margin_right = 172.0
+margin_bottom = 124.0
+placeholder_text = "Option1"
 
-[node name="Options" type="VBoxContainer" parent="."]
-visible = false
-margin_left = 28.0
-margin_top = 207.0
-margin_right = 272.0
-margin_bottom = 237.0
-size_flags_horizontal = 9
-size_flags_vertical = 9
-
-[node name="Option1" type="LineEdit" parent="Options"]
-margin_right = 268.0
-margin_bottom = 30.0
-rect_min_size = Vector2( 0, 30 )
-custom_colors/font_color = Color( 1, 1, 1, 1 )
-placeholder_text = "Option 1"
-[connection signal="text_entered" from="Speaker" to="." method="_on_Speaker_changed"]
+[connection signal="resize_request" from="." to="." method="_on_resize"]

@@ -8,9 +8,20 @@
 
 config_version=4
 
-_global_script_classes=[  ]
+_global_script_classes=[ {
+"base": "GraphNode",
+"class": "BaseNode",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/nodes/baseNode.gd"
+}, {
+"base": "RichTextEffect",
+"class": "RichTextWait",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/bbcodeWait.gd"
+} ]
 _global_script_class_icons={
-
+"BaseNode": "",
+"RichTextWait": ""
 }
 
 [application]
@@ -19,9 +30,13 @@ config/name="DialogueNodes"
 run/main_scene="res://addons/dialogue_nodes/NodeEditor.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/handheld/orientation="sensor"
+
 [gui]
 
-theme/custom="res://Theme.theme"
+theme/custom="res://test.theme"
 
 [rendering]
 

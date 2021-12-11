@@ -1,0 +1,74 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/objects/dialogue.gd" type="Script" id=1]
+
+[node name="Dialogue" type="PopupDialog"]
+margin_right = 480.0
+margin_bottom = 128.0
+rect_min_size = Vector2( 300, 80 )
+size_flags_vertical = 3
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Speaker" type="Label" parent="."]
+anchor_right = 1.0
+margin_left = 8.0
+margin_right = -8.0
+margin_bottom = 22.0
+text = "Speaker"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Dialogue" type="RichTextLabel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 24.0
+margin_right = -8.0
+margin_bottom = -32.0
+bbcode_enabled = true
+bbcode_text = "Sample dialogue."
+text = "Sample dialogue."
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Options" type="HBoxContainer" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = -29.0
+margin_right = -8.0
+margin_bottom = -5.0
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Option1" type="Button" parent="Options"]
+margin_left = 180.0
+margin_right = 248.0
+margin_bottom = 24.0
+text = "Option 1"
+
+[node name="Option2" type="Button" parent="Options"]
+margin_left = 252.0
+margin_right = 320.0
+margin_bottom = 24.0
+text = "Option 2"
+
+[node name="Option3" type="Button" parent="Options"]
+margin_left = 324.0
+margin_right = 392.0
+margin_bottom = 24.0
+text = "Option 3"
+
+[node name="Option4" type="Button" parent="Options"]
+margin_left = 396.0
+margin_right = 464.0
+margin_bottom = 24.0
+text = "Option 4"
