@@ -8,17 +8,19 @@ func _enter_tree():
 	scene = preload("res://addons/dialogue_nodes/NodeEditor.tscn").instance()
 	#add_control_to_bottom_panel(scene, 'Dialogue Nodes')
 	
+	# add scene to main viewport
 	get_editor_interface().get_editor_viewport().add_child(scene)
 	make_visible(false)
-	print('Plugin Enabled')
+	print_debug('Plugin Enabled')
 
 
 func _exit_tree():
 	#remove_control_from_bottom_panel(scene)
+	
 	# Remove from main viewport
 	if scene != null:
 		scene.queue_free()
-	print('Plugin Disabled')
+	print_debug('Plugin Disabled')
 
 
 func has_main_screen():
@@ -39,5 +41,6 @@ func get_plugin_icon():
 
 
 func save_external_data():
-	if scene != null:
-		scene.saveTree('', scene.visible)
+	if scene:
+		# save the dialogue tree
+		pass
