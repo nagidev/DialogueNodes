@@ -1,7 +1,8 @@
 tool
 extends GraphNode
-# TODO : deal with empty options
+# TODO : fix size on duplication
 
+signal modified
 signal connection_move(old_slot, new_slot)
 
 export var max_options = 4
@@ -9,27 +10,31 @@ export var max_options = 4
 onready var speaker = $Speaker
 onready var dialogue = $Dialogue
 
-var _minsize = Vector2.ZERO
-var options = []
+var options : Array = []
+var _new_size : Vector2
 
 func _ready():
-	_on_resize(rect_size)
-	_minsize = rect_size
+	for i in range(max_options):
+		if has_node("Option"+str(i+1)):
+			var option = get_node("Option"+str(i+1))
+			options.append(option)
+			option.connect("text_changed", self, "_on_option_changed", [options[0]])
+			option.connect("text_entered", self, "_on_option_entered", [options[0]])
+			option.connect("focus_exited", self, "_on_option_entered", ['', options[0]])
+			set_slot(option.get_index(), false, 0, Color.white, true, 0, Color.white)
 	
-	options.append(get_node("Option1"))
-	options[0].connect("text_changed", self, "_on_option_changed", [options[0]])
-	options[0].connect("text_entered", self, "_on_option_entered", [options[0]])
-	options[0].connect("focus_exited", self, "_on_option_entered", ['', options[0]])
-	set_slot(options[0].get_index(), false, 0, Color.white, true, 0, Color.white)
+	# bugfix : resize when deleting useless option
+	options[0].connect("tree_exited", self, "_on_resize", [_new_size, true])
 
 
 func add_option(new_text= ''):
 	if len(options) == max_options:
 		return
 	
-	var new_option = options[0].duplicate()
+	var new_option = LineEdit.new()
 	var id = len(options)
 	
+	new_option.name = 'Option'+str(id+1)
 	new_option.text = new_text
 	new_option.placeholder_text = "Option"+str(id+1)
 	
@@ -72,6 +77,9 @@ func _to_dict(graph):
 	
 	dict['speaker'] = speaker.text
 	dict['dialogue'] = dialogue.text
+	dict['size'] = {}
+	dict['size']['x'] = rect_size.x
+	dict['size']['y'] = rect_size.y
 	
 	# get options connected to other nodes
 	var options_dict = {}
@@ -83,8 +91,8 @@ func _to_dict(graph):
 			options_dict[idx]['link'] = connection['to']
 	
 	# get options not connected
-	for i in range(len(options)-1):
-		if not options_dict.has(i):
+	for i in range(len(options)):
+		if not options_dict.has(i) and options[i].text != '':
 			options_dict[str(i)] = {}
 			options_dict[str(i)]['text'] = options[i].text
 			options_dict[str(i)]['link'] = 'END'
@@ -101,22 +109,58 @@ func _to_dict(graph):
 	return dict
 
 
+func _from_dict(graph, dict):
+	var next_nodes = []
+	
+	# set values
+	speaker.text = dict['speaker']
+	dialogue.text = dict['dialogue']
+	
+	# remove any existing options
+	for option in options:
+		option.queue_free()
+	options.clear()
+	
+	# add new options
+	for key in dict['options']:
+		add_option(dict['options'][key]['text'])
+		next_nodes.append(dict['options'][key]['link'])
+	
+	# set size of node
+	if dict.has('size'):
+		_new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+		_on_resize(_new_size, true)
+	
+	_update_slots()
+	 
+	return next_nodes
+
+
 func _on_option_changed(new_text, option_node):
 	if option_node == options[-1]:
 		add_option()
 	if new_text != '':
 		_update_slots()
+	_on_node_modified()
 
 
 func _on_option_entered(new_text, option_node):
 	if option_node.text == '':
 		remove_option(option_node)
 		_update_slots()
+	_on_node_modified()
 
 
-func _on_resize(new_minsize):
-	new_minsize.x = max(new_minsize.x, _minsize.x)
-	new_minsize.y = max(new_minsize.y, _minsize.y)
-	rect_min_size = new_minsize
-	rect_size = new_minsize
-	dialogue.rect_min_size.y = new_minsize.y - dialogue.rect_position.y - 16
+func _on_resize(new_size, _loading = false):
+	new_size.x = max(new_size.x, rect_min_size.x)
+	new_size.y = max(new_size.y, rect_min_size.y)
+	
+	dialogue.rect_min_size.y = new_size.y - ( dialogue.rect_position.y + (options[0].rect_size.y * len(options)) + 6 )
+	rect_size = new_size
+	
+	if not _loading:
+		_on_node_modified()
+
+
+func _on_node_modified(_a=0, _b=0):
+	emit_signal("modified")

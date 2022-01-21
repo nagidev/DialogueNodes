@@ -2,6 +2,8 @@ tool
 extends GraphNode
 
 
+signal modified
+
 onready var textEdit = $TextEdit
 
 var _minsize = Vector2.ZERO
@@ -23,8 +25,12 @@ func _to_dict(_graph):
 
 
 func _from_dict(_graph, dict):
+	if dict.has('size'):
+		rect_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+	
+	_on_resize(rect_size)
+	
 	textEdit.text = dict['comment']
-	rect_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
 
 
 func _on_resize(new_minsize):
@@ -33,3 +39,8 @@ func _on_resize(new_minsize):
 	rect_min_size = new_minsize
 	rect_size = new_minsize
 	textEdit.rect_min_size.y = new_minsize.y - 32
+	_on_node_modified()
+
+
+func _on_node_modified():
+	emit_signal("modified")

@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "RichTextEffect",
 "class": "RichTextWait",
 "language": "GDScript",
-"path": "res://addons/dialogue_nodes/bbcodeWait.gd"
+"path": "res://addons/dialogue_nodes/icons/bbcodeWait.gd"
 } ]
 _global_script_class_icons={
 "BaseNode": "",
@@ -27,16 +27,16 @@ _global_script_class_icons={
 [application]
 
 config/name="DialogueNodes"
-run/main_scene="res://addons/dialogue_nodes/NodeEditor.tscn"
+run/main_scene="res://examples/Demo.tscn"
 config/icon="res://icon.png"
 
 [display]
 
 window/handheld/orientation="sensor"
 
-[gui]
+[editor_plugins]
 
-theme/custom="res://test.theme"
+enabled=PoolStringArray( "res://addons/dialogue_nodes/plugin.cfg" )
 
 [rendering]
 
@@ -45,5 +45,5 @@ quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-environment/default_clear_color=Color( 0.219608, 0.329412, 0.360784, 1 )
+environment/default_clear_color=Color( 0.113725, 0.137255, 0.156863, 1 )
 environment/default_environment="res://default_env.tres"

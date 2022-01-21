@@ -1,17 +1,21 @@
 tool
 extends HSplitContainer
-# TODO : redo duplication code
+# TODO : long file names make side panel un-resizeable
 
 signal node_added(node_name)
 signal node_deleted(node_name)
 
 export (Array, String, FILE, "*.tscn, *.scn") var nodeScenes
 
+onready var files = $SidePanel/Files
 onready var graph = $Graph
 onready var popup = $Graph/PopupMenu
 
 var cursor_pos = Vector2.ZERO
 var nodes = []
+var request_node = null
+var request_slot = null
+var loading_file : bool = false
 
 
 func _ready():
@@ -20,7 +24,7 @@ func _ready():
 
 func show_menu(pos):
 	popup.popup(Rect2(pos.x, pos.y, popup.rect_size.x, popup.rect_size.y))
-	cursor_pos = pos + graph.scroll_offset
+	cursor_pos = (pos - graph.rect_global_position + graph.scroll_offset) / graph.zoom
 
 
 ## Nodes 
@@ -37,45 +41,69 @@ func init_nodes():
 		nodes[i] = {"name": scene_name, "scene": scene}
 
 
-func add_node(id, clone = null, node_id = '', offset = null):
+func add_node(id, clone = null, node_name = '', offset = null):
 	var new_node
 	
 	if clone:
 		# duplicate node
-		new_node = clone.duplicate()
-		clone.selected = false
 		id = int(clone.name.split('_')[0])
+		clone.selected = false
 	else:
-		# create new node
-		new_node = nodes[id].scene.instance()
 		_select_all_nodes(false)
 	
-	new_node.offset = (get_viewport().get_mouse_position() + graph.scroll_offset) / graph.zoom - (new_node.rect_size * 0.5) if offset == null else offset
+	# create new node
+	new_node = nodes[id].scene.instance()
+	
+	#new_node.offset = (get_viewport().get_mouse_position() + graph.scroll_offset) / graph.zoom - (new_node.rect_size * 0.5) if offset == null else offset
+	new_node.offset = cursor_pos - (new_node.rect_size * 0.5) if offset == null else offset
 	new_node.selected = true
 	
 	new_node.connect("dragged", self, "_on_node_dragged")
 	new_node.connect("close_request", self, "remove_node", [new_node])
+	new_node.connect("modified", graph, "_on_modified")
+	new_node.connect("close_request", graph, "_on_modified")
 	
 	# dialogue node signals
 	if new_node.has_signal("connection_move"):
 		new_node.connect("connection_move", self, "_move_connection_slot", [new_node])
 	
 	# set nodeId and add to graph
-	new_node.name = (str(id)+'_1') if node_id == '' else node_id
+	new_node.name = (str(id)+'_1') if node_name == '' else node_name
 	
 	graph.add_child(new_node, true)
 	new_node.title = nodes[id].name + ' #' + new_node.name.split('_')[1]
 	
+	# set up values, if clone
+	if clone:
+		new_node._from_dict(graph, clone._to_dict(graph))
+	
+	# connect to previous node if required
+	if request_node:
+		if new_node.is_slot_enabled_left(0):
+			graph.connect_node(request_node, request_slot, new_node.name, 0)
+		request_node = null
+		request_slot = null
+	
+	if not loading_file:
+		files.modify_file()
 	emit_signal("node_added", new_node.name)
+	
+	return new_node
 
 
 func remove_node(node):
-	
 	_remove_all_connections(node.name)
 	
 	node.queue_free()
 	
 	emit_signal("node_deleted", node.name)
+
+
+func remove_all_nodes():
+	for child in graph.get_children():
+		if child is GraphNode:
+			remove_node(child)
+			child.name += '_' # workaround
 
 
 func _remove_invalid_connections(from, from_slot= -1, to= null, to_slot= -1):
@@ -110,6 +138,7 @@ func _on_node_dragged(_from, to):
 func _on_nodes_duplicated():
 	for child in graph.get_children():
 		if child is GraphNode and child.is_selected():
+			cursor_pos = (get_viewport().get_mouse_position() - graph.rect_position + graph.scroll_offset) / graph.zoom
 			add_node(-1, child)
 
 
@@ -126,8 +155,9 @@ func _select_all_nodes(select = true):
 
 
 func _on_connection_to_empty(from, from_slot, release_position):
-	show_menu(release_position)
-	# TODO : attach new node to this one
+	request_node = from
+	request_slot = from_slot
+	show_menu(release_position + graph.rect_global_position)
 
 
 func _on_connection_request(from, from_slot, to, to_slot):
@@ -142,3 +172,16 @@ func _on_connection_request(from, from_slot, to, to_slot):
 func _on_disconnection_request(from, from_slot, to, to_slot):
 	graph.disconnect_node(from, from_slot, to, to_slot)
 
+
+func _on_file_modified():
+	if not loading_file:
+		files.modify_file()
+
+
+func _on_file_closed():
+	
+	remove_all_nodes()
+	
+	# child_count <= 1 because the file_button is still queued for deletion, hence, may be present
+	if files.get_item_count() == 0:
+		graph.hide()
