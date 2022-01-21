@@ -5,11 +5,11 @@
 [node name="CommentNode" type="GraphNode"]
 margin_right = 200.0
 margin_bottom = 100.0
+rect_min_size = Vector2( 200, 100 )
 title = "Comment"
 show_close = true
 resizable = true
 comment = true
-overlay = 1
 slot/0/left_enabled = false
 slot/0/left_type = 0
 slot/0/left_color = Color( 1, 1, 1, 1 )
@@ -25,8 +25,10 @@ __meta__ = {
 margin_left = 28.0
 margin_top = 24.0
 margin_right = 172.0
-margin_bottom = 44.0
-rect_min_size = Vector2( 20, 20 )
+margin_bottom = 92.0
+rect_min_size = Vector2( 20, 68 )
 smooth_scrolling = true
+wrap_enabled = true
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
+[connection signal="text_changed" from="TextEdit" to="." method="_on_node_modified"]

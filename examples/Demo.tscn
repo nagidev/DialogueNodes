@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=1]
+[ext_resource path="res://examples/demo.gd" type="Script" id=2]
+
+[node name="Demo" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DialogueBox" type="PopupDialog" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -232.0
+margin_right = 232.0
+margin_bottom = 177.0
+rect_min_size = Vector2( 300, 100 )
+popup_exclusive = true
+script = ExtResource( 1 )
+dialogue_file = "res://examples/Example3.json"
+start_id = "START"
+options_alignment = 0
+
+[node name="Button" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -42.0
+margin_top = -11.0
+margin_right = 42.0
+margin_bottom = 11.0
+text = "Start Demo"
+
+[connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

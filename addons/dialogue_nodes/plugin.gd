@@ -1,25 +1,33 @@
 tool
 extends EditorPlugin
 
-var scene
+var editor
 
 
 func _enter_tree():
-	scene = preload("res://addons/dialogue_nodes/NodeEditor.tscn").instance()
-	#add_control_to_bottom_panel(scene, 'Dialogue Nodes')
+	editor = preload("res://addons/dialogue_nodes/NodeEditor.tscn").instance()
 	
-	# add scene to main viewport
-	get_editor_interface().get_editor_viewport().add_child(scene)
+	# add editor to main viewport
+	get_editor_interface().get_editor_viewport().add_child(editor)
 	make_visible(false)
+	
+	# add dialogue provider node
+	add_custom_type(
+		'DialogueBox',
+		'PopupDialog',
+		preload("res://addons/dialogue_nodes/objects/dialogueBox.gd"),
+		preload("res://addons/dialogue_nodes/icons/Dialogue.svg"))
+	
 	print_debug('Plugin Enabled')
 
 
 func _exit_tree():
-	#remove_control_from_bottom_panel(scene)
-	
 	# Remove from main viewport
-	if scene != null:
-		scene.queue_free()
+	if editor:
+		editor.queue_free()
+	
+	remove_custom_type('DialogueBox')
+	
 	print_debug('Plugin Disabled')
 
 
@@ -28,8 +36,8 @@ func has_main_screen():
 
 
 func make_visible(visible):
-	if scene:
-		scene.visible = visible
+	if editor:
+		editor.visible = visible
 
 
 func get_plugin_name():
@@ -37,10 +45,10 @@ func get_plugin_name():
 
 
 func get_plugin_icon():
-	return get_editor_interface().get_base_control().get_icon("Script", "EditorIcons")
+	return preload("res://addons/dialogue_nodes/icons/Dialogue.svg")
 
 
 func save_external_data():
-	if scene:
-		# save the dialogue tree
+	if editor:
+		editor.files.save_all()
 		pass

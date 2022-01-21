@@ -5,6 +5,7 @@
 [node name="DialogueNode" type="GraphNode"]
 margin_right = 200.0
 margin_bottom = 200.0
+rect_min_size = Vector2( 200, 200 )
 title = "Dialogue"
 show_close = true
 resizable = true
@@ -35,7 +36,7 @@ slot/3/right_color = Color( 1, 1, 1, 1 )
 slot/4/left_enabled = false
 slot/4/left_type = 0
 slot/4/left_color = Color( 1, 1, 1, 1 )
-slot/4/right_enabled = false
+slot/4/right_enabled = true
 slot/4/right_type = 0
 slot/4/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
@@ -44,38 +45,42 @@ __meta__ = {
 }
 
 [node name="SpeakerLabel" type="Label" parent="."]
-margin_left = 28.0
+margin_left = 16.0
 margin_top = 24.0
-margin_right = 172.0
-margin_bottom = 46.0
+margin_right = 184.0
+margin_bottom = 38.0
 text = "Speaker"
 
 [node name="Speaker" type="LineEdit" parent="."]
-margin_left = 28.0
-margin_top = 47.0
-margin_right = 172.0
-margin_bottom = 69.0
+margin_left = 16.0
+margin_top = 39.0
+margin_right = 184.0
+margin_bottom = 63.0
 hint_tooltip = "The name of the speaker shown in the dialogues."
 
 [node name="DialogueLabel" type="Label" parent="."]
-margin_left = 28.0
-margin_top = 70.0
-margin_right = 172.0
-margin_bottom = 92.0
+margin_left = 16.0
+margin_top = 64.0
+margin_right = 184.0
+margin_bottom = 78.0
 text = "Dialogue"
 
 [node name="Dialogue" type="TextEdit" parent="."]
-margin_left = 28.0
-margin_top = 93.0
-margin_right = 172.0
-margin_bottom = 101.0
+margin_left = 16.0
+margin_top = 79.0
+margin_right = 184.0
+margin_bottom = 151.0
+rect_min_size = Vector2( 0, 72 )
 hint_tooltip = "TODO : write awesome hint"
+wrap_enabled = true
 
 [node name="Option1" type="LineEdit" parent="."]
-margin_left = 28.0
-margin_top = 102.0
-margin_right = 172.0
-margin_bottom = 124.0
+margin_left = 16.0
+margin_top = 152.0
+margin_right = 184.0
+margin_bottom = 176.0
 placeholder_text = "Option1"
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
+[connection signal="text_changed" from="Speaker" to="." method="_on_node_modified"]
+[connection signal="text_changed" from="Dialogue" to="." method="_on_node_modified"]

@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://addons/dialogue_nodes/editor.gd" type="Script" id=1]
-[ext_resource path="res://addons/dialogue_nodes/graph.gd" type="Script" id=2]
+[ext_resource path="res://addons/dialogue_nodes/editor/editor.gd" type="Script" id=1]
+[ext_resource path="res://addons/dialogue_nodes/editor/graph.gd" type="Script" id=2]
 [ext_resource path="res://addons/dialogue_nodes/icons/Back.svg" type="Texture" id=3]
 [ext_resource path="res://addons/dialogue_nodes/icons/Forward.svg" type="Texture" id=4]
-[ext_resource path="res://addons/dialogue_nodes/objects/Dialogue.tscn" type="PackedScene" id=5]
+[ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=5]
 [ext_resource path="res://addons/dialogue_nodes/editor/workspace.gd" type="Script" id=7]
+[ext_resource path="res://addons/dialogue_nodes/editor/files.gd" type="Script" id=9]
 
 [node name="NodeEditor" type="Control"]
 anchor_right = 1.0
@@ -20,27 +21,30 @@ __meta__ = {
 [node name="Main" type="VBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 4.0
+margin_right = -4.0
 size_flags_vertical = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ToolBar" type="HBoxContainer" parent="Main"]
-margin_right = 1024.0
-margin_bottom = 22.0
+margin_right = 1016.0
+margin_bottom = 20.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="FileMenu" type="MenuButton" parent="Main/ToolBar"]
 margin_right = 35.0
-margin_bottom = 22.0
+margin_bottom = 20.0
 keep_pressed_outside = true
 text = "File"
-items = [ "New Tree", null, 0, false, false, 0, 0, null, "", false, "Save Tree", null, 0, false, false, 1, 0, null, "", false, "Open Tree", null, 0, false, false, 2, 0, null, "", false, "Close Tree", null, 0, false, false, 3, 0, null, "", false ]
+items = [ "New Tree", null, 0, false, false, 0, 0, null, "", false, "Open...", null, 0, false, false, 1, 0, null, "", false, "", null, 0, false, false, 5, 0, null, "", true, "Save", null, 0, false, false, 2, 0, null, "", false, "Save As", null, 0, false, false, 3, 0, null, "", false, "", null, 0, false, false, 6, 0, null, "", true, "Close", null, 0, false, false, 4, 0, null, "", false ]
 switch_on_hover = true
 
 [node name="AddMenu" type="MenuButton" parent="Main/ToolBar"]
+visible = false
 margin_left = 39.0
 margin_right = 114.0
 margin_bottom = 22.0
@@ -50,18 +54,18 @@ items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNo
 switch_on_hover = true
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
+visible = false
 margin_left = 118.0
 margin_right = 154.0
 margin_bottom = 22.0
 keep_pressed_outside = true
 text = "Run"
-items = [ "Run this tree", null, 0, false, false, 0, 0, null, "", false, "Run from file", null, 0, false, false, 1, 0, null, "", false ]
 switch_on_hover = true
 
 [node name="Workspace" type="HSplitContainer" parent="Main"]
-margin_top = 26.0
-margin_right = 1024.0
-margin_bottom = 574.0
+margin_top = 24.0
+margin_right = 1016.0
+margin_bottom = 576.0
 size_flags_vertical = 3
 script = ExtResource( 7 )
 __meta__ = {
@@ -69,28 +73,32 @@ __meta__ = {
 }
 nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn" ]
 
-[node name="SidePanel" type="Panel" parent="Main/Workspace"]
-visible = false
-margin_right = 200.0
-margin_bottom = 548.0
-rect_min_size = Vector2( 200, 0 )
+[node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
+margin_right = 1016.0
+margin_bottom = 552.0
+rect_min_size = Vector2( 150, 0 )
+rect_clip_content = true
 
-[node name="Label" type="Label" parent="Main/Workspace/SidePanel"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-text = "TODO : show multiple open files."
-autowrap = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Files" type="ItemList" parent="Main/Workspace/SidePanel"]
+margin_right = 1016.0
+margin_bottom = 552.0
+script = ExtResource( 9 )
+editor_path = NodePath("../../../..")
+newDialogue_path = NodePath("../../../../NewDialog")
+saveDialogue_path = NodePath("../../../../SaveDialog")
+openDialogue_path = NodePath("../../../../OpenDialog")
+confirmDialogue_path = NodePath("../../../../ConfirmationDialog")
 
 [node name="Graph" type="GraphEdit" parent="Main/Workspace"]
-margin_right = 1024.0
+visible = false
+margin_right = 1016.0
 margin_bottom = 548.0
 rect_min_size = Vector2( 400, 0 )
 size_flags_vertical = 3
 right_disconnects = true
 scroll_offset = Vector2( -208, -2 )
+zoom_min = 0.5
+zoom_max = 2.0
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -106,15 +114,16 @@ __meta__ = {
 }
 
 [node name="Statusbar" type="HBoxContainer" parent="Main"]
-margin_top = 578.0
-margin_right = 1024.0
+margin_top = 580.0
+margin_right = 1016.0
 margin_bottom = 600.0
 
 [node name="PanelToggle" type="TextureButton" parent="Main/Statusbar"]
 margin_right = 30.0
-margin_bottom = 22.0
+margin_bottom = 20.0
 rect_min_size = Vector2( 30, 20 )
 toggle_mode = true
+pressed = true
 texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 3 )
 expand = true
@@ -122,9 +131,25 @@ stretch_mode = 3
 
 [node name="FileName" type="Label" parent="Main/Statusbar"]
 margin_left = 34.0
+margin_top = 3.0
 margin_right = 134.0
-margin_bottom = 22.0
+margin_bottom = 17.0
 rect_min_size = Vector2( 100, 0 )
+
+[node name="NewDialog" type="FileDialog" parent="."]
+margin_left = 200.0
+margin_top = 200.0
+margin_right = 700.0
+margin_bottom = 600.0
+rect_min_size = Vector2( 400, 300 )
+rect_pivot_offset = Vector2( 200, 150 )
+window_title = "Save New Dialogue Tree"
+resizable = true
+mode_overrides_title = false
+access = 2
+filters = PoolStringArray( "*.json; Dialogue JSON File" )
+current_dir = "/Godot/GodotProjects/DialogueNodes"
+current_path = "/Godot/GodotProjects/DialogueNodes/"
 
 [node name="SaveDialog" type="FileDialog" parent="."]
 margin_left = 200.0
@@ -141,23 +166,7 @@ filters = PoolStringArray( "*.json; Dialogue JSON File" )
 current_dir = "/Godot/GodotProjects/DialogueNodes"
 current_path = "/Godot/GodotProjects/DialogueNodes/"
 
-[node name="LoadDemoDialog" type="FileDialog" parent="."]
-margin_left = 200.0
-margin_top = 200.0
-margin_right = 700.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 400, 300 )
-rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Open File to Run"
-resizable = true
-mode_overrides_title = false
-mode = 0
-access = 2
-filters = PoolStringArray( "*.json; Dialogue JSON File" )
-current_dir = "/Godot/GodotProjects/DialogueNodes"
-current_path = "/Godot/GodotProjects/DialogueNodes/"
-
-[node name="LoadTreeDialog" type="FileDialog" parent="."]
+[node name="OpenDialog" type="FileDialog" parent="."]
 margin_left = 200.0
 margin_top = 200.0
 margin_right = 700.0
@@ -173,37 +182,51 @@ filters = PoolStringArray( "*.json; Dialogue JSON File" )
 current_dir = "/Godot/GodotProjects/DialogueNodes"
 current_path = "/Godot/GodotProjects/DialogueNodes/"
 
-[node name="LoadAlertDialog" type="AcceptDialog" parent="."]
+[node name="ConfirmationDialog" type="AcceptDialog" parent="."]
+margin_right = 280.0
+margin_bottom = 90.0
+rect_min_size = Vector2( 280, 90 )
+popup_exclusive = true
+window_title = "Unsaved changes!"
+dialog_text = "The file containes unsaved changes. Are you sure you want to close the file?"
+dialog_autowrap = true
+
+[node name="DialogueBox" type="PopupDialog" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -90.0
-margin_top = -34.0
-margin_right = 90.0
-margin_bottom = 34.0
-dialog_text = "File loaded successfully."
+margin_left = -250.0
+margin_top = -75.0
+margin_right = 250.0
+margin_bottom = 75.0
+rect_min_size = Vector2( 300, 100 )
+popup_exclusive = true
+script = ExtResource( 5 )
 
-[node name="SaveAlertDialog" type="AcceptDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -125.5
-margin_top = -34.0
-margin_right = 125.5
-margin_bottom = 34.0
-dialog_text = "Tree is incomplete. Unable to save."
-
-[node name="Dialogue" parent="." instance=ExtResource( 5 )]
-
+[connection signal="about_to_show" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
 [connection signal="node_deleted" from="Main/Workspace" to="." method="_on_node_deleted"]
+[connection signal="closed" from="Main/Workspace/SidePanel/Files" to="Main/Workspace" method="_on_file_closed"]
+[connection signal="item_selected" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="select_file"]
+[connection signal="opened" from="Main/Workspace/SidePanel/Files" to="." method="_on_file_opened"]
+[connection signal="switched" from="Main/Workspace/SidePanel/Files" to="." method="open_dict"]
+[connection signal="_end_node_move" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_request"]
+[connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="connection_to_empty" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_to_empty"]
 [connection signal="delete_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_nodes_delete"]
+[connection signal="delete_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="disconnection_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_disconnection_request"]
+[connection signal="disconnection_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="duplicate_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_nodes_duplicated"]
+[connection signal="duplicate_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
+[connection signal="modified" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_file_modified"]
 [connection signal="popup_request" from="Main/Workspace/Graph" to="Main/Workspace" method="show_menu"]
+[connection signal="visibility_changed" from="Main/Workspace/Graph" to="." method="_on_graph_visibility_changed"]
 [connection signal="id_pressed" from="Main/Workspace/Graph/PopupMenu" to="Main/Workspace" method="add_node"]
 [connection signal="pressed" from="Main/Statusbar/PanelToggle" to="." method="toggle_side_panel"]
+[connection signal="file_selected" from="NewDialog" to="." method="new_file"]
+[connection signal="file_selected" from="SaveDialog" to="." method="save_file"]
+[connection signal="file_selected" from="OpenDialog" to="." method="open_file"]
+[connection signal="custom_action" from="ConfirmationDialog" to="Main/Workspace/SidePanel/Files" method="_on_confirmDialog_action"]
