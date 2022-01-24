@@ -1,6 +1,11 @@
 tool
 extends PopupDialog
 
+signal dialogue_started(id)
+signal dialogue_proceeded
+signal dialogue_signal(value)
+signal dialogue_ended
+
 export (String, FILE, "*.json; Dialogue JSON File") var dialogue_file setget load_file
 export (String) var start_id
 export (int, 1, 8) var max_options = 4
@@ -83,9 +88,13 @@ func start(id = start_id):
 	if !dict:
 		printerr('No dialogue data!')
 		return
+	elif !dict['start'].has(id):
+		printerr('Start ID not present!')
+		return
 	
 	running = true
 	proceed(dict['start'][id])
+	emit_signal("dialogue_started", id)
 
 
 func proceed(idx):
@@ -100,11 +109,16 @@ func proceed(idx):
 			proceed(dict[idx]['link'])
 		'1':
 			set_dialogue(dict[idx])
+		'3':
+			emit_signal('dialogue_signal', dict[idx]['signalValue'])
+			proceed(dict[idx]['link'])
+	emit_signal("dialogue_proceeded")
 
 
 func stop():
 	running = false
 	hide()
+	emit_signal("dialogue_ended")
 
 
 func set_dialogue(dict):

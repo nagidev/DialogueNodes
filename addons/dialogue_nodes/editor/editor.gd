@@ -177,6 +177,8 @@ func open_dict(dict):
 			var new_node = workspace.add_node(type, null, node_name, offset)
 			new_node._from_dict(graph, dict[node_name])
 	
+	workspace.request_node = null
+	workspace.request_slot = null
 	workspace.loading_file = false
 
 

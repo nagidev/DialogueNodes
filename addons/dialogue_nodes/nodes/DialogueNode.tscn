@@ -4,7 +4,7 @@
 
 [node name="DialogueNode" type="GraphNode"]
 margin_right = 200.0
-margin_bottom = 200.0
+margin_bottom = 201.0
 rect_min_size = Vector2( 200, 200 )
 title = "Dialogue"
 show_close = true
@@ -69,16 +69,16 @@ text = "Dialogue"
 margin_left = 16.0
 margin_top = 79.0
 margin_right = 184.0
-margin_bottom = 151.0
-rect_min_size = Vector2( 0, 72 )
+margin_bottom = 170.0
+rect_min_size = Vector2( 0, 91 )
 hint_tooltip = "TODO : write awesome hint"
 wrap_enabled = true
 
 [node name="Option1" type="LineEdit" parent="."]
 margin_left = 16.0
-margin_top = 152.0
+margin_top = 171.0
 margin_right = 184.0
-margin_bottom = 176.0
+margin_bottom = 195.0
 placeholder_text = "Option1"
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
