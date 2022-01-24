@@ -80,6 +80,9 @@ func add_node(id, clone = null, node_name = '', offset = null):
 	# connect to previous node if required
 	if request_node:
 		if new_node.is_slot_enabled_left(0):
+			# remove any connection from this slot to previous node
+			_remove_invalid_connections(request_node, request_slot)
+			# make new connection
 			graph.connect_node(request_node, request_slot, new_node.name, 0)
 		request_node = null
 		request_slot = null
@@ -138,7 +141,7 @@ func _on_node_dragged(_from, to):
 func _on_nodes_duplicated():
 	for child in graph.get_children():
 		if child is GraphNode and child.is_selected():
-			cursor_pos = (get_viewport().get_mouse_position() - graph.rect_position + graph.scroll_offset) / graph.zoom
+			cursor_pos = (get_viewport().get_mouse_position() - graph.rect_global_position + graph.scroll_offset) / graph.zoom
 			add_node(-1, child)
 
 

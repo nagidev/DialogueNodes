@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/nodes/signalNode.gd" type="Script" id=1]
+
+[node name="SignalNode" type="GraphNode"]
+margin_right = 160.0
+margin_bottom = 80.0
+title = "Signal"
+show_close = true
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color( 1, 1, 1, 1 )
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color( 1, 1, 1, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 144.0
+margin_bottom = 38.0
+text = "signal value"
+
+[node name="SignalValue" type="LineEdit" parent="."]
+margin_left = 16.0
+margin_top = 39.0
+margin_right = 144.0
+margin_bottom = 63.0
+hint_tooltip = "The String value passed in the signal parameter."
+
+[connection signal="text_changed" from="SignalValue" to="." method="_on_node_modified"]

@@ -42,5 +42,5 @@ func _on_resize(new_minsize):
 	_on_node_modified()
 
 
-func _on_node_modified():
+func _on_node_modified(_a=0, _b=0):
 	emit_signal("modified")

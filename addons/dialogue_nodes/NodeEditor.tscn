@@ -50,7 +50,7 @@ margin_right = 114.0
 margin_bottom = 22.0
 keep_pressed_outside = true
 text = "Add Node"
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false ]
+items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false ]
 switch_on_hover = true
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
@@ -71,7 +71,7 @@ script = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn" ]
+nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn", "res://addons/dialogue_nodes/nodes/SignalNode.tscn" ]
 
 [node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
 margin_right = 1016.0
@@ -107,7 +107,7 @@ __meta__ = {
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/Graph"]
 margin_right = 16.0
 margin_bottom = 16.0
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false ]
+items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false ]
 allow_search = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -128,13 +128,6 @@ texture_normal = ExtResource( 4 )
 texture_pressed = ExtResource( 3 )
 expand = true
 stretch_mode = 3
-
-[node name="FileName" type="Label" parent="Main/Statusbar"]
-margin_left = 34.0
-margin_top = 3.0
-margin_right = 134.0
-margin_bottom = 17.0
-rect_min_size = Vector2( 100, 0 )
 
 [node name="NewDialog" type="FileDialog" parent="."]
 margin_left = 200.0

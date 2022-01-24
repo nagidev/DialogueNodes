@@ -9,18 +9,12 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "GraphNode",
-"class": "BaseNode",
-"language": "GDScript",
-"path": "res://addons/dialogue_nodes/nodes/baseNode.gd"
-}, {
 "base": "RichTextEffect",
 "class": "RichTextWait",
 "language": "GDScript",
 "path": "res://addons/dialogue_nodes/icons/bbcodeWait.gd"
 } ]
 _global_script_class_icons={
-"BaseNode": "",
 "RichTextWait": ""
 }
 
