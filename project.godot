@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "PopupDialog",
+"class": "DialogueBox",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/objects/dialogueBox.gd"
+}, {
 "base": "RichTextEffect",
 "class": "RichTextWait",
 "language": "GDScript",
-"path": "res://addons/dialogue_nodes/icons/bbcodeWait.gd"
+"path": "res://addons/dialogue_nodes/objects/bbcodeWait.gd"
 } ]
 _global_script_class_icons={
+"DialogueBox": "",
 "RichTextWait": ""
 }
 
@@ -39,5 +45,5 @@ quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
 vram_compression/import_etc=true
 vram_compression/import_etc2=false
-environment/default_clear_color=Color( 0.113725, 0.137255, 0.156863, 1 )
+environment/default_clear_color=Color( 0.0705882, 0.305882, 0.537255, 1 )
 environment/default_environment="res://default_env.tres"
