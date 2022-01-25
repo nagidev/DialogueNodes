@@ -1,5 +1,6 @@
 tool
 extends EditorPlugin
+# TODO : Undo/Redo support
 
 var editor
 

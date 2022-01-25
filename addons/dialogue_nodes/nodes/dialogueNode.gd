@@ -1,6 +1,6 @@
 tool
 extends GraphNode
-# TODO : fix size on duplication
+# TODO : fix size not handled correctly
 
 signal modified
 signal connection_move(old_slot, new_slot)

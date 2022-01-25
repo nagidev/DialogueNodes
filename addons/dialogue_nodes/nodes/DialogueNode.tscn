@@ -71,7 +71,8 @@ margin_top = 79.0
 margin_right = 184.0
 margin_bottom = 170.0
 rect_min_size = Vector2( 0, 91 )
-hint_tooltip = "TODO : write awesome hint"
+hint_tooltip = "The dialogue displayed in the DialogueBox.
+Use [bbcodes] to add extra effects to your dialogue."
 wrap_enabled = true
 
 [node name="Option1" type="LineEdit" parent="."]

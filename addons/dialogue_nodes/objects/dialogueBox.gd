@@ -1,5 +1,6 @@
 tool
 extends PopupDialog
+class_name DialogueBox
 
 signal dialogue_started(id)
 signal dialogue_proceeded
@@ -10,6 +11,7 @@ export (String, FILE, "*.json; Dialogue JSON File") var dialogue_file setget loa
 export (String) var start_id
 export (int, 1, 8) var max_options = 4
 export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_options_alignment
+export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 
 var speaker : Label
 var dialogue : RichTextLabel
@@ -23,6 +25,9 @@ func _enter_tree():
 	# setup popup properties
 	popup_exclusive = true
 	rect_min_size = Vector2(300, 100)
+	
+	## dialogue box setup code ##
+	# note : edit the code below to change the layout of your dialogue box
 	
 	# setup containers
 	var margin_container = MarginContainer.new()
@@ -50,6 +55,7 @@ func _enter_tree():
 	dialogue.scroll_following = true
 	dialogue.bbcode_enabled = true
 	dialogue.size_flags_vertical = SIZE_EXPAND_FILL
+	dialogue.custom_effects = custom_effects
 	
 	# setup options
 	options = HBoxContainer.new()
@@ -103,13 +109,17 @@ func proceed(idx):
 	
 	var type = idx.split('_')[0]
 	
+	# define how to process the current node type
 	match(type):
 		'0':
+			# start
 			popup()
 			proceed(dict[idx]['link'])
 		'1':
+			# dialogue
 			set_dialogue(dict[idx])
 		'3':
+			# signal
 			emit_signal('dialogue_signal', dict[idx]['signalValue'])
 			proceed(dict[idx]['link'])
 	emit_signal("dialogue_proceeded")
