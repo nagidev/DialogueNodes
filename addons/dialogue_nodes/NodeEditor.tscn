@@ -1,12 +1,16 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/editor/editor.gd" type="Script" id=1]
 [ext_resource path="res://addons/dialogue_nodes/editor/graph.gd" type="Script" id=2]
 [ext_resource path="res://addons/dialogue_nodes/icons/Back.svg" type="Texture" id=3]
 [ext_resource path="res://addons/dialogue_nodes/icons/Forward.svg" type="Texture" id=4]
 [ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=5]
+[ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=6]
 [ext_resource path="res://addons/dialogue_nodes/editor/workspace.gd" type="Script" id=7]
 [ext_resource path="res://addons/dialogue_nodes/editor/files.gd" type="Script" id=9]
+
+[sub_resource type="RichTextEffect" id=1]
+script = ExtResource( 6 )
 
 [node name="NodeEditor" type="Control"]
 anchor_right = 1.0
@@ -139,10 +143,7 @@ rect_pivot_offset = Vector2( 200, 150 )
 window_title = "Save New Dialogue Tree"
 resizable = true
 mode_overrides_title = false
-access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
-current_dir = "/Godot/GodotProjects/DialogueNodes"
-current_path = "/Godot/GodotProjects/DialogueNodes/"
 
 [node name="SaveDialog" type="FileDialog" parent="."]
 margin_left = 200.0
@@ -154,10 +155,7 @@ rect_pivot_offset = Vector2( 200, 150 )
 window_title = "Save Dialogue Tree"
 resizable = true
 mode_overrides_title = false
-access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
-current_dir = "/Godot/GodotProjects/DialogueNodes"
-current_path = "/Godot/GodotProjects/DialogueNodes/"
 
 [node name="OpenDialog" type="FileDialog" parent="."]
 margin_left = 200.0
@@ -170,10 +168,7 @@ window_title = "Open Dialogue Tree"
 resizable = true
 mode_overrides_title = false
 mode = 0
-access = 2
 filters = PoolStringArray( "*.json; Dialogue JSON File" )
-current_dir = "/Godot/GodotProjects/DialogueNodes"
-current_path = "/Godot/GodotProjects/DialogueNodes/"
 
 [node name="ConfirmationDialog" type="AcceptDialog" parent="."]
 margin_right = 280.0
@@ -196,6 +191,7 @@ margin_bottom = 75.0
 rect_min_size = Vector2( 300, 100 )
 popup_exclusive = true
 script = ExtResource( 5 )
+custom_effects = [ SubResource( 1 ) ]
 
 [connection signal="about_to_show" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
