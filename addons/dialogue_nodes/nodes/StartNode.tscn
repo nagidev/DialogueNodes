@@ -20,9 +20,9 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 28.0
+margin_left = 16.0
 margin_top = 24.0
-margin_right = 152.0
+margin_right = 164.0
 margin_bottom = 48.0
 
 [node name="RunButton" type="Button" parent="HBoxContainer"]
@@ -34,17 +34,18 @@ flat = true
 
 [node name="IDLabel" type="Label" parent="HBoxContainer"]
 margin_left = 32.0
-margin_top = 1.0
-margin_right = 55.0
-margin_bottom = 23.0
+margin_top = 5.0
+margin_right = 47.0
+margin_bottom = 19.0
 text = "ID"
 
 [node name="ID" type="LineEdit" parent="HBoxContainer"]
-margin_left = 59.0
-margin_right = 119.0
+margin_left = 51.0
+margin_right = 148.0
 margin_bottom = 24.0
 hint_tooltip = "Required field.
 The ID is used to identify each tree in a dialogue tree."
+size_flags_horizontal = 3
 
 [connection signal="pressed" from="HBoxContainer/RunButton" to="." method="_on_run_pressed"]
 [connection signal="text_changed" from="HBoxContainer/ID" to="." method="_on_ID_changed"]

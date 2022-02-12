@@ -15,3 +15,4 @@ func _on_Button_pressed():
 func _on_dialogue_signal(value):
 	match(value):
 		'explode': explode()
+

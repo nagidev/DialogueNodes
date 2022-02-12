@@ -46,6 +46,7 @@ func get_plugin_name():
 
 
 func get_plugin_icon():
+	# get_editor_interface().get_base_control().get_icon("Script", "EditorIcons")
 	return preload("res://addons/dialogue_nodes/icons/Dialogue.svg")
 
 

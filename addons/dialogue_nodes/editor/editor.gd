@@ -10,6 +10,7 @@ onready var workspace = $Main/Workspace
 onready var graph = $Main/Workspace/Graph
 onready var side_panel = $Main/Workspace/SidePanel
 onready var files = $Main/Workspace/SidePanel/Files
+onready var variables = $Main/Workspace/SidePanel/Variables
 onready var dialogue = $DialogueBox
 onready var newDialogue = $NewDialog
 onready var saveDialogue = $SaveDialog
@@ -47,7 +48,9 @@ func init_menus():
 
 # Run
 func _run_tree(start_node):	
-	dialogue.dict = start_node.tree_to_dict(graph)
+	var dict = start_node.tree_to_dict(graph)
+	dict['variables'] = variables.to_dict()
+	dialogue.dict = dict
 	
 	if dialogue.dict:
 		dialogue.start(start_node.ID)
@@ -125,7 +128,7 @@ func get_dict():
 		var start_node = graph.get_node(start_node_name)
 		dict = start_node.tree_to_dict(graph, dict)
 	
-	# add comments to tree
+	# add comments to dict
 	var comments = {}
 	for i in range(len(comment_nodes)):
 		var node = graph.get_node(comment_nodes[i])
@@ -133,6 +136,9 @@ func get_dict():
 		dict[node.name] = node._to_dict(graph)
 		dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
 	dict['comments'] = comments
+	
+	# add variables to dict
+	dict['variables'] = variables.to_dict()
 	
 	# add stray nodes #
 	var strays = {}
@@ -169,6 +175,9 @@ func open_dict(dict):
 			var comment_node = workspace.add_node(type, null, node_name, offset)
 			comment_node._from_dict(graph, dict[node_name])
 	
+	if dict.has('variables'):
+		variables.from_dict(dict['variables'])
+	
 	if dict.has('strays'):
 		for key in dict['strays']:
 			var node_name = dict['strays'][key]
@@ -185,6 +194,7 @@ func open_dict(dict):
 func new_file(path):
 	files.new_file(path)
 	graph.show()
+	variables.show()
 
 
 func open_file(path):
@@ -194,6 +204,7 @@ func open_file(path):
 func _on_file_opened(dict):
 	open_dict(dict)
 	graph.show()
+	variables.show()
 
 
 func save_file(path, dict = get_dict()):
@@ -207,3 +218,8 @@ func _on_file_request_dict(file_button):
 # Side panel
 func toggle_side_panel():
 	side_panel.visible = not side_panel.visible
+
+
+# Dialogue box
+func _on_dialogue_variable_changed(var_name, value):
+	variables.set_value(var_name, value)

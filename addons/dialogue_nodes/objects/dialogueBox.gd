@@ -6,6 +6,7 @@ signal dialogue_started(id)
 signal dialogue_proceeded
 signal dialogue_signal(value)
 signal dialogue_ended
+signal variable_changed(var_name, value)
 
 export (String, FILE, "*.json; Dialogue JSON File") var dialogue_file setget load_file
 export (String) var start_id
@@ -16,7 +17,8 @@ export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 var speaker : Label
 var dialogue : RichTextLabel
 var options : HBoxContainer
-var dict = null
+var dict = null setget set_dict
+var variables = {}
 var running = false
 var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
 
@@ -24,7 +26,7 @@ var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
 func _enter_tree():
 	# setup popup properties
 	popup_exclusive = true
-	rect_min_size = Vector2(300, 100)
+	rect_min_size = Vector2(300, 72)
 	
 	## dialogue box setup code ##
 	# note : edit the code below to change the layout of your dialogue box
@@ -68,10 +70,9 @@ func _enter_tree():
 		options.add_child(button)
 
 
-func _exit_tree():
-	if get_child_count() > 0:
-		for child in get_children():
-			child.queue_free()
+func _ready():
+	if dict:
+		init_variables(dict['variables'])
 
 
 func load_file(path):
@@ -90,6 +91,22 @@ func load_file(path):
 			dict = null
 
 
+func set_dict(new_dict):
+	dict = new_dict
+	if dict:
+		init_variables(dict['variables'])
+
+
+func init_variables(var_dict):
+	variables.clear()
+	
+	for var_name in var_dict:
+		var type = int(var_dict[var_name]['type'])
+		var value = var_dict[var_name]['value']
+		
+		set_variable(var_name, type, value)
+
+
 func start(id = start_id):
 	if !dict:
 		printerr('No dialogue data!')
@@ -106,6 +123,7 @@ func start(id = start_id):
 func proceed(idx):
 	if idx == 'END':
 		stop()
+		return
 	
 	var type = idx.split('_')[0]
 	
@@ -122,6 +140,26 @@ func proceed(idx):
 			# signal
 			emit_signal('dialogue_signal', dict[idx]['signalValue'])
 			proceed(dict[idx]['link'])
+		'4':
+			# set
+			var var_dict = dict[idx]
+			
+			var var_name = var_dict['variable']
+			var value = var_dict['value']
+			var var_type = typeof(variables[var_name]) if variables.has(var_name) else TYPE_STRING
+			var operator = int(var_dict['type'])
+			
+			set_variable(var_name, var_type, value, operator)
+			
+			if variables.has(var_name):
+				emit_signal("variable_changed", var_name, variables[var_name])
+			
+			proceed(var_dict['link'])
+		_:
+			if dict[idx].has('link'):
+				proceed(dict[idx]['link'])
+			else:
+				stop()
 	emit_signal("dialogue_proceeded")
 
 
@@ -133,7 +171,7 @@ func stop():
 
 func set_dialogue(dict):
 	speaker.text = dict['speaker']
-	dialogue.bbcode_text = dict['dialogue']
+	dialogue.bbcode_text = process_text(dict['dialogue'])
 	
 	# hide all options
 	for option in options.get_children():
@@ -153,7 +191,62 @@ func set_dialogue(dict):
 	if len(dict['options']) == 1 and options.get_child(0).text == '':
 		options.get_child(0).icon = next_icon
 	
+	# wait some time then grab focus
+	yield(get_tree().create_timer(0.5), "timeout")
 	options.get_child(0).grab_focus()
+
+
+func process_text(text : String):
+	for i in range(text.count('{{')):
+		# Find tag position
+		var tag_start = text.find('{{')+2
+		var tag_len = text.find('}}') - tag_start
+		
+		# Find variable value
+		var var_name = text.substr(tag_start, tag_len)
+		var value = 'undefined'
+		if variables.has(var_name):
+			value = variables[var_name]
+		
+		# Remove tag
+		text.erase(tag_start-2, tag_len+4)
+		
+		# Insert value
+		text = text.insert(tag_start-2, value)
+	
+	return text
+
+
+func set_variable(var_name, type, value, operator = 0):
+	
+	# Set datatype of value
+	match type:
+		TYPE_STRING:
+			value = str(value)
+		TYPE_INT:
+			value = int(value)
+		TYPE_REAL:
+			value = float(value)
+		TYPE_BOOL:
+			value = bool(value)
+	
+	# Perform operation
+	match operator:
+		0:
+			# =
+			variables[var_name] = value
+		1:
+			# +=
+			variables[var_name] += value
+		2:
+			# -=
+			variables[var_name] -= value
+		3:
+			# *=
+			variables[var_name] *= value
+		4:
+			# /=
+			variables[var_name] /= value
 
 
 func _set_options_alignment(value):
