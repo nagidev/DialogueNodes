@@ -8,6 +8,7 @@ signal node_deleted(node_name)
 export (Array, String, FILE, "*.tscn, *.scn") var nodeScenes
 
 onready var files = $SidePanel/Files
+onready var variables = $SidePanel/Variables
 onready var graph = $Graph
 onready var popup = $Graph/PopupMenu
 
@@ -188,3 +189,4 @@ func _on_file_closed():
 	# child_count <= 1 because the file_button is still queued for deletion, hence, may be present
 	if files.get_item_count() == 0:
 		graph.hide()
+		variables.hide()

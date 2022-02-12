@@ -196,14 +196,14 @@ anchor_bottom = 1.0
 margin_left = -350.0
 margin_top = -210.0
 margin_right = 350.0
-rect_min_size = Vector2( 300, 100 )
+rect_min_size = Vector2( 300, 72 )
 popup_exclusive = true
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 dialogue_file = "res://examples/Example4.json"
-start_id = "START"
+start_id = "SETGET"
 custom_effects = [ SubResource( 13 ) ]
 
 [node name="Button" type="Button" parent="."]

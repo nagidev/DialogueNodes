@@ -13,7 +13,6 @@ export (NodePath) var openDialogue_path
 export (NodePath) var confirmDialogue_path
 
 var script_icon = preload("res://addons/dialogue_nodes/icons/Script.svg")
-var files = {}
 var editor
 var newDialogue
 var saveDialogue
