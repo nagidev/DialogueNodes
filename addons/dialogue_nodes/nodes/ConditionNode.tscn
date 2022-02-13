@@ -1,0 +1,80 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/nodes/conditionNode.gd" type="Script" id=1]
+
+[node name="ConditionNode" type="GraphNode"]
+margin_right = 240.0
+margin_bottom = 110.0
+title = "ConditionNode"
+show_close = true
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color( 1, 1, 1, 1 )
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color( 1, 1, 1, 1 )
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color( 1, 1, 1, 1 )
+slot/1/right_enabled = true
+slot/1/right_type = 0
+slot/1/right_color = Color( 0.647059, 0.937255, 0.67451, 1 )
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color( 1, 1, 1, 1 )
+slot/2/right_enabled = true
+slot/2/right_type = 0
+slot/2/right_color = Color( 1, 0.364706, 0.364706, 1 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+margin_left = 16.0
+margin_top = 24.0
+margin_right = 224.0
+margin_bottom = 48.0
+
+[node name="Value1" type="LineEdit" parent="HBoxContainer"]
+margin_right = 77.0
+margin_bottom = 24.0
+hint_tooltip = "The property to set the value of."
+size_flags_horizontal = 3
+placeholder_text = "Value"
+
+[node name="Operator" type="OptionButton" parent="HBoxContainer"]
+margin_left = 81.0
+margin_right = 126.0
+margin_bottom = 24.0
+hint_tooltip = "The type of the value to set."
+text = "=="
+items = [ "==", null, false, 0, null, "!=", null, false, 1, null, ">", null, false, 2, null, "<", null, false, 3, null, ">=", null, false, 4, null, "<=", null, false, 5, null ]
+selected = 0
+
+[node name="Value2" type="LineEdit" parent="HBoxContainer"]
+margin_left = 130.0
+margin_right = 208.0
+margin_bottom = 24.0
+hint_tooltip = "The value to set the property to.
+Eg: Bob, 12, 0.5, false, etc."
+size_flags_horizontal = 3
+placeholder_text = "Value"
+
+[node name="TrueLabel" type="ItemList" parent="."]
+margin_left = 16.0
+margin_top = 49.0
+margin_right = 224.0
+margin_bottom = 76.0
+mouse_filter = 2
+items = [ "True", null, false ]
+auto_height = true
+
+[node name="FalseLabel" type="ItemList" parent="."]
+margin_left = 16.0
+margin_top = 77.0
+margin_right = 224.0
+margin_bottom = 104.0
+mouse_filter = 2
+items = [ "False", null, false ]
+auto_height = true

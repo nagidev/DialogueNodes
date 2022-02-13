@@ -155,6 +155,9 @@ func proceed(idx):
 				emit_signal("variable_changed", var_name, variables[var_name])
 			
 			proceed(var_dict['link'])
+		'5':
+			# condition
+			handle_condition(dict[idx])
 		_:
 			if dict[idx].has('link'):
 				proceed(dict[idx]['link'])
@@ -217,6 +220,20 @@ func process_text(text : String):
 	return text
 
 
+func get_variable(text : String):
+	# Find tag position
+	var tag_start = text.find('{{')+2
+	var tag_len = text.find('}}') - tag_start
+	
+	# Find variable value
+	var var_name = text.substr(tag_start, tag_len)
+	var value = 'undefined'
+	if variables.has(var_name):
+		value = variables[var_name]
+	
+	return value
+
+
 func set_variable(var_name, type, value, operator = 0):
 	
 	# Set datatype of value
@@ -247,6 +264,54 @@ func set_variable(var_name, type, value, operator = 0):
 		4:
 			# /=
 			variables[var_name] /= value
+
+
+func handle_condition(cond_dict):
+	var value1 = cond_dict['value1']
+	var value2 = cond_dict['value2']
+	var type = TYPE_STRING
+	
+	# Get variables if needed
+	if value1.count('{{') > 0:
+		value1 = get_variable(value1)
+		type = typeof(value1)
+	if value2.count('{{') > 0:
+		value2 = get_variable(value2)
+		type = typeof(value2)
+	
+	# Set datatype of values
+	match type:
+		TYPE_STRING:
+			value1 = str(value1)
+			value2 = str(value2)
+		TYPE_INT:
+			value1 = int(value1)
+			value2 = int(value2)
+		TYPE_REAL:
+			value1 = float(value1)
+			value2 = float(value2)
+		TYPE_BOOL:
+			value1 = bool(value1)
+			value2 = bool(value2)
+	
+	# Perform operation
+	var result : bool = false
+	match cond_dict['operator']:
+		0:
+			result = value1 == value2
+		1:
+			result = value1 != value2
+		2:
+			result = value1 > value2
+		3:
+			result = value1 < value2
+		4:
+			result = value1 >= value2
+		5:
+			result = value1 <= value2
+	
+	# Proceed
+	proceed(cond_dict[str(result).to_lower()])
 
 
 func _set_options_alignment(value):

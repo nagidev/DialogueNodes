@@ -55,7 +55,7 @@ margin_right = 114.0
 margin_bottom = 22.0
 keep_pressed_outside = true
 text = "Add Node"
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false ]
+items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false, "ConditionNode", null, 0, false, false, 5, 0, null, "", false ]
 switch_on_hover = true
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
@@ -76,7 +76,7 @@ script = ExtResource( 7 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn", "res://addons/dialogue_nodes/nodes/SignalNode.tscn", "res://addons/dialogue_nodes/nodes/SetNode.tscn" ]
+nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn", "res://addons/dialogue_nodes/nodes/SignalNode.tscn", "res://addons/dialogue_nodes/nodes/SetNode.tscn", "res://addons/dialogue_nodes/nodes/ConditionNode.tscn" ]
 
 [node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
 margin_right = 1016.0
@@ -134,7 +134,7 @@ __meta__ = {
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/Graph"]
 margin_right = 16.0
 margin_bottom = 16.0
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false ]
+items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false, "ConditionNode", null, 0, false, false, 5, 0, null, "", false ]
 allow_search = true
 __meta__ = {
 "_edit_use_anchors_": false
