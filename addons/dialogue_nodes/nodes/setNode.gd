@@ -5,9 +5,9 @@ enum {STRING, INT, FLOAT, BOOL}
 
 signal modified
 
-onready var variable = $Variable
+onready var variable = $HBoxContainer/Variable
 onready var type = $HBoxContainer/Type
-onready var value = $Value
+onready var value = $HBoxContainer/Value
 
 
 func _to_dict(graph):
@@ -19,7 +19,7 @@ func _to_dict(graph):
 	var next_nodes = graph.get_next(name)
 	
 	if len(next_nodes) > 0:
-		dict['link'] = graph.get_next(name)[0]
+		dict['link'] = next_nodes[0]
 	else:
 		dict['link'] = 'END'
 	
