@@ -1,6 +1,7 @@
 tool
 extends GraphNode
 
+
 enum {EQUAL, NEQUAL, GREATER, LESS, GEQUAL, LEQUAL}
 
 signal modified

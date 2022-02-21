@@ -2,6 +2,7 @@ tool
 extends PopupDialog
 class_name DialogueBox
 
+
 signal dialogue_started(id)
 signal dialogue_proceeded
 signal dialogue_signal(value)
@@ -184,7 +185,7 @@ func set_dialogue(dict):
 	# set options
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
-		option.text = dict['options'][idx]['text']
+		option.text = process_text(dict['options'][idx]['text'])
 		if option.is_connected('pressed', self, 'proceed'):
 			option.disconnect("pressed", self, 'proceed')
 		option.connect("pressed", self, 'proceed', [dict['options'][idx]['link']])

@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=1]
 [ext_resource path="res://examples/demo.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://examples/Montserrat-Regular.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=5]
+[ext_resource path="res://Mango.gd" type="Script" id=6]
 
 [sub_resource type="StyleBoxFlat" id=2]
 content_margin_left = 6.0
@@ -173,11 +174,11 @@ RichTextLabel/styles/focus = SubResource( 9 )
 RichTextLabel/styles/normal = SubResource( 10 )
 VBoxContainer/constants/separation = 4
 
-[sub_resource type="RichTextEffect" id=13]
-script = ExtResource( 5 )
-
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.71435, 0.0, 0, 0 ]
+
+[sub_resource type="RichTextEffect" id=13]
+script = ExtResource( 5 )
 
 [node name="Demo" type="Control"]
 anchor_right = 1.0
@@ -187,24 +188,6 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="DialogueBox" type="PopupDialog" parent="."]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -350.0
-margin_top = -210.0
-margin_right = 350.0
-rect_min_size = Vector2( 300, 72 )
-popup_exclusive = true
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-dialogue_file = "res://examples/Example1.json"
-start_id = "START"
-custom_effects = [ SubResource( 13 ) ]
 
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5
@@ -222,6 +205,7 @@ position = Vector2( 510.17, 235.463 )
 emitting = false
 amount = 64
 one_shot = true
+speed_scale = 2.0
 explosiveness = 0.9
 randomness = 0.2
 lifetime_randomness = 0.5
@@ -233,9 +217,30 @@ spread = 180.0
 gravity = Vector2( 0, 0 )
 initial_velocity = 200.0
 initial_velocity_random = 0.5
-angle = 180.0
-angle_random = 1.0
 scale_amount_curve = SubResource( 1 )
 
-[connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]
+[node name="DialogueBox" type="PopupDialog" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -269.0
+margin_top = -150.0
+margin_right = 269.0
+rect_min_size = Vector2( 300, 72 )
+popup_exclusive = true
+script = ExtResource( 1 )
+dialogue_file = "res://examples/Example4.json"
+start_id = "SIGNALS"
+custom_effects = [ SubResource( 13 ) ]
+
+[node name="Control" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
+[connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]

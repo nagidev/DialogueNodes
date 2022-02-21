@@ -1,6 +1,7 @@
 tool
 extends GraphNode
 
+
 enum {STRING, INT, FLOAT, BOOL}
 
 signal modified

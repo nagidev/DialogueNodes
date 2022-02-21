@@ -12,6 +12,8 @@ export (NodePath) var saveDialogue_path
 export (NodePath) var openDialogue_path
 export (NodePath) var confirmDialogue_path
 
+onready var popupMenu = $PopupMenu
+
 var script_icon = preload("res://addons/dialogue_nodes/icons/Script.svg")
 var editor
 var newDialogue
@@ -20,7 +22,7 @@ var openDialogue
 var confirmDialogue
 
 var current : int
-var queued : int # for closing
+var queued : Array # for closing
 
 
 func _ready():
@@ -37,7 +39,7 @@ func _ready():
 	confirmDialogue.add_cancel("Cancel")
 	
 	current = -1
-	queued = -1
+	queued = []
 	
 	
 func _show_dir(idx):
@@ -109,13 +111,7 @@ func select_file(idx):
 		var metadata = get_item_metadata(current)
 		metadata['dict'] = editor.get_dict()
 		set_item_metadata(current, metadata)
-
-	##
-#	if idx == current:
-#		print('already selected!')
-#		return
-	##
-
+	
 	current = idx
 	var dict = get_item_metadata(current)['dict']
 	select(current)
@@ -163,7 +159,6 @@ func open_file(path, internal = false):
 	# create, setup file button
 	var file_idx = create_file(file_name, file_dir, dict)
 	
-	#print('File opened: ', get_item_metadata(file_idx)['path'])
 	if not internal:
 		emit_signal("opened", get_item_metadata(file_idx)['dict'])
 
@@ -185,7 +180,8 @@ func save_file(idx = current):
 	file.store_line(to_json(metadata['dict']))
 	file.close()
 	
-	print('File saved: ', metadata['path'])
+	if editor._debug:
+		print('File saved: ', metadata['path'])
 	
 	metadata['modified'] = false
 	set_item_metadata(idx, metadata)
@@ -211,35 +207,73 @@ func close_file(idx = current):
 		return
 	
 	var metadata = get_item_metadata(idx)
+	var count = get_item_count()
 
-	if metadata['modified'] and idx != queued:
+	if metadata['modified'] and not idx in queued:
+		queued.append(idx)
 		confirmDialogue.popup_centered()
-		queued = idx
 		return
 	elif idx == current:
-		if get_item_count() == 1:
+		if count == 1:
 			current = -1
-		elif get_item_count() == current+1:
+		elif count == current+1:
 			current -= 1
 	
 	remove_item(idx)
 	emit_signal("closed")
 	
-	print('File closed: ', metadata['path'])
+	if editor._debug:
+		print('File closed: ', metadata['path'])
 	
 	if current > -1:
 		select(current)
 		emit_signal("switched", get_item_metadata(current)['dict'])
 
 
+func close_all():
+	# Check if any file is modified
+	var modified = false
+	for idx in range(get_item_count()):
+		if get_item_metadata(idx)['modified']:
+			modified = true
+			break
+	
+	# Store all files in queue, ask for confirmation
+	if modified:
+		queued.clear()
+		for idx in range(get_item_count()):
+			queued.push_front(idx)
+		confirmDialogue.popup_centered()
+		return
+	
+	# If none are modified, close all files
+	current = -1
+	for idx in range(get_item_count()):
+		close_file(0)
+
+
 func _on_confirmDialog_action(action):
-	if queued > -1:
-		match(action):
+	if len(queued) > 0:
+		match (action):
 			"save_file":
-				save_file(queued)
-				close_file(queued)
-				queued = -1
+				for idx in queued:
+					save_file(idx)
+					close_file(idx)
+					yield(get_tree(), "idle_frame")
 			"discard_file":
-				close_file(queued)
-				queued = -1
+				for idx in queued:
+					close_file(idx)
+					yield(get_tree(), "idle_frame")
 	confirmDialogue.hide()
+
+
+func _on_confirmDialog_hide():
+	queued.clear()
+
+
+func _on_rmb_clicked(pos):
+	popupMenu.popup(Rect2(rect_global_position + pos, popupMenu.rect_size))
+
+
+func _on_rmb_selected(_idx, pos):
+	popupMenu.popup(Rect2(rect_global_position + pos, popupMenu.rect_size))

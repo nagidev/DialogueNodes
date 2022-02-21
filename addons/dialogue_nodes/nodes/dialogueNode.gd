@@ -1,6 +1,6 @@
 tool
 extends GraphNode
-# TODO : fix size not handled correctly
+
 
 signal modified
 signal connection_move(old_slot, new_slot)
@@ -11,7 +11,6 @@ onready var speaker = $Speaker
 onready var dialogue = $Dialogue
 
 var options : Array = []
-var _new_size : Vector2
 
 func _ready():
 	for i in range(max_options):
@@ -22,9 +21,6 @@ func _ready():
 			option.connect("text_entered", self, "_on_option_entered", [options[0]])
 			option.connect("focus_exited", self, "_on_option_entered", ['', options[0]])
 			set_slot(option.get_index(), false, 0, Color.white, true, 0, Color.white)
-	
-	# bugfix : resize when deleting useless option
-	options[0].connect("tree_exited", self, "_on_resize", [_new_size, true])
 
 
 func add_option(new_text= ''):
@@ -63,7 +59,6 @@ func remove_option(option_node):
 
 
 func _update_slots():
-	
 	# turn off all slots whose options are empty
 	for i in range(len(options)):
 		set_slot(options[i].get_index(), false, 0, Color.white, (options[i].text != ''), 0, Color.white)
@@ -128,8 +123,8 @@ func _from_dict(graph, dict):
 	
 	# set size of node
 	if dict.has('size'):
-		_new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
-		_on_resize(_new_size, true)
+		var new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+		_on_resize(new_size, true)
 	
 	_update_slots()
 	 
@@ -155,7 +150,6 @@ func _on_resize(new_size, _loading = false):
 	new_size.x = max(new_size.x, rect_min_size.x)
 	new_size.y = max(new_size.y, rect_min_size.y)
 	
-	dialogue.rect_min_size.y = new_size.y - ( dialogue.rect_position.y + (options[0].rect_size.y * len(options)) + 6 )
 	rect_size = new_size
 	
 	if not _loading:
