@@ -1,11 +1,12 @@
 tool
 extends Control
-# TODO : 
+
 
 onready var fileMenu = $Main/ToolBar/FileMenu
 onready var addMenu = $Main/ToolBar/AddMenu
 onready var popupMenu = $Main/Workspace/Graph/PopupMenu
 onready var runMenu = $Main/ToolBar/RunMenu
+onready var debugMenu = $Main/ToolBar/DebugMenu
 onready var workspace = $Main/Workspace
 onready var graph = $Main/Workspace/Graph
 onready var side_panel = $Main/Workspace/SidePanel
@@ -20,6 +21,7 @@ onready var openDialogue = $OpenDialog
 var start_nodes = []
 var comment_nodes = []
 var _empty_dict = {'start': {}, 'comments': {}}
+var _debug = false
 
 
 func _ready():
@@ -28,6 +30,7 @@ func _ready():
 	addMenu.get_popup().connect("id_pressed", workspace, "add_node")
 	runMenu.get_popup().connect("id_pressed", self, "_on_run_menu_pressed")
 	fileMenu.get_popup().connect("id_pressed", self, "_on_file_menu_pressed")
+	debugMenu.get_popup().connect("id_pressed", self, "_on_debug_menu_pressed")
 
 
 func init_menus():
@@ -67,56 +70,6 @@ func _update_run_menu():
 	for start_node_name in start_nodes:
 		var ID = graph.get_node(start_node_name).ID
 		runMenu.get_popup().add_item(ID)
-
-
-func _on_run_menu_pressed(id):
-	var start_node = graph.get_node(start_nodes[int(id)])
-	
-	_run_tree(start_node)
-
-
-func _on_graph_visibility_changed():
-	addMenu.visible = graph.visible
-	runMenu.visible = graph.visible
-
-
-func _on_node_added(node_name):
-	var type = node_name.split('_')[0]
-	
-	match( type ):
-		'0':
-			start_nodes.append(node_name)
-			var node = graph.get_node(node_name)
-			node.connect("run_tree", self, "_run_tree", [node])
-		'2':
-			comment_nodes.append(node_name)
-
-
-func _on_node_deleted(node_name):
-	var type = node_name.split('_')[0]
-	
-	match( type ):
-		'0':
-			start_nodes.erase(node_name)
-		'2':
-			comment_nodes.erase(node_name)
-
-
-# File management
-func _on_file_menu_pressed(id):
-	
-	match( id ):
-		0:
-			newDialogue.popup_centered()
-		1:
-			openDialogue.popup_centered()
-		2:
-			files.save_file()
-		3:
-			if files.get_item_count() > 0:
-				saveDialogue.popup_centered()
-		4:
-			files.close_file()
 
 
 func get_dict():
@@ -201,25 +154,103 @@ func open_file(path):
 	files.open_file(path)
 
 
+func save_file(path, dict = get_dict()):
+	files.save_as_file(path, dict)
+
+
+func toggle_side_panel():
+	side_panel.visible = not side_panel.visible
+
+
+func _on_node_added(node_name):
+	var type = node_name.split('_')[0]
+	
+	match( type ):
+		'0':
+			start_nodes.append(node_name)
+			var node = graph.get_node(node_name)
+			node.connect("run_tree", self, "_run_tree", [node])
+		'2':
+			comment_nodes.append(node_name)
+
+
+func _on_node_deleted(node_name):
+	var type = node_name.split('_')[0]
+	
+	match( type ):
+		'0':
+			start_nodes.erase(node_name)
+		'2':
+			comment_nodes.erase(node_name)
+
+
+func _on_file_menu_pressed(id):
+	
+	match( id ):
+		0:
+			newDialogue.popup_centered()
+		1:
+			openDialogue.popup_centered()
+		2:
+			files.save_file()
+		3:
+			if files.get_item_count() > 0:
+				saveDialogue.popup_centered()
+		4:
+			files.close_file()
+			variables.remove_all_variables()
+		5:
+			files.close_all()
+			variables.remove_all_variables()
+
+
+func _on_file_popup_pressed(id):
+	match (id):
+		0:
+			# Save
+			files.save_file()
+		1:
+			# Save as
+			if files.get_item_count() > 0:
+				saveDialogue.popup_centered()
+		2:
+			# Close
+			files.close_file()
+			variables.remove_all_variables()
+		3:
+			# Close all
+			files.close_all()
+			variables.remove_all_variables()
+
+
 func _on_file_opened(dict):
 	open_dict(dict)
 	graph.show()
 	variables.show()
 
 
-func save_file(path, dict = get_dict()):
-	files.save_as_file(path, dict)
-
-
 func _on_file_request_dict(file_button):
 	file_button.dict = get_dict()
 
 
-# Side panel
-func toggle_side_panel():
-	side_panel.visible = not side_panel.visible
+func _on_run_menu_pressed(id):
+	var start_node = graph.get_node(start_nodes[int(id)])
+	
+	_run_tree(start_node)
 
 
-# Dialogue box
+func _on_debug_menu_pressed(id):
+	match (id):
+		0:
+			var popup = debugMenu.get_popup()
+			_debug = !_debug
+			popup.set_item_checked(id, _debug)
+
+
+func _on_graph_visibility_changed():
+	addMenu.visible = graph.visible
+	runMenu.visible = graph.visible
+
+
 func _on_dialogue_variable_changed(var_name, value):
 	variables.set_value(var_name, value)

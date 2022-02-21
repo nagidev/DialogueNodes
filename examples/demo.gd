@@ -1,5 +1,6 @@
 extends Control
 
+
 onready var dialogue_box = $DialogueBox
 onready var particles = $Particles
 

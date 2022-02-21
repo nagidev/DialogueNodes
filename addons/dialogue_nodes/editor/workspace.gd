@@ -1,6 +1,6 @@
 tool
 extends HSplitContainer
-# TODO : long file names make side panel un-resizeable
+
 
 signal node_added(node_name)
 signal node_deleted(node_name)

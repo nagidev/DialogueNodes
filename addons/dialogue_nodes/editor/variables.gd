@@ -1,6 +1,7 @@
 tool
 extends VBoxContainer
 
+
 signal modified
 
 
@@ -60,6 +61,12 @@ func remove_variable(variable):
 	_on_modified()
 
 
+func remove_all_variables():
+	for child in get_children():
+		if child is HBoxContainer:
+			remove_variable(child)
+
+
 func get_variable(var_name):
 	for child in get_children():
 		if child is HBoxContainer and child.get_node('Name').text == var_name:
@@ -94,9 +101,7 @@ func to_dict():
 
 func from_dict(dict):
 	# remove old variables
-	for child in get_children():
-		if child is HBoxContainer:
-			remove_variable(child)
+	remove_all_variables()
 	
 	# add values
 	for var_name in dict:
