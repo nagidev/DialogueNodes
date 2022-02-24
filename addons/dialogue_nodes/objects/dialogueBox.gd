@@ -74,6 +74,11 @@ func _enter_tree():
 func _ready():
 	if dict:
 		init_variables(dict['variables'])
+	
+	for effect in custom_effects:
+		if effect is RichTextWait:
+			effect.connect("wait_finished", self, "show_options")
+			break
 
 
 func load_file(path):
@@ -178,6 +183,7 @@ func set_dialogue(dict):
 	dialogue.bbcode_text = process_text(dict['dialogue'])
 	
 	# hide all options
+	options.hide()
 	for option in options.get_children():
 		option.icon = null
 		option.hide()
@@ -185,7 +191,7 @@ func set_dialogue(dict):
 	# set options
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
-		option.text = process_text(dict['options'][idx]['text'])
+		option.text = process_text(dict['options'][idx]['text'], false)
 		if option.is_connected('pressed', self, 'proceed'):
 			option.disconnect("pressed", self, 'proceed')
 		option.connect("pressed", self, 'proceed', [dict['options'][idx]['link']])
@@ -194,29 +200,33 @@ func set_dialogue(dict):
 	# if single empty option
 	if len(dict['options']) == 1 and options.get_child(0).text == '':
 		options.get_child(0).icon = next_icon
+
+
+func process_text(text : String, is_dialogue = true):
+	# Fill if empty
+	if text == '' and is_dialogue:
+		text = ' '
 	
-	# wait some time then grab focus
-	yield(get_tree().create_timer(0.5), "timeout")
-	options.get_child(0).grab_focus()
-
-
-func process_text(text : String):
-	for i in range(text.count('{{')):
-		# Find tag position
-		var tag_start = text.find('{{')+2
-		var tag_len = text.find('}}') - tag_start
-		
-		# Find variable value
-		var var_name = text.substr(tag_start, tag_len)
-		var value = 'undefined'
-		if variables.has(var_name):
-			value = variables[var_name]
-		
-		# Remove tag
-		text.erase(tag_start-2, tag_len+4)
-		
-		# Insert value
-		text = text.insert(tag_start-2, value)
+	# Add variables
+	text = text.format(variables, '{{_}}')
+	
+	# Add a wait if none present
+	if text.count('[wait') == 0 and is_dialogue:
+		text = '[wait]' + text + '[/wait]'
+	
+	# Update [wait] with last attribute for showing options
+	# Find the actual position of the last character sans bbcode
+	var last := text.length()-1
+	var find_pos = 0
+	for i in range(text.count(']')):
+		var tag_start = text.findn('[', find_pos)
+		var tag_end = text.findn(']', find_pos)
+		var tag_len = (tag_end - tag_start) +1
+		find_pos = tag_end + 1
+		last -= tag_len
+	last -= text.count('\n')
+	# Update tags
+	text = text.replace('[wait', '[wait last='+str(last))
 	
 	return text
 
@@ -313,6 +323,11 @@ func handle_condition(cond_dict):
 	
 	# Proceed
 	proceed(cond_dict[str(result).to_lower()])
+
+
+func show_options():
+	options.show()
+	options.get_child(0).grab_focus()
 
 
 func _set_options_alignment(value):

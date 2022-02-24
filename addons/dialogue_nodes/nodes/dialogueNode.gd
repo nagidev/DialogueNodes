@@ -21,6 +21,7 @@ func _ready():
 			option.connect("text_entered", self, "_on_option_entered", [options[0]])
 			option.connect("focus_exited", self, "_on_option_entered", ['', options[0]])
 			set_slot(option.get_index(), false, 0, Color.white, true, 0, Color.white)
+	dialogue.add_color_region('[', ']', Color('a5efac'))
 
 
 func add_option(new_text= ''):
