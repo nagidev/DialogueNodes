@@ -74,6 +74,8 @@ rect_min_size = Vector2( 0, 91 )
 hint_tooltip = "The dialogue displayed in the DialogueBox.
 Use [bbcodes] to add extra effects to your dialogue."
 size_flags_vertical = 3
+syntax_highlighting = true
+highlight_all_occurrences = true
 wrap_enabled = true
 
 [node name="Option1" type="LineEdit" parent="."]
