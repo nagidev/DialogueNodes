@@ -307,7 +307,7 @@ func handle_condition(cond_dict):
 	
 	# Perform operation
 	var result : bool = false
-	match cond_dict['operator']:
+	match int(cond_dict['operator']):
 		0:
 			result = value1 == value2
 		1:
