@@ -1,177 +1,10 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=1]
 [ext_resource path="res://examples/demo.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
-[ext_resource path="res://examples/Montserrat-Regular.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/dialogue_nodes/themes/bubbly.theme" type="Theme" id=4]
 [ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=5]
-
-[sub_resource type="StyleBoxFlat" id=2]
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0.162, 0.198, 0.225, 1 )
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color( 0.126, 0.154, 0.175, 1 )
-
-[sub_resource type="StyleBoxFlat" id=3]
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0, 0, 0, 1 )
-draw_center = false
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.752941, 0.796078, 0.862745, 1 )
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=4]
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0.352941, 0.411765, 0.533333, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.545098, 0.607843, 0.705882, 1 )
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=5]
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0.227451, 0.266667, 0.4, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.352941, 0.411765, 0.533333, 1 )
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=6]
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color( 0.227451, 0.266667, 0.4, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0, 0, 0, 1 )
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-expand_margin_left = 4.0
-expand_margin_right = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxEmpty" id=7]
-content_margin_left = 4.0
-content_margin_right = 4.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id=8]
-content_margin_left = 8.0
-content_margin_right = 8.0
-content_margin_top = 8.0
-content_margin_bottom = 8.0
-bg_color = Color( 0.0941176, 0.0784314, 0.145098, 1 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.14902, 0.168627, 0.266667, 1 )
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-shadow_color = Color( 0, 0, 0, 0.12549 )
-shadow_size = 8
-shadow_offset = Vector2( 0, 4 )
-
-[sub_resource type="StyleBoxEmpty" id=9]
-
-[sub_resource type="StyleBoxFlat" id=10]
-content_margin_left = 4.0
-content_margin_right = 4.0
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-draw_center = false
-border_color = Color( 0.09, 0.11, 0.125, 1 )
-
-[sub_resource type="DynamicFont" id=12]
-font_data = ExtResource( 4 )
-
-[sub_resource type="Theme" id=11]
-default_font = SubResource( 12 )
-Button/colors/font_color = Color( 1, 1, 1, 1 )
-Button/colors/font_color_disabled = Color( 1, 1, 1, 0.3 )
-Button/colors/font_color_focus = Color( 1, 1, 1, 1 )
-Button/colors/font_color_hover = Color( 1, 1, 1, 1 )
-Button/colors/font_color_pressed = Color( 0.752941, 0.796078, 0.862745, 1 )
-Button/colors/icon_color_hover = Color( 1, 1, 1, 1 )
-Button/colors/icon_color_pressed = Color( 0.752941, 0.796078, 0.862745, 1 )
-Button/styles/disabled = SubResource( 2 )
-Button/styles/focus = SubResource( 3 )
-Button/styles/hover = SubResource( 4 )
-Button/styles/normal = SubResource( 5 )
-Button/styles/pressed = SubResource( 6 )
-HBoxContainer/constants/separation = 16
-Label/colors/font_color = Color( 0, 0.6, 0.858824, 1 )
-Label/colors/font_color_shadow = Color( 0, 0, 0, 0 )
-Label/constants/line_spacing = 3
-Label/constants/shadow_as_outline = 0
-Label/constants/shadow_offset_x = 1
-Label/constants/shadow_offset_y = 1
-Label/styles/normal = SubResource( 7 )
-MarginContainer/constants/margin_bottom = 8
-MarginContainer/constants/margin_left = 8
-MarginContainer/constants/margin_right = 8
-MarginContainer/constants/margin_top = 8
-PopupDialog/styles/panel = SubResource( 8 )
-RichTextLabel/colors/default_color = Color( 1, 1, 1, 1 )
-RichTextLabel/colors/font_color_shadow = Color( 0, 0, 0, 0 )
-RichTextLabel/constants/shadow_as_outline = 0
-RichTextLabel/constants/shadow_offset_x = 1
-RichTextLabel/constants/shadow_offset_y = 1
-RichTextLabel/styles/focus = SubResource( 9 )
-RichTextLabel/styles/normal = SubResource( 10 )
-VBoxContainer/constants/separation = 4
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.71435, 0.0, 0, 0 ]
@@ -182,7 +15,7 @@ script = ExtResource( 5 )
 [node name="Demo" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = SubResource( 11 )
+theme = ExtResource( 4 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -224,13 +57,14 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 margin_left = -269.0
-margin_top = -170.0
+margin_top = -180.0
 margin_right = 269.0
+margin_bottom = -28.0
 rect_min_size = Vector2( 300, 72 )
 popup_exclusive = true
 script = ExtResource( 1 )
-dialogue_file = "res://examples/Example1.json"
-start_id = "START"
+dialogue_file = "res://examples/Example4.json"
+start_id = "SIGNALS"
 custom_effects = [ SubResource( 13 ) ]
 
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

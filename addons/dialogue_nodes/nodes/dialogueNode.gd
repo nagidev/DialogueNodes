@@ -71,6 +71,7 @@ func _update_slots():
 func _to_dict(graph):
 	var dict = {}
 	
+	speaker.text = speaker.text.replace("{", "").replace("}", "")
 	dict['speaker'] = speaker.text
 	dict['dialogue'] = dialogue.text
 	dict['size'] = {}

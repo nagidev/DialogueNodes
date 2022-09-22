@@ -12,3 +12,4 @@ exports/DialogueNodes.pck
 exports/exports.zip
 
 # Project-specific ignores
+*.import
