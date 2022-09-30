@@ -81,6 +81,11 @@ func _ready():
 			break
 
 
+func _input(event):
+	if Input.is_action_just_pressed("ui_accept"):
+		custom_effects[0].skip = true
+
+
 func load_file(path):
 	dialogue_file = path
 	
@@ -181,6 +186,7 @@ func stop():
 func set_dialogue(dict):
 	speaker.text = dict['speaker']
 	dialogue.bbcode_text = process_text(dict['dialogue'])
+	custom_effects[0].skip = false
 	
 	# hide all options
 	options.hide()
