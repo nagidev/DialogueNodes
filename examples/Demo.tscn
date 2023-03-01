@@ -20,20 +20,31 @@ script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+demos = [ "res://examples/Example1.json", "res://examples/Example2.json", "res://examples/Example3.json", "res://examples/Example4.json" ]
+
+[node name="DemoSelector" type="OptionButton" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -67.0
+margin_top = 131.714
+margin_right = 68.0
+margin_bottom = 167.714
 
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -42.0
-margin_top = -11.0
-margin_right = 42.0
-margin_bottom = 11.0
+margin_left = -52.0
+margin_top = 193.214
+margin_right = 52.0
+margin_bottom = 224.214
 text = "Start Demo"
 
 [node name="Particles" type="CPUParticles2D" parent="."]
-position = Vector2( 527.817, 268.304 )
+position = Vector2( 508.747, 200.498 )
 emitting = false
 amount = 64
 one_shot = true
@@ -63,9 +74,10 @@ margin_bottom = -28.0
 rect_min_size = Vector2( 300, 72 )
 popup_exclusive = true
 script = ExtResource( 1 )
-dialogue_file = "res://examples/Example4.json"
-start_id = "SIGNALS"
+dialogue_file = "res://examples/Example1.json"
+start_id = "START"
 custom_effects = [ SubResource( 13 ) ]
 
+[connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]

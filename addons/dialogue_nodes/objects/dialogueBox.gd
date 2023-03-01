@@ -262,7 +262,7 @@ func set_variable(var_name, type, value, operator = 0):
 		TYPE_REAL:
 			value = float(value)
 		TYPE_BOOL:
-			value = bool(value)
+			value = (value == "true")
 	
 	# Perform operation
 	match operator:
@@ -308,8 +308,8 @@ func handle_condition(cond_dict):
 			value1 = float(value1)
 			value2 = float(value2)
 		TYPE_BOOL:
-			value1 = bool(value1)
-			value2 = bool(value2)
+			value1 = (value1 == "true") if value1 is String else value1
+			value2 = (value2 == "true") if value2 is String else value2
 	
 	# Perform operation
 	var result : bool = false
