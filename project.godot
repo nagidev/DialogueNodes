@@ -34,10 +34,6 @@ config/icon="res://icon.png"
 
 window/handheld/orientation="sensor"
 
-[editor_plugins]
-
-enabled=PoolStringArray( "res://addons/dialogue_nodes/plugin.cfg" )
-
 [rendering]
 
 quality/driver/driver_name="GLES2"
