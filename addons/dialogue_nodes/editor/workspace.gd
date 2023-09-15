@@ -146,10 +146,9 @@ func _on_nodes_duplicated():
 			add_node(-1, child)
 
 
-func _on_nodes_delete():
-	for child in graph.get_children():
-		if child is GraphNode and child.is_selected():
-			remove_node(child)
+func _on_nodes_delete(node_names):
+	for node_name in node_names:
+		remove_node(graph.get_node(NodePath(node_name)))
 
 
 func _select_all_nodes(select = true):

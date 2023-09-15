@@ -17,9 +17,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 4 )
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 demos = [ "res://examples/Example1.json", "res://examples/Example2.json", "res://examples/Example3.json", "res://examples/Example4.json" ]
 
 [node name="DemoSelector" type="OptionButton" parent="."]
