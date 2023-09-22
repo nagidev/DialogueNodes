@@ -1,4 +1,4 @@
-tool
+@tool
 extends GraphEdit
 # TODO : find some way to discard arguments from signals
 
@@ -15,4 +15,4 @@ func get_next(node_name):
 
 
 func _on_modified( _a=0, _b=0, _c=0, _d=0 ):
-	emit_signal("modified")
+	modified.emit()

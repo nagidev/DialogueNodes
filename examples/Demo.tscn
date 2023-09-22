@@ -1,50 +1,60 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=8 format=3 uid="uid://bwk7tjlhnu23j"]
 
-[ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=1]
-[ext_resource path="res://examples/demo.gd" type="Script" id=2]
-[ext_resource path="res://icon.png" type="Texture" id=3]
-[ext_resource path="res://addons/dialogue_nodes/themes/bubbly.theme" type="Theme" id=4]
-[ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=5]
+[ext_resource type="Script" path="res://examples/demo.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://banj0dmrk5t1e" path="res://icon.png" id="3"]
+[ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="4"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="8_kplwy"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="9_4rd6n"]
 
-[sub_resource type="Curve" id=1]
-_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.71435, 0.0, 0, 0 ]
+[sub_resource type="Curve" id="1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -2.71435, 0.0, 0, 0]
+point_count = 2
 
-[sub_resource type="RichTextEffect" id=13]
-script = ExtResource( 5 )
+[sub_resource type="RichTextEffect" id="RichTextEffect_fpwbw"]
+script = ExtResource("9_4rd6n")
 
 [node name="Demo" type="Control"]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme = ExtResource( 4 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-demos = [ "res://examples/Example1.json", "res://examples/Example2.json", "res://examples/Example3.json", "res://examples/Example4.json" ]
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("4")
+script = ExtResource("2")
 
 [node name="DemoSelector" type="OptionButton" parent="."]
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -67.0
-margin_top = 131.714
-margin_right = 68.0
-margin_bottom = 167.714
+offset_left = -67.5
+offset_top = -62.0
+offset_right = 67.5
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -52.0
-margin_top = 193.214
-margin_right = 52.0
-margin_bottom = 224.214
+offset_left = -52.0
+offset_top = 56.5
+offset_right = 52.0
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "Start Demo"
 
 [node name="Particles" type="CPUParticles2D" parent="."]
-position = Vector2( 508.747, 200.498 )
+position = Vector2(508.747, 200.498)
 emitting = false
 amount = 64
 one_shot = true
@@ -52,31 +62,33 @@ speed_scale = 1.5
 explosiveness = 0.9
 randomness = 0.2
 lifetime_randomness = 0.5
-texture = ExtResource( 3 )
+texture = ExtResource("3")
 emission_shape = 1
 emission_sphere_radius = 32.0
-direction = Vector2( 0, 0 )
+direction = Vector2(0, 0)
 spread = 180.0
-gravity = Vector2( 0, 0 )
-initial_velocity = 200.0
-initial_velocity_random = 0.5
-scale_amount_curve = SubResource( 1 )
+gravity = Vector2(0, 0)
+scale_amount_curve = SubResource("1")
 
-[node name="DialogueBox" type="PopupDialog" parent="."]
+[node name="DialogueBox" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 1
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -269.0
-margin_top = -180.0
-margin_right = 269.0
-margin_bottom = -28.0
-rect_min_size = Vector2( 300, 72 )
-popup_exclusive = true
-script = ExtResource( 1 )
+offset_left = -404.0
+offset_top = -215.0
+offset_right = 409.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("8_kplwy")
 dialogue_file = "res://examples/Example1.json"
 start_id = "START"
-custom_effects = [ SubResource( 13 ) ]
+custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_fpwbw")])
 
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]

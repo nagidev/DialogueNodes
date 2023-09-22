@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://addons/dialogue_nodes/icons/Play.svg" type="Texture" id=1]
+[ext_resource path="res://addons/dialogue_nodes/icons/Play.svg" type="Texture2D" id=1]
 [ext_resource path="res://addons/dialogue_nodes/nodes/startNode.gd" type="Script" id=2]
 
 [node name="StartNode" type="GraphNode"]
-margin_right = 180.0
-margin_bottom = 60.0
+offset_right = 180.0
+offset_bottom = 60.0
 title = "Start"
 show_close = true
 slot/0/left_enabled = false
@@ -20,30 +20,30 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
-margin_left = 16.0
-margin_top = 24.0
-margin_right = 164.0
-margin_bottom = 48.0
+offset_left = 16.0
+offset_top = 24.0
+offset_right = 164.0
+offset_bottom = 48.0
 
 [node name="RunButton" type="Button" parent="HBoxContainer"]
-margin_right = 28.0
-margin_bottom = 24.0
-hint_tooltip = "Run this tree."
+offset_right = 28.0
+offset_bottom = 24.0
+tooltip_text = "Run this tree."
 icon = ExtResource( 1 )
 flat = true
 
 [node name="IDLabel" type="Label" parent="HBoxContainer"]
-margin_left = 32.0
-margin_top = 5.0
-margin_right = 47.0
-margin_bottom = 19.0
+offset_left = 32.0
+offset_top = 5.0
+offset_right = 47.0
+offset_bottom = 19.0
 text = "ID"
 
 [node name="ID" type="LineEdit" parent="HBoxContainer"]
-margin_left = 51.0
-margin_right = 148.0
-margin_bottom = 24.0
-hint_tooltip = "Required field.
+offset_left = 51.0
+offset_right = 148.0
+offset_bottom = 24.0
+tooltip_text = "Required field.
 The ID is used to identify each tree in a dialogue tree."
 size_flags_horizontal = 3
 

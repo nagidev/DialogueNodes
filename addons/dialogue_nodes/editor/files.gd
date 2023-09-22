@@ -1,4 +1,4 @@
-tool
+@tool
 extends ItemList
 
 
@@ -6,13 +6,13 @@ signal opened(dict)
 signal switched(dict)
 signal closed
 
-export (NodePath) var editor_path
-export (NodePath) var newDialogue_path
-export (NodePath) var saveDialogue_path
-export (NodePath) var openDialogue_path
-export (NodePath) var confirmDialogue_path
+@export var editor_path: NodePath
+@export var newDialogue_path: NodePath
+@export var saveDialogue_path: NodePath
+@export var openDialogue_path: NodePath
+@export var confirmDialogue_path: NodePath
 
-onready var popupMenu = $PopupMenu
+@onready var popupMenu = $PopupMenu
 
 var script_icon = preload("res://addons/dialogue_nodes/icons/Script.svg")
 var editor
@@ -33,10 +33,10 @@ func _ready():
 	confirmDialogue = get_node(confirmDialogue_path)
 	
 	##
-	confirmDialogue.get_ok().hide()
+	confirmDialogue.get_ok_button().hide()
 	confirmDialogue.add_button("Save", true, "save_file")
 	confirmDialogue.add_button("Discard", true, "discard_file")
-	confirmDialogue.add_cancel("Cancel")
+	confirmDialogue.add_cancel_button("Cancel")
 	
 	current = -1
 	queued = []
@@ -115,7 +115,7 @@ func select_file(idx):
 	current = idx
 	var dict = get_item_metadata(current)['dict']
 	select(current)
-	emit_signal("switched", dict)
+	switched.emit(dict)
 
 
 func modify_file(idx = current):
@@ -135,15 +135,16 @@ func new_file(path):
 	create_file(file_name, file_dir, dict)
 	save_file(current)
 	
-	emit_signal("switched", dict)
+	switched.emit(dict)
 
 
 func open_file(path, internal = false):
 	# open/read file
-	var file = File.new()
-	file.open(path, File.READ)
+	var file = FileAccess.open(path, FileAccess.READ)
 	
-	var dict = parse_json(file.get_as_text())
+	var test_json_conv = JSON.new()
+	test_json_conv.parse(file.get_as_text())
+	var dict = test_json_conv.get_data()
 	file.close()
 	
 	var file_name : String
@@ -160,7 +161,7 @@ func open_file(path, internal = false):
 	var file_idx = create_file(file_name, file_dir, dict)
 	
 	if not internal:
-		emit_signal("opened", get_item_metadata(file_idx)['dict'])
+		opened.emit(get_item_metadata(file_idx)['dict'])
 
 
 func save_file(idx = current):
@@ -173,11 +174,10 @@ func save_file(idx = current):
 		metadata['dict'] = editor.get_dict()
 		set_item_metadata(current, metadata)
 	
-	var file = File.new()
-	file.open(metadata['path'], File.WRITE)
+	var file = FileAccess.open(metadata['path'], FileAccess.WRITE)
 	
 	# save dict to json file	
-	file.store_line(to_json(metadata['dict']))
+	file.store_line(JSON.new().stringify(metadata['dict']))
 	file.close()
 	
 	if editor._debug:
@@ -194,7 +194,7 @@ func save_as_file(path, dict):
 	
 	create_file(file_name, file_dir, dict)
 	save_file(current)
-	emit_signal("switched", dict)
+	switched.emit(dict)
 
 
 func save_all():
@@ -220,14 +220,14 @@ func close_file(idx = current):
 			current -= 1
 	
 	remove_item(idx)
-	emit_signal("closed")
+	closed.emit()
 	
 	if editor._debug:
 		print('File closed: ', metadata['path'])
 	
 	if current > -1:
 		select(current)
-		emit_signal("switched", get_item_metadata(current)['dict'])
+		switched.emit(get_item_metadata(current)['dict'])
 
 
 func close_all():
@@ -259,11 +259,10 @@ func _on_confirmDialog_action(action):
 				for idx in queued:
 					save_file(idx)
 					close_file(idx)
-					yield(get_tree(), "idle_frame")
+					await get_tree().idle_frame
 			"discard_file":
 				for idx in queued:
 					close_file(idx)
-					yield(get_tree(), "idle_frame")
 	confirmDialogue.hide()
 
 
@@ -271,9 +270,11 @@ func _on_confirmDialog_hide():
 	queued.clear()
 
 
-func _on_rmb_clicked(pos):
-	popupMenu.popup(Rect2(rect_global_position + pos, popupMenu.rect_size))
+func _on_empty_clicked(at_pos, mouse_button_index):
+	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		popupMenu.popup(Rect2(global_position + at_pos, popupMenu.size))
 
 
-func _on_rmb_selected(_idx, pos):
-	popupMenu.popup(Rect2(rect_global_position + pos, popupMenu.rect_size))
+func _on_item_clicked(index, at_pos, mouse_button_index):
+	if mouse_button_index == MOUSE_BUTTON_RIGHT:
+		popupMenu.popup(Rect2(global_position + at_pos, popupMenu.size))

@@ -1,4 +1,4 @@
-tool
+@tool
 extends GraphNode
 
 
@@ -6,9 +6,9 @@ enum {STRING, INT, FLOAT, BOOL}
 
 signal modified
 
-onready var variable = $HBoxContainer/Variable
-onready var type = $HBoxContainer/Type
-onready var value = $HBoxContainer/Value
+@onready var variable = $HBoxContainer/Variable
+@onready var type = $HBoxContainer/Type
+@onready var value = $HBoxContainer/Value
 
 
 func _to_dict(graph):
@@ -48,4 +48,4 @@ func set_value(_new_val):
 
 
 func _on_modified():
-	emit_signal("modified")
+	modified.emit()

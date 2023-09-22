@@ -13,3 +13,4 @@ exports/exports.zip
 
 # Project-specific ignores
 *.import
+.godot

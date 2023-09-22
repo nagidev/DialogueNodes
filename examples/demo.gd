@@ -1,15 +1,21 @@
 extends Control
 
-export (Array, String, FILE, "*.json") var demos
+var demos: Array[String] = [
+	"res://examples/Example1.json",
+	"res://examples/Example2.json",
+	"res://examples/Example3.json",
+	"res://examples/Example4.json"
+]
 
-onready var dialogue_box = $DialogueBox
-onready var particles = $Particles
+@onready var dialogue_box = $DialogueBox
+@onready var particles = $Particles
 
 
 func _ready():
 	for file in demos:
 		var label = file.split("/")[-1].split(".")[0]
 		$DemoSelector.add_item(label)
+	pass
 
 
 func explode(_a=0):
@@ -27,4 +33,5 @@ func _on_dialogue_signal(value):
 
 
 func _on_demo_selected(index):
+	print("loading file:", demos[index])
 	dialogue_box.load_file(demos[index])
