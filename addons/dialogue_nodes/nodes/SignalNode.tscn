@@ -3,8 +3,8 @@
 [ext_resource path="res://addons/dialogue_nodes/nodes/signalNode.gd" type="Script" id=1]
 
 [node name="SignalNode" type="GraphNode"]
-margin_right = 200.0
-margin_bottom = 60.0
+offset_right = 200.0
+offset_bottom = 60.0
 title = "Signal"
 show_close = true
 slot/0/left_enabled = true
@@ -19,11 +19,11 @@ __meta__ = {
 }
 
 [node name="SignalValue" type="LineEdit" parent="."]
-margin_left = 16.0
-margin_top = 24.0
-margin_right = 184.0
-margin_bottom = 48.0
-hint_tooltip = "The String value passed in the signal parameter."
+offset_left = 16.0
+offset_top = 24.0
+offset_right = 184.0
+offset_bottom = 48.0
+tooltip_text = "The String value passed in the signal parameter."
 placeholder_text = "Value"
 
 [connection signal="text_changed" from="SignalValue" to="." method="_on_node_modified"]

@@ -1,5 +1,5 @@
-tool
-extends PopupDialog
+@tool
+extends Panel
 class_name DialogueBox
 
 
@@ -9,28 +9,27 @@ signal dialogue_signal(value)
 signal dialogue_ended
 signal variable_changed(var_name, value)
 
-export (String, FILE, "*.json; Dialogue JSON File") var dialogue_file setget load_file
-export (String) var start_id
-export (int, 1, 8) var max_options = 4
-export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_options_alignment
-export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
+@export_file("*.json") var dialogue_file : set = load_file
+@export var start_id: String
+@export_range(1, 8) var max_options = 4
+@export_enum('Begin', 'Center', 'End') var options_alignment = 2: set = _set_options_alignment
+@export var custom_effects : Array[RichTextEffect] = [RichTextWait.new()]
 
 var speaker : Label
 var dialogue : RichTextLabel
 var options : HBoxContainer
-var dict = null setget set_dict
+var dict = null: set = set_dict
 var variables = {}
 var running = false
 var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
 
 
 func _enter_tree():
-	# setup popup properties
-	popup_exclusive = true
-	rect_min_size = Vector2(300, 72)
-	
 	## dialogue box setup code ##
 	# note : edit the code below to change the layout of your dialogue box
+	
+	# setup dialog panel
+	custom_minimum_size = Vector2(256, 128)
 	
 	# setup containers
 	var margin_container = MarginContainer.new()
@@ -39,10 +38,10 @@ func _enter_tree():
 	margin_container.anchor_top = 0
 	margin_container.anchor_right = 1
 	margin_container.anchor_bottom = 1
-	margin_container.margin_left = 4
-	margin_container.margin_top = 4
-	margin_container.margin_right = -4
-	margin_container.margin_bottom = -4
+	margin_container.offset_left = 4
+	margin_container.offset_top = 4
+	margin_container.offset_right = -4
+	margin_container.offset_bottom = -4
 	
 	var vbox_container = VBoxContainer.new()
 	margin_container.add_child(vbox_container)
@@ -54,10 +53,10 @@ func _enter_tree():
 	
 	dialogue = RichTextLabel.new()
 	vbox_container.add_child(dialogue)
-	dialogue.bbcode_text = 'Sample dialogue.\nLoad a [u]dialogue file[/u].'
+	dialogue.text = 'Sample dialogue.\nLoad a [u]dialogue file[/u].'
 	dialogue.scroll_following = true
 	dialogue.bbcode_enabled = true
-	dialogue.size_flags_vertical = SIZE_EXPAND_FILL
+	dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	dialogue.custom_effects = custom_effects
 	
 	# setup options
@@ -72,12 +71,14 @@ func _enter_tree():
 
 
 func _ready():
+	hide()
+	
 	if dict:
 		init_variables(dict['variables'])
 	
 	for effect in custom_effects:
 		if effect is RichTextWait:
-			effect.connect("wait_finished", self, "show_options")
+			effect.wait_finished.connect(show_options)
 			break
 
 
@@ -92,9 +93,10 @@ func load_file(path):
 	if path == '':
 		dict = null
 	else:
-		var file = File.new()
-		file.open(path, File.READ)
-		dict = parse_json(file.get_as_text())
+		var file = FileAccess.open(path, FileAccess.READ)
+		var test_json_conv = JSON.new()
+		test_json_conv.parse(file.get_as_text())
+		dict = test_json_conv.get_data()
 		file.close()
 		
 		if typeof(dict) != TYPE_DICTIONARY:
@@ -128,7 +130,7 @@ func start(id = start_id):
 	
 	running = true
 	proceed(dict['start'][id])
-	emit_signal("dialogue_started", id)
+	dialogue_started.emit(id)
 
 
 func proceed(idx):
@@ -142,14 +144,14 @@ func proceed(idx):
 	match(type):
 		'0':
 			# start
-			popup()
+			show()
 			proceed(dict[idx]['link'])
 		'1':
 			# dialogue
 			set_dialogue(dict[idx])
 		'3':
 			# signal
-			emit_signal('dialogue_signal', dict[idx]['signalValue'])
+			dialogue_signal.emit(dict[idx]['signalValue'])
 			proceed(dict[idx]['link'])
 		'4':
 			# set
@@ -163,7 +165,7 @@ func proceed(idx):
 			set_variable(var_name, var_type, value, operator)
 			
 			if variables.has(var_name):
-				emit_signal("variable_changed", var_name, variables[var_name])
+				variable_changed.emit(var_name, variables[var_name])
 			
 			proceed(var_dict['link'])
 		'5':
@@ -174,18 +176,19 @@ func proceed(idx):
 				proceed(dict[idx]['link'])
 			else:
 				stop()
-	emit_signal("dialogue_proceeded")
+	dialogue_proceeded.emit()
 
 
 func stop():
 	running = false
+	dialogue.text = ""
 	hide()
-	emit_signal("dialogue_ended")
+	dialogue_ended.emit()
 
 
 func set_dialogue(dict):
 	speaker.text = dict['speaker']
-	dialogue.bbcode_text = process_text(dict['dialogue'])
+	dialogue.text = process_text(dict['dialogue'])
 	custom_effects[0].skip = false
 	
 	# hide all options
@@ -198,9 +201,9 @@ func set_dialogue(dict):
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
 		option.text = process_text(dict['options'][idx]['text'], false)
-		if option.is_connected('pressed', self, 'proceed'):
-			option.disconnect("pressed", self, 'proceed')
-		option.connect("pressed", self, 'proceed', [dict['options'][idx]['link']])
+		if option.is_connected('pressed', Callable(self, 'proceed')):
+			option.disconnect("pressed", Callable(self, 'proceed'))
+		option.connect("pressed", Callable(self, 'proceed').bind(dict['options'][idx]['link']))
 		option.show()
 	
 	# if single empty option
@@ -222,17 +225,42 @@ func process_text(text : String, is_dialogue = true):
 	
 	# Update [wait] with last attribute for showing options
 	# Find the actual position of the last character sans bbcode
-	var last := text.length()-1
-	var find_pos = 0
-	for i in range(text.count(']')):
-		var tag_start = text.findn('[', find_pos)
-		var tag_end = text.findn(']', find_pos)
-		var tag_len = (tag_end - tag_start) +1
-		find_pos = tag_end + 1
-		last -= tag_len
-	last -= text.count('\n')
-	# Update tags
-	text = text.replace('[wait', '[wait last='+str(last))
+	var regex = RegEx.new()
+	regex.compile("\\[.*?\\]")
+	var textLength = regex.sub(text, "", true).length()
+	
+	var idx = 0
+	var char_idx = -1
+	var char_count = 0
+	var waits = []
+	while idx < text.length():
+		match text[idx]:
+			'[':
+				var open_tag_start = text.findn('[wait', idx)
+				var open_tag_end = text.findn(']', idx)
+				var end_tag = text.findn('[/wait]', idx)
+				
+				if open_tag_start == idx:
+					var start = char_idx + 1
+					waits.push_back({ "at": open_tag_end, "start": start })
+					idx = open_tag_end + 1
+				elif end_tag == idx:
+					var start_data = waits.pop_back()
+					var insertText = ' start='+str(start_data.start)+' last='+str(char_count - 1)+' length='+str(textLength)
+					text = text.insert(start_data.at, insertText)
+					idx = end_tag + insertText.length() + 7
+				else:
+					idx = open_tag_end + 1
+			_:
+				idx += 1
+				char_idx += 1
+				char_count += 1
+	
+	# insert waits if any left
+	while len(waits) > 0:
+		var start_data = waits.pop_back()
+		var insertText = ' start='+str(start_data.start)+' last='+str(char_count - 1)+' length='+str(textLength)
+		text = text.insert(start_data.at, insertText)
 	
 	return text
 
@@ -259,7 +287,7 @@ func set_variable(var_name, type, value, operator = 0):
 			value = str(value)
 		TYPE_INT:
 			value = int(value)
-		TYPE_REAL:
+		TYPE_FLOAT:
 			value = float(value)
 		TYPE_BOOL:
 			value = (value == "true")
@@ -304,7 +332,7 @@ func handle_condition(cond_dict):
 		TYPE_INT:
 			value1 = int(value1)
 			value2 = int(value2)
-		TYPE_REAL:
+		TYPE_FLOAT:
 			value1 = float(value1)
 			value2 = float(value2)
 		TYPE_BOOL:

@@ -1,105 +1,125 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=17 format=3 uid="uid://bqscglixmr4bd"]
 
-[ext_resource path="res://addons/dialogue_nodes/editor/editor.gd" type="Script" id=1]
-[ext_resource path="res://addons/dialogue_nodes/editor/graph.gd" type="Script" id=2]
-[ext_resource path="res://addons/dialogue_nodes/icons/Back.svg" type="Texture" id=3]
-[ext_resource path="res://addons/dialogue_nodes/icons/Forward.svg" type="Texture" id=4]
-[ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=5]
-[ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=6]
-[ext_resource path="res://addons/dialogue_nodes/editor/workspace.gd" type="Script" id=7]
-[ext_resource path="res://addons/dialogue_nodes/editor/files.gd" type="Script" id=9]
-[ext_resource path="res://addons/dialogue_nodes/editor/variables.gd" type="Script" id=10]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="3"]
+[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/StartNode.tscn" id="3_kc00i"]
+[ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="4"]
+[ext_resource type="PackedScene" uid="uid://b60fa8vcjuoo6" path="res://addons/dialogue_nodes/nodes/DialogueNode.tscn" id="4_byype"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="5"]
+[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/SignalNode.tscn" id="5_6axxc"]
+[ext_resource type="PackedScene" uid="uid://3ofh51q0vhmg" path="res://addons/dialogue_nodes/nodes/ConditionNode.tscn" id="6_rpnyg"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/workspace.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://dsllcvm7vi10m" path="res://addons/dialogue_nodes/nodes/SetNode.tscn" id="7_yjl7f"]
+[ext_resource type="PackedScene" uid="uid://h3hkys0mgvji" path="res://addons/dialogue_nodes/nodes/CommentNode.tscn" id="8_nuo3d"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="9"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="15_kpna5"]
 
-[sub_resource type="RichTextEffect" id=1]
-script = ExtResource( 6 )
+[sub_resource type="RichTextEffect" id="RichTextEffect_3vpbk"]
+script = ExtResource("15_kpna5")
 
 [node name="NodeEditor" type="Control"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-rect_min_size = Vector2( 0, 300 )
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("1")
 
 [node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_right = -4.0
+offset_left = 4.0
+offset_right = -4.0
 size_flags_vertical = 3
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ToolBar" type="HBoxContainer" parent="Main"]
-margin_right = 1016.0
-margin_bottom = 20.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+layout_mode = 2
 
 [node name="FileMenu" type="MenuButton" parent="Main/ToolBar"]
-margin_right = 35.0
-margin_bottom = 20.0
+layout_mode = 2
 keep_pressed_outside = true
 text = "File"
-items = [ "New Tree", null, 0, false, false, 0, 0, null, "", false, "Open...", null, 0, false, false, 1, 0, null, "", false, "", null, 0, false, false, 6, 0, null, "", true, "Save", null, 0, false, false, 2, 0, null, "", false, "Save As", null, 0, false, false, 3, 0, null, "", false, "", null, 0, false, false, 7, 0, null, "", true, "Close", null, 0, false, false, 4, 0, null, "", false, "Close All", null, 0, false, false, 5, 0, null, "", false ]
 switch_on_hover = true
+item_count = 8
+popup/item_0/text = "New Tree"
+popup/item_0/id = 0
+popup/item_1/text = "Open..."
+popup/item_1/id = 1
+popup/item_2/text = ""
+popup/item_2/id = 6
+popup/item_2/separator = true
+popup/item_3/text = "Save"
+popup/item_3/id = 2
+popup/item_4/text = "Save As"
+popup/item_4/id = 3
+popup/item_5/text = ""
+popup/item_5/id = 7
+popup/item_5/separator = true
+popup/item_6/text = "Close"
+popup/item_6/id = 4
+popup/item_7/text = "Close All"
+popup/item_7/id = 5
 
 [node name="AddMenu" type="MenuButton" parent="Main/ToolBar"]
 visible = false
-margin_left = 39.0
-margin_right = 114.0
-margin_bottom = 22.0
+layout_mode = 2
 keep_pressed_outside = true
 text = "Add Node"
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false, "ConditionNode", null, 0, false, false, 5, 0, null, "", false ]
 switch_on_hover = true
+item_count = 6
+popup/item_0/text = "StartNode"
+popup/item_0/id = 0
+popup/item_1/text = "DialogueNode"
+popup/item_1/id = 1
+popup/item_2/text = "CommentNode"
+popup/item_2/id = 2
+popup/item_3/text = "SignalNode"
+popup/item_3/id = 3
+popup/item_4/text = "SetNode"
+popup/item_4/id = 4
+popup/item_5/text = "ConditionNode"
+popup/item_5/id = 5
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
 visible = false
-margin_left = 118.0
-margin_right = 154.0
-margin_bottom = 22.0
+layout_mode = 2
 keep_pressed_outside = true
 text = "Run"
 switch_on_hover = true
 
 [node name="DebugMenu" type="MenuButton" parent="Main/ToolBar"]
-margin_left = 39.0
-margin_right = 92.0
-margin_bottom = 20.0
+layout_mode = 2
 focus_mode = 2
 keep_pressed_outside = true
 text = "Debug"
-items = [ "Print Debug Messages", null, 1, false, false, 0, 0, null, "", false ]
 switch_on_hover = true
+item_count = 1
+popup/item_0/text = "Print Debug Messages"
+popup/item_0/checkable = 1
+popup/item_0/id = 0
 
 [node name="Workspace" type="HSplitContainer" parent="Main"]
-margin_top = 24.0
-margin_right = 1016.0
-margin_bottom = 576.0
+layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource( 7 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-nodeScenes = [ "res://addons/dialogue_nodes/nodes/StartNode.tscn", "res://addons/dialogue_nodes/nodes/DialogueNode.tscn", "res://addons/dialogue_nodes/nodes/CommentNode.tscn", "res://addons/dialogue_nodes/nodes/SignalNode.tscn", "res://addons/dialogue_nodes/nodes/SetNode.tscn", "res://addons/dialogue_nodes/nodes/ConditionNode.tscn" ]
+script = ExtResource("7")
+nodeScenes = Array[PackedScene]([ExtResource("3_kc00i"), ExtResource("4_byype"), ExtResource("8_nuo3d"), ExtResource("5_6axxc"), ExtResource("7_yjl7f"), ExtResource("6_rpnyg")])
 
 [node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
-margin_right = 1016.0
-margin_bottom = 552.0
-rect_min_size = Vector2( 150, 0 )
-rect_clip_content = true
+clip_contents = true
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
 
 [node name="Files" type="ItemList" parent="Main/Workspace/SidePanel"]
-margin_right = 1016.0
-margin_bottom = 552.0
+layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
-script = ExtResource( 9 )
+script = ExtResource("9")
 editor_path = NodePath("../../../..")
 newDialogue_path = NodePath("../../../../NewDialog")
 saveDialogue_path = NodePath("../../../../SaveDialog")
@@ -107,145 +127,132 @@ openDialogue_path = NodePath("../../../../OpenDialog")
 confirmDialogue_path = NodePath("../../../../ConfirmationDialog")
 
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/SidePanel/Files"]
-margin_right = 20.0
-margin_bottom = 20.0
-items = [ "Save", null, 0, false, false, 0, 0, null, "", false, "Save As", null, 0, false, false, 1, 0, null, "", false, "Close", null, 0, false, false, 2, 0, null, "", false, "Close All", null, 0, false, false, 3, 0, null, "", false ]
-allow_search = true
+item_count = 4
+item_0/text = "Save"
+item_0/id = 0
+item_1/text = "Save As"
+item_1/id = 1
+item_2/text = "Close"
+item_2/id = 2
+item_3/text = "Close All"
+item_3/id = 3
 
 [node name="Variables" type="VBoxContainer" parent="Main/Workspace/SidePanel"]
 visible = false
-margin_top = 282.0
-margin_right = 1016.0
-margin_bottom = 552.0
+layout_mode = 2
 size_flags_vertical = 3
-script = ExtResource( 10 )
+script = ExtResource("10")
 
 [node name="Title" type="Label" parent="Main/Workspace/SidePanel/Variables"]
-margin_right = 1016.0
-margin_bottom = 14.0
+layout_mode = 2
 text = "Variables:"
 
 [node name="AddButton" type="Button" parent="Main/Workspace/SidePanel/Variables"]
-margin_top = 18.0
-margin_right = 1016.0
-margin_bottom = 38.0
-hint_tooltip = "Add a new variable."
+layout_mode = 2
+tooltip_text = "Add a new variable."
 text = "+"
 
 [node name="Graph" type="GraphEdit" parent="Main/Workspace"]
 visible = false
-margin_left = 162.0
-margin_right = 1016.0
-margin_bottom = 552.0
-rect_min_size = Vector2( 400, 0 )
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
 size_flags_vertical = 3
 right_disconnects = true
-scroll_offset = Vector2( -208, -2 )
 zoom_min = 0.5
 zoom_max = 2.0
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+script = ExtResource("2")
 
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/Graph"]
-margin_right = 16.0
-margin_bottom = 16.0
-items = [ "StartNode", null, 0, false, false, 0, 0, null, "", false, "DialogueNode", null, 0, false, false, 1, 0, null, "", false, "CommentNode", null, 0, false, false, 2, 0, null, "", false, "SignalNode", null, 0, false, false, 3, 0, null, "", false, "SetNode", null, 0, false, false, 4, 0, null, "", false, "ConditionNode", null, 0, false, false, 5, 0, null, "", false ]
-allow_search = true
-__meta__ = {
-"_edit_use_anchors_": false
-}
+item_count = 6
+item_0/text = "StartNode"
+item_0/id = 0
+item_1/text = "DialogueNode"
+item_1/id = 1
+item_2/text = "CommentNode"
+item_2/id = 2
+item_3/text = "SignalNode"
+item_3/id = 3
+item_4/text = "SetNode"
+item_4/id = 4
+item_5/text = "ConditionNode"
+item_5/id = 5
 
 [node name="Statusbar" type="HBoxContainer" parent="Main"]
-margin_top = 580.0
-margin_right = 1016.0
-margin_bottom = 600.0
+layout_mode = 2
 
 [node name="PanelToggle" type="TextureButton" parent="Main/Statusbar"]
-margin_right = 30.0
-margin_bottom = 20.0
-rect_min_size = Vector2( 30, 20 )
+custom_minimum_size = Vector2(30, 20)
+layout_mode = 2
 toggle_mode = true
-pressed = true
-texture_normal = ExtResource( 4 )
-texture_pressed = ExtResource( 3 )
-expand = true
+texture_normal = ExtResource("4")
+texture_pressed = ExtResource("3")
 stretch_mode = 3
 
 [node name="NewDialog" type="FileDialog" parent="."]
-margin_left = 200.0
-margin_top = 200.0
-margin_right = 700.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 400, 300 )
-rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Save New Dialogue Tree"
-resizable = true
+title = "Create a file"
+size = Vector2i(600, 400)
 mode_overrides_title = false
-filters = PoolStringArray( "*.json; Dialogue JSON File" )
+filters = PackedStringArray("*.json; Dialogue JSON File")
 
 [node name="SaveDialog" type="FileDialog" parent="."]
-margin_left = 200.0
-margin_top = 200.0
-margin_right = 700.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 400, 300 )
-rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Save Dialogue Tree"
-resizable = true
+title = "Save a file"
+size = Vector2i(600, 400)
 mode_overrides_title = false
-filters = PoolStringArray( "*.json; Dialogue JSON File" )
+filters = PackedStringArray("*.json; Dialogue JSON File")
 
 [node name="OpenDialog" type="FileDialog" parent="."]
-margin_left = 200.0
-margin_top = 200.0
-margin_right = 700.0
-margin_bottom = 600.0
-rect_min_size = Vector2( 400, 300 )
-rect_pivot_offset = Vector2( 200, 150 )
-window_title = "Open Dialogue Tree"
-resizable = true
+title = "Open a file"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
 mode_overrides_title = false
-mode = 0
-filters = PoolStringArray( "*.json; Dialogue JSON File" )
+file_mode = 0
+filters = PackedStringArray("*.json; Dialogue JSON File")
 
 [node name="ConfirmationDialog" type="AcceptDialog" parent="."]
-margin_right = 280.0
-margin_bottom = 90.0
-rect_min_size = Vector2( 280, 90 )
-popup_exclusive = true
-window_title = "Unsaved changes!"
+size = Vector2i(400, 109)
 dialog_text = "The file/s contains unsaved changes. Are you sure you want to close the file/s?"
 dialog_autowrap = true
 
-[node name="DialogueBox" type="PopupDialog" parent="."]
+[node name="DialogBackground" type="Panel" parent="."]
+visible = false
+modulate = Color(0, 0, 0, 0.501961)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DialogueBox" type="Panel" parent="."]
+visible = false
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -250.0
-margin_top = -75.0
-margin_right = 250.0
-margin_bottom = 75.0
-rect_min_size = Vector2( 300, 72 )
-popup_exclusive = true
-script = ExtResource( 5 )
-custom_effects = [ SubResource( 1 ) ]
+offset_left = -343.5
+offset_top = -127.0
+offset_right = 343.5
+offset_bottom = 127.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5")
+custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_3vpbk")])
 
-[connection signal="about_to_show" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
+[connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
 [connection signal="node_deleted" from="Main/Workspace" to="." method="_on_node_deleted"]
 [connection signal="closed" from="Main/Workspace/SidePanel/Files" to="Main/Workspace" method="_on_file_closed"]
-[connection signal="item_rmb_selected" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_rmb_selected"]
+[connection signal="empty_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_empty_clicked"]
+[connection signal="item_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_item_clicked"]
 [connection signal="item_selected" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="select_file"]
 [connection signal="opened" from="Main/Workspace/SidePanel/Files" to="." method="_on_file_opened"]
-[connection signal="rmb_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_rmb_clicked"]
 [connection signal="switched" from="Main/Workspace/SidePanel/Files" to="." method="open_dict"]
 [connection signal="id_pressed" from="Main/Workspace/SidePanel/Files/PopupMenu" to="." method="_on_file_popup_pressed"]
 [connection signal="modified" from="Main/Workspace/SidePanel/Variables" to="Main/Workspace" method="_on_file_modified"]
 [connection signal="pressed" from="Main/Workspace/SidePanel/Variables/AddButton" to="Main/Workspace/SidePanel/Variables" method="add_variable"]
-[connection signal="_end_node_move" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_request"]
 [connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="connection_to_empty" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_to_empty"]
@@ -264,5 +271,4 @@ custom_effects = [ SubResource( 1 ) ]
 [connection signal="file_selected" from="SaveDialog" to="." method="save_file"]
 [connection signal="file_selected" from="OpenDialog" to="." method="open_file"]
 [connection signal="custom_action" from="ConfirmationDialog" to="Main/Workspace/SidePanel/Files" method="_on_confirmDialog_action"]
-[connection signal="popup_hide" from="ConfirmationDialog" to="Main/Workspace/SidePanel/Files" method="_on_confirmDialog_hide"]
-[connection signal="variable_changed" from="DialogueBox" to="." method="_on_dialogue_variable_changed"]
+[connection signal="gui_input" from="DialogBackground" to="." method="_on_dialog_background_input"]

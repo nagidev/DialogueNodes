@@ -1,4 +1,4 @@
-tool
+@tool
 extends VBoxContainer
 
 
@@ -6,7 +6,7 @@ signal modified
 
 
 var delete_icon = preload("res://addons/dialogue_nodes/icons/Remove.svg")
-var types = [TYPE_STRING, TYPE_INT, TYPE_REAL, TYPE_BOOL]
+var types = [TYPE_STRING, TYPE_INT, TYPE_FLOAT, TYPE_BOOL]
 
 
 func add_variable(new_name='', new_type=0, new_value = ''):
@@ -22,18 +22,18 @@ func add_variable(new_name='', new_type=0, new_value = ''):
 	var_name.placeholder_text = 'Variable Name'
 	var_name.size_flags_horizontal = SIZE_EXPAND_FILL
 	new_variable.add_child(var_name)
-	var _res = var_name.connect("text_changed", self, "_on_modified")
+	var _res = var_name.text_changed.connect(_on_modified)
 	
 	# Type
 	var type = OptionButton.new()
 	type.name = 'Type'
 	type.add_item('String', TYPE_STRING)
 	type.add_item('Int', TYPE_INT)
-	type.add_item('Float', TYPE_REAL)
+	type.add_item('Float', TYPE_FLOAT)
 	type.add_item('Bool', TYPE_BOOL)
 	new_variable.add_child(type, true)
 	type.selected = types.find(new_type)
-	_res = type.connect("item_selected", self, "_on_modified")
+	_res = type.item_selected.connect(_on_modified)
 	
 	# Value
 	var var_val = LineEdit.new()
@@ -42,14 +42,14 @@ func add_variable(new_name='', new_type=0, new_value = ''):
 	var_val.placeholder_text = 'Value'
 	var_val.size_flags_horizontal = SIZE_EXPAND_FILL
 	new_variable.add_child(var_val)
-	_res = var_val.connect("text_changed", self, "_on_modified")
+	_res = var_val.text_changed.connect(_on_modified)
 	
 	# Delete button
 	var delete = Button.new()
 	delete.name = 'DeleteButton'
 	new_variable.add_child(delete)
 	delete.icon = delete_icon
-	delete.connect("pressed", self, "remove_variable", [new_variable])
+	delete.connect("pressed", Callable(self, "remove_variable").bind(new_variable))
 	
 	_on_modified()
 	
@@ -109,4 +109,4 @@ func from_dict(dict):
 
 
 func _on_modified(_a=0, _b=0):
-	emit_signal("modified")
+	modified.emit()

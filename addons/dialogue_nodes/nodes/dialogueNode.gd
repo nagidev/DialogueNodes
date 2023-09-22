@@ -1,27 +1,31 @@
-tool
+@tool
 extends GraphNode
 
 
 signal modified
 signal connection_move(old_slot, new_slot)
 
-export var max_options = 4
+@export var max_options = 4
 
-onready var speaker = $Speaker
-onready var dialogue = $Dialogue
+@onready var speaker = $Speaker
+@onready var dialogue = $Dialogue
 
 var options : Array = []
+var _base_color : Color = Color.WHITE
 
 func _ready():
 	for i in range(max_options):
 		if has_node("Option"+str(i+1)):
 			var option = get_node("Option"+str(i+1))
 			options.append(option)
-			option.connect("text_changed", self, "_on_option_changed", [options[0]])
-			option.connect("text_entered", self, "_on_option_entered", [options[0]])
-			option.connect("focus_exited", self, "_on_option_entered", ['', options[0]])
-			set_slot(option.get_index(), false, 0, Color.white, true, 0, Color.white)
-	dialogue.add_color_region('[', ']', Color('a5efac'))
+			option.text_changed.connect(_on_option_changed.bind(option))
+			option.text_submitted.connect(_on_option_entered.bind(option))
+			option.focus_exited.connect(_on_option_entered.bind('', option))
+			set_slot(option.get_index(), false, 0, _base_color, true, 0, _base_color)
+	
+	# add bbcode syntax highlighting in dialogue
+	if not dialogue.syntax_highlighter.has_color_region('['):
+		dialogue.syntax_highlighter.add_color_region('[', ']', Color('a5efac'))
 
 
 func add_option(new_text= ''):
@@ -36,9 +40,9 @@ func add_option(new_text= ''):
 	new_option.placeholder_text = "Option"+str(id+1)
 	
 	options.append(new_option)
-	new_option.connect("text_changed", self, "_on_option_changed", [new_option])
-	new_option.connect("text_entered", self, "_on_option_entered", [new_option])
-	new_option.connect("focus_exited", self, "_on_option_entered", ['', new_option])
+	new_option.connect("text_changed", Callable(self, "_on_option_changed").bind(new_option))
+	new_option.connect("text_submitted", Callable(self, "_on_option_entered").bind(new_option))
+	new_option.connect("focus_exited", Callable(self, "_on_option_entered").bind('', new_option))
 	
 	add_child(new_option, true)
 
@@ -51,7 +55,7 @@ func remove_option(option_node):
 	
 	while i < len(options):
 		options[i-1].text = options[i].text
-		emit_signal("connection_move", i, i-1)
+		connection_move.emit(i, i-1)
 		i += 1
 	
 	options[-1].text = ''
@@ -62,10 +66,18 @@ func remove_option(option_node):
 func _update_slots():
 	# turn off all slots whose options are empty
 	for i in range(len(options)):
-		set_slot(options[i].get_index(), false, 0, Color.white, (options[i].text != ''), 0, Color.white)
+		set_slot(options[i].get_index(), false, 0, _base_color, (options[i].text != ''), 0, _base_color)
 	
 	# set the first slot to true anyway
-	set_slot(options[0].get_index(), false, 0, Color.white, true, 0, Color.white)
+	set_slot(options[0].get_index(), false, 0, _base_color, true, 0, _base_color)
+
+
+func _set_syntax_color(color):
+	_base_color = color
+	dialogue.syntax_highlighter.number_color = color
+	dialogue.syntax_highlighter.symbol_color = color
+	dialogue.syntax_highlighter.function_color = color
+	dialogue.syntax_highlighter.member_variable_color = color
 
 
 func _to_dict(graph):
@@ -75,8 +87,8 @@ func _to_dict(graph):
 	dict['speaker'] = speaker.text
 	dict['dialogue'] = dialogue.text
 	dict['size'] = {}
-	dict['size']['x'] = rect_size.x
-	dict['size']['y'] = rect_size.y
+	dict['size']['x'] = size.x
+	dict['size']['y'] = size.y
 	
 	# get options connected to other nodes
 	var options_dict = {}
@@ -129,7 +141,7 @@ func _from_dict(graph, dict):
 		_on_resize(new_size, true)
 	
 	_update_slots()
-	 
+	
 	return next_nodes
 
 
@@ -149,14 +161,14 @@ func _on_option_entered(new_text, option_node):
 
 
 func _on_resize(new_size, _loading = false):
-	new_size.x = max(new_size.x, rect_min_size.x)
-	new_size.y = max(new_size.y, rect_min_size.y)
+	new_size.x = max(new_size.x, custom_minimum_size.x)
+	new_size.y = max(new_size.y, custom_minimum_size.y)
 	
-	rect_size = new_size
+	size = new_size
 	
 	if not _loading:
 		_on_node_modified()
 
 
 func _on_node_modified(_a=0, _b=0):
-	emit_signal("modified")
+	modified.emit()

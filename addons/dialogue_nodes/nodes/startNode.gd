@@ -1,11 +1,11 @@
-tool
+@tool
 extends GraphNode
 
 
 signal modified
 signal run_tree
 
-onready var ID = $HBoxContainer/ID.text
+@onready var ID = $HBoxContainer/ID.text
 
 
 # convert graph/tree from this node to dict
@@ -27,7 +27,7 @@ func tree_to_dict(graph, dict= {}, node= self):
 	
 	# add data for current node
 	dict[node.name] = node._to_dict(graph)
-	dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
+	dict[node.name]['offset'] = {'x' : node.position_offset.x, 'y' : node.position_offset.y}
 	
 	# add data for next nodes
 	for next_node in next_nodes:
@@ -35,7 +35,7 @@ func tree_to_dict(graph, dict= {}, node= self):
 		if dict.has(next_node):
 			continue
 		# get dict from node
-		dict = tree_to_dict(graph, dict, graph.get_node(next_node))
+		dict = tree_to_dict(graph, dict, graph.get_node(NodePath(next_node)))
 	
 	return dict
 
@@ -52,12 +52,12 @@ func dict_to_tree(workspace, dict, node_name= name):
 		workspace.request_node = null
 		workspace.request_slot = null
 		return
-	elif not workspace.graph.has_node(node_name):
+	elif not workspace.graph.has_node(NodePath(node_name)):
 		var type = int(node_name.split('_')[0])
 		var offset = Vector2( float(dict[node_name]['offset']['x']), float(dict[node_name]['offset']['y']) )
 		var node = workspace.add_node(type, null, node_name, offset)
 		next_nodes = node._from_dict(workspace.graph, dict[node_name])
-	elif workspace.graph.has_node(node_name):
+	elif workspace.graph.has_node(NodePath(node_name)):
 		workspace.graph.connect_node(workspace.request_node, workspace.request_slot, node_name, 0)
 	
 	for i in range(len(next_nodes)):
@@ -87,8 +87,8 @@ func _from_dict(graph, dict):
 
 func _on_ID_changed(new_id):
 	ID = new_id
-	emit_signal("modified")
+	modified.emit()
 
 
 func _on_run_pressed():
-	emit_signal("run_tree")
+	run_tree.emit()

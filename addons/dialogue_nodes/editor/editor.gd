@@ -1,36 +1,42 @@
-tool
+@tool
 extends Control
 
 
-onready var fileMenu = $Main/ToolBar/FileMenu
-onready var addMenu = $Main/ToolBar/AddMenu
-onready var popupMenu = $Main/Workspace/Graph/PopupMenu
-onready var runMenu = $Main/ToolBar/RunMenu
-onready var debugMenu = $Main/ToolBar/DebugMenu
-onready var workspace = $Main/Workspace
-onready var graph = $Main/Workspace/Graph
-onready var side_panel = $Main/Workspace/SidePanel
-onready var files = $Main/Workspace/SidePanel/Files
-onready var variables = $Main/Workspace/SidePanel/Variables
-onready var dialogue = $DialogueBox
-onready var newDialogue = $NewDialog
-onready var saveDialogue = $SaveDialog
-onready var openDialogue = $OpenDialog
+@onready var fileMenu = $Main/ToolBar/FileMenu
+@onready var addMenu = $Main/ToolBar/AddMenu
+@onready var popupMenu = $Main/Workspace/Graph/PopupMenu
+@onready var runMenu = $Main/ToolBar/RunMenu
+@onready var debugMenu = $Main/ToolBar/DebugMenu
+@onready var workspace = $Main/Workspace
+@onready var graph = $Main/Workspace/Graph
+@onready var side_panel = $Main/Workspace/SidePanel
+@onready var files = $Main/Workspace/SidePanel/Files
+@onready var variables = $Main/Workspace/SidePanel/Variables
+@onready var dialogue = $DialogueBox
+@onready var dialogueBG = $DialogBackground
+@onready var newDialogue = $NewDialog
+@onready var saveDialogue = $SaveDialog
+@onready var openDialogue = $OpenDialog
 
 
 var start_nodes = []
 var comment_nodes = []
 var _empty_dict = {'start': {}, 'comments': {}}
 var _debug = false
+var _base_color : Color
 
 
 func _ready():
 	init_menus()
 	
-	addMenu.get_popup().connect("id_pressed", workspace, "add_node")
-	runMenu.get_popup().connect("id_pressed", self, "_on_run_menu_pressed")
-	fileMenu.get_popup().connect("id_pressed", self, "_on_file_menu_pressed")
-	debugMenu.get_popup().connect("id_pressed", self, "_on_debug_menu_pressed")
+	addMenu.get_popup().id_pressed.connect(workspace.add_node)
+	runMenu.get_popup().id_pressed.connect(_on_run_menu_pressed)
+	fileMenu.get_popup().id_pressed.connect(_on_file_menu_pressed)
+	debugMenu.get_popup().id_pressed.connect(_on_debug_menu_pressed)
+	
+	dialogue.dialogue_signal.connect(_on_dialogue_signal)
+	dialogue.variable_changed.connect(_on_dialogue_variable_changed)
+	dialogue.dialogue_ended.connect(_on_dialogue_ended)
 
 
 func init_menus():
@@ -56,7 +62,11 @@ func _run_tree(start_node):
 	dialogue.dict = dict
 	
 	if dialogue.dict:
+		dialogueBG.show()
 		dialogue.start(start_node.ID)
+		
+		if _debug:
+			print("Dialogue started:", start_node.ID)
 
 
 func _update_run_menu():
@@ -68,7 +78,7 @@ func _update_run_menu():
 		return
 	
 	for start_node_name in start_nodes:
-		var ID = graph.get_node(start_node_name).ID
+		var ID = graph.get_node(NodePath(start_node_name)).ID
 		runMenu.get_popup().add_item(ID)
 
 
@@ -78,16 +88,16 @@ func get_dict():
 	# add trees to dict
 	dict['start'] = {}
 	for start_node_name in start_nodes:
-		var start_node = graph.get_node(start_node_name)
+		var start_node = graph.get_node(NodePath(start_node_name))
 		dict = start_node.tree_to_dict(graph, dict)
 	
 	# add comments to dict
 	var comments = {}
 	for i in range(len(comment_nodes)):
-		var node = graph.get_node(comment_nodes[i])
+		var node = graph.get_node(NodePath(comment_nodes[i]))
 		comments[i] = node.name
 		dict[node.name] = node._to_dict(graph)
-		dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
+		dict[node.name]['offset'] = {'x' : node.position_offset.x, 'y' : node.position_offset.y}
 	dict['comments'] = comments
 	
 	# add variables to dict
@@ -99,7 +109,7 @@ func get_dict():
 		if node is GraphNode and not dict.has(node.name):
 			strays[node.name] = node.name
 			dict[node.name] = node._to_dict(graph)
-			dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
+			dict[node.name]['offset'] = {'x' : node.position_offset.x, 'y' : node.position_offset.y}
 	dict['strays'] = strays
 	
 	return dict
@@ -147,6 +157,7 @@ func open_dict(dict):
 func new_file(path):
 	files.new_file(path)
 	graph.show()
+	variables.remove_all_variables()
 	variables.show()
 
 
@@ -164,14 +175,22 @@ func toggle_side_panel():
 
 func _on_node_added(node_name):
 	var type = node_name.split('_')[0]
+	var node : GraphNode = graph.get_node(NodePath(node_name))
+	
+	if node.is_slot_enabled_left(0):
+		node.set_slot_color_left(0, _base_color)
 	
 	match( type ):
 		'0':
 			start_nodes.append(node_name)
-			var node = graph.get_node(node_name)
-			node.connect("run_tree", self, "_run_tree", [node])
+			node.set_slot_color_right(0, _base_color)
+			node.connect("run_tree", Callable(self, "_run_tree").bind(node))
+		'1':
+			node._set_syntax_color(_base_color)
 		'2':
 			comment_nodes.append(node_name)
+		'3', '4':
+			node.set_slot_color_right(0, _base_color)
 
 
 func _on_node_deleted(node_name):
@@ -224,7 +243,6 @@ func _on_file_popup_pressed(id):
 
 
 func _on_file_opened(dict):
-	open_dict(dict)
 	graph.show()
 	variables.show()
 
@@ -234,7 +252,7 @@ func _on_file_request_dict(file_button):
 
 
 func _on_run_menu_pressed(id):
-	var start_node = graph.get_node(start_nodes[int(id)])
+	var start_node = graph.get_node(NodePath(start_nodes[int(id)]))
 	
 	_run_tree(start_node)
 
@@ -254,3 +272,23 @@ func _on_graph_visibility_changed():
 
 func _on_dialogue_variable_changed(var_name, value):
 	variables.set_value(var_name, value)
+	files.modify_file()
+	
+	if _debug:
+		print("Variable changed:", var_name, ", value:", value)
+
+
+func _on_dialogue_signal(value):
+	if _debug:
+		print("Dialogue emitted signal with value:", value)
+
+
+func _on_dialogue_ended():
+	dialogueBG.hide()
+	if _debug:
+		print("Dialogue finished")
+
+
+func _on_dialog_background_input(event):
+	if event is InputEventMouseButton:
+		dialogue.stop()

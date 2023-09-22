@@ -1,4 +1,4 @@
-tool
+@tool
 extends GraphNode
 
 
@@ -6,12 +6,12 @@ enum {EQUAL, NEQUAL, GREATER, LESS, GEQUAL, LEQUAL}
 
 signal modified
 
-onready var value1 = $HBoxContainer/Value1
-onready var operator = $HBoxContainer/Operator
-onready var value2 = $HBoxContainer/Value2
+@onready var value1 = $HBoxContainer/Value1
+@onready var operator = $HBoxContainer/Operator
+@onready var value2 = $HBoxContainer/Value2
 
-onready var trueLabel = $TrueLabel
-onready var falseLabel = $FalseLabel
+@onready var trueLabel = $TrueLabel
+@onready var falseLabel = $FalseLabel
 
 
 func _to_dict(graph):
@@ -51,4 +51,4 @@ func set_value(_new_val):
 
 
 func _on_modified():
-	emit_signal("modified")
+	modified.emit()
