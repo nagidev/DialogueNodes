@@ -88,6 +88,7 @@ grow_vertical = 0
 script = ExtResource("8_kplwy")
 dialogue_file = "res://examples/Example1.json"
 start_id = "START"
+input_action = null
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_fpwbw")])
 
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]

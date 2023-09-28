@@ -13,6 +13,7 @@ signal variable_changed(var_name, value)
 @export var start_id: String
 @export_range(1, 8) var max_options = 4
 @export_enum('Begin', 'Center', 'End') var options_alignment = 2: set = _set_options_alignment
+@export var input_action : String
 @export var custom_effects : Array[RichTextEffect] = [RichTextWait.new()]
 
 var speaker : Label
@@ -83,8 +84,12 @@ func _ready():
 
 
 func _input(event):
-	if Input.is_action_just_pressed("ui_accept"):
-		custom_effects[0].skip = true
+	if input_action == '':
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				custom_effects[0].skip = true
+	else:
+		if Input.is_action_just_pressed(input_action):
+			custom_effects[0].skip = true
 
 
 func load_file(path):
