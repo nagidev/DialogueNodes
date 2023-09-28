@@ -38,6 +38,21 @@ offset_bottom = -26.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="StartSelector" type="OptionButton" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.5
+offset_top = -7.0
+offset_right = 67.5
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Button" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 8
@@ -91,5 +106,6 @@ start_id = "START"
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_fpwbw")])
 
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
+[connection signal="item_selected" from="StartSelector" to="." method="_on_start_selected"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]
