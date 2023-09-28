@@ -54,7 +54,7 @@ func _enter_tree():
 	dialogue = RichTextLabel.new()
 	vbox_container.add_child(dialogue)
 	dialogue.text = 'Sample dialogue.\nLoad a [u]dialogue file[/u].'
-	dialogue.scroll_following = true
+	dialogue.scroll_following = false
 	dialogue.bbcode_enabled = true
 	dialogue.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	dialogue.custom_effects = custom_effects
