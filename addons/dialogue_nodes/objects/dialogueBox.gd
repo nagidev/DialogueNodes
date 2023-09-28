@@ -86,7 +86,7 @@ func _ready():
 func _input(event):
 	if input_action == '':
 		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-				custom_effects[0].skip = true
+			custom_effects[0].skip = true
 	else:
 		if Input.is_action_just_pressed(input_action):
 			custom_effects[0].skip = true
