@@ -8,7 +8,7 @@ signal node_deleted(node_name)
 export (Array, String, FILE, "*.tscn, *.scn") var nodeScenes
 
 onready var files = $SidePanel/Files
-onready var variables = $SidePanel/Variables
+onready var data = $SidePanel/Data
 onready var graph = $Graph
 onready var popup = $Graph/PopupMenu
 
@@ -146,9 +146,10 @@ func _on_nodes_duplicated():
 			add_node(-1, child)
 
 
-func _on_nodes_delete(node_names):
-	for node_name in node_names:
-		remove_node(graph.get_node(NodePath(node_name)))
+func _on_nodes_delete():
+	for child in graph.get_children():
+		if child is GraphNode and child.is_selected():
+			remove_node(child)
 
 
 func _select_all_nodes(select = true):
@@ -188,4 +189,4 @@ func _on_file_closed():
 	# child_count <= 1 because the file_button is still queued for deletion, hence, may be present
 	if files.get_item_count() == 0:
 		graph.hide()
-		variables.hide()
+		data.hide()

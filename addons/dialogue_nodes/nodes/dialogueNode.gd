@@ -7,9 +7,12 @@ signal connection_move(old_slot, new_slot)
 
 export var max_options = 4
 
-onready var speaker = $Speaker
+onready var speaker = $HBoxContainer/Speaker
+onready var customSpeaker = $HBoxContainer/CustomSpeaker
+onready var characterToggle = $HBoxContainer/CharacterToggle
 onready var dialogue = $Dialogue
 
+var curSpeaker : int = -1
 var options : Array = []
 
 func _ready():
@@ -71,8 +74,15 @@ func _update_slots():
 func _to_dict(graph):
 	var dict = {}
 	
-	speaker.text = speaker.text.replace("{", "").replace("}", "")
-	dict['speaker'] = speaker.text
+	if customSpeaker.visible:
+		customSpeaker.text = customSpeaker.text.replace("{", "").replace("}", "")
+		dict['speaker'] = customSpeaker.text
+	elif speaker.visible:
+		var speakerIdx := -1
+		if speaker.get_item_count() > 0:
+			speakerIdx = curSpeaker
+		dict['speaker'] = speakerIdx
+	
 	dict['dialogue'] = dialogue.text
 	dict['size'] = {}
 	dict['size']['x'] = rect_size.x
@@ -110,7 +120,11 @@ func _from_dict(graph, dict):
 	var next_nodes = []
 	
 	# set values
-	speaker.text = dict['speaker']
+	if dict['speaker'] is String:
+		customSpeaker.text = dict['speaker']
+	elif dict['speaker'] is int:
+		curSpeaker = dict['speaker']
+		characterToggle.pressed = true
 	dialogue.text = dict['dialogue']
 	
 	# remove any existing options
@@ -156,6 +170,34 @@ func _on_resize(new_size, _loading = false):
 	
 	if not _loading:
 		_on_node_modified()
+
+
+func _on_character_toggled(useCharacter):
+	if useCharacter:
+		speaker.show()
+		customSpeaker.hide()
+	else:
+		speaker.hide()
+		customSpeaker.show()
+	_on_node_modified()
+
+
+func _on_characters_loaded(newCharacterList : Array):
+	speaker.clear()
+	
+	for newCharacter in newCharacterList:
+		speaker.add_item(newCharacter.name)
+	
+	if newCharacterList.size() > 0:
+		if curSpeaker < newCharacterList.size():
+			speaker.selected = curSpeaker
+		else:
+			curSpeaker = 0
+
+
+func _on_speaker_selected(idx : int):
+	curSpeaker = idx
+	_on_node_modified()
 
 
 func _on_node_modified(_a=0, _b=0):

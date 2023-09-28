@@ -72,7 +72,7 @@ func get_variable(var_name):
 		if child is HBoxContainer and child.get_node('Name').text == var_name:
 			return child
 	
-	printerr('Variable not found : ', var_name)
+	printerr('Variable not found: ', var_name)
 	return null
 
 
@@ -82,6 +82,9 @@ func get_value(var_name):
 
 func set_value(var_name, value):
 	var variable = get_variable(var_name)
+	if not variable:
+		printerr('Variable not found: ', var_name)
+		return
 	variable.get_node('Value').text = str(value)
 
 

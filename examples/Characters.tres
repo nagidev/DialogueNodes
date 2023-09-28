@@ -1,0 +1,18 @@
+[gd_resource type="Resource" load_steps=6 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/objects/CharacterList.gd" type="Script" id=1]
+[ext_resource path="res://addons/dialogue_nodes/objects/Character.gd" type="Script" id=2]
+[ext_resource path="res://examples/profile0.png" type="Texture" id=3]
+
+[sub_resource type="Resource" id=1]
+script = ExtResource( 2 )
+name = "Greg"
+
+[sub_resource type="Resource" id=2]
+script = ExtResource( 2 )
+name = "Clara"
+image = ExtResource( 3 )
+
+[resource]
+script = ExtResource( 1 )
+characters = [ SubResource( 1 ), SubResource( 2 ) ]

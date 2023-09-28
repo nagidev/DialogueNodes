@@ -9,19 +9,21 @@ signal dialogue_signal(value)
 signal dialogue_ended
 signal variable_changed(var_name, value)
 
-export (String, FILE, "*.json; Dialogue JSON File") var dialogue_file setget load_file
+export (Resource) var dialogue_file setget load_data
 export (String) var start_id
 export (int, 1, 8) var max_options = 4
 export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_options_alignment
+export var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
 export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 
 var speaker : Label
+var portrait : TextureRect
 var dialogue : RichTextLabel
 var options : HBoxContainer
-var dict = null setget set_dict
+var data : DialogueData = null setget set_data
 var variables = {}
 var running = false
-var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
+var characterList : CharacterList = null
 
 
 func _enter_tree():
@@ -35,17 +37,26 @@ func _enter_tree():
 	# setup containers
 	var margin_container = MarginContainer.new()
 	add_child(margin_container)
-	margin_container.anchor_left = 0
-	margin_container.anchor_top = 0
-	margin_container.anchor_right = 1
-	margin_container.anchor_bottom = 1
+	margin_container.set_anchors_preset(Control.PRESET_WIDE)
 	margin_container.margin_left = 4
 	margin_container.margin_top = 4
 	margin_container.margin_right = -4
 	margin_container.margin_bottom = -4
 	
+	var hbox_container = HBoxContainer.new()
+	margin_container.add_child(hbox_container)
+	
+	# setup portrait image
+	portrait = TextureRect.new()
+	hbox_container.add_child(portrait)
+	portrait.expand = true
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	portrait.size_flags_stretch_ratio = 0.2
+	
 	var vbox_container = VBoxContainer.new()
-	margin_container.add_child(vbox_container)
+	hbox_container.add_child(vbox_container)
+	vbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
 	# setup speaker, dialogue
 	speaker = Label.new()
@@ -72,8 +83,8 @@ func _enter_tree():
 
 
 func _ready():
-	if dict:
-		init_variables(dict['variables'])
+	if data:
+		init_variables(data.variables)
 	
 	for effect in custom_effects:
 		if effect is RichTextWait:
@@ -86,26 +97,29 @@ func _input(event):
 		custom_effects[0].skip = true
 
 
-func load_file(path):
-	dialogue_file = path
+func load_data(new_data : DialogueData):
+	data = null
 	
-	if path == '':
-		dict = null
-	else:
-		var file = File.new()
-		file.open(path, File.READ)
-		dict = parse_json(file.get_as_text())
-		file.close()
+	if new_data and not new_data is DialogueData:
+		printerr('Unsupported file!')
+		return
+	
+	dialogue_file = new_data
+	set_data(new_data)
+
+
+func set_data(new_data : DialogueData):
+	data = new_data
+	if data:
+		# load variables from the data
+		init_variables(data.variables)
 		
-		if typeof(dict) != TYPE_DICTIONARY:
-			printerr('Unsupported file!')
-			dict = null
-
-
-func set_dict(new_dict):
-	dict = new_dict
-	if dict:
-		init_variables(dict['variables'])
+		# load characters
+		characterList = null
+		if data.characters.ends_with('.tres'):
+			var file = ResourceLoader.load(data.characters, '', true)
+			if file is CharacterList:
+				characterList = file
 
 
 func init_variables(var_dict):
@@ -119,15 +133,15 @@ func init_variables(var_dict):
 
 
 func start(id = start_id):
-	if !dict:
+	if !data:
 		printerr('No dialogue data!')
 		return
-	elif !dict['start'].has(id):
+	elif !data.starts.has(id):
 		printerr('Start ID not present!')
 		return
 	
 	running = true
-	proceed(dict['start'][id])
+	proceed(data.starts[id])
 	emit_signal("dialogue_started", id)
 
 
@@ -143,17 +157,17 @@ func proceed(idx):
 		'0':
 			# start
 			popup()
-			proceed(dict[idx]['link'])
+			proceed(data.nodes[idx]['link'])
 		'1':
 			# dialogue
-			set_dialogue(dict[idx])
+			set_dialogue(data.nodes[idx])
 		'3':
 			# signal
-			emit_signal('dialogue_signal', dict[idx]['signalValue'])
-			proceed(dict[idx]['link'])
+			emit_signal('dialogue_signal', data.nodes[idx]['signalValue'])
+			proceed(data.nodes[idx]['link'])
 		'4':
 			# set
-			var var_dict = dict[idx]
+			var var_dict = data.nodes[idx]
 			
 			var var_name = var_dict['variable']
 			var value = var_dict['value']
@@ -168,10 +182,10 @@ func proceed(idx):
 			proceed(var_dict['link'])
 		'5':
 			# condition
-			handle_condition(dict[idx])
+			handle_condition(data.nodes[idx])
 		_:
-			if dict[idx].has('link'):
-				proceed(dict[idx]['link'])
+			if data.nodes[idx].has('link'):
+				proceed(data.nodes[idx]['link'])
 			else:
 				stop()
 	emit_signal("dialogue_proceeded")
@@ -184,7 +198,20 @@ func stop():
 
 
 func set_dialogue(dict):
-	speaker.text = dict['speaker']
+	# set speaker and portrait
+	speaker.text = ''
+	portrait.texture = null
+	portrait.hide()
+	if dict['speaker'] is String:
+		speaker.text = dict['speaker']
+	elif dict['speaker'] is int and characterList:
+		var idx = int(dict['speaker'])
+		if idx > -1 and idx < characterList.characters.size():
+			speaker.text = characterList.characters[idx].name
+			if characterList.characters[idx].image:
+				portrait.texture = characterList.characters[idx].image
+				portrait.show()
+	
 	dialogue.bbcode_text = process_text(dict['dialogue'])
 	custom_effects[0].skip = false
 	

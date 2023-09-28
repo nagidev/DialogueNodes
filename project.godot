@@ -9,10 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Resource",
+"class": "Character",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/objects/Character.gd"
+}, {
+"base": "Resource",
+"class": "CharacterList",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/objects/CharacterList.gd"
+}, {
 "base": "PopupDialog",
 "class": "DialogueBox",
 "language": "GDScript",
 "path": "res://addons/dialogue_nodes/objects/dialogueBox.gd"
+}, {
+"base": "Resource",
+"class": "DialogueData",
+"language": "GDScript",
+"path": "res://addons/dialogue_nodes/objects/DialogueData.gd"
 }, {
 "base": "RichTextEffect",
 "class": "RichTextWait",
@@ -20,7 +35,10 @@ _global_script_classes=[ {
 "path": "res://addons/dialogue_nodes/objects/bbcodeWait.gd"
 } ]
 _global_script_class_icons={
+"Character": "",
+"CharacterList": "",
 "DialogueBox": "",
+"DialogueData": "",
 "RichTextWait": ""
 }
 
@@ -33,14 +51,16 @@ config/icon="res://icon.png"
 [display]
 
 window/handheld/orientation="sensor"
+window/stretch/aspect="keep"
 
-[editor_plugins]
+[locale]
 
-enabled=PoolStringArray( "res://addons/dialogue_nodes/plugin.cfg" )
+translation_remaps={
+"res://examples/ExampleBasic.tres": PoolStringArray( "res://examples/ExampleBasic_ja.tres:ja" )
+}
 
 [rendering]
 
-quality/driver/driver_name="GLES2"
 quality/intended_usage/framebuffer_allocation=0
 quality/intended_usage/framebuffer_allocation.mobile=0
 vram_compression/import_etc=true

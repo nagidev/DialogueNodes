@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" type="Script" id=1]
+[ext_resource path="res://addons/dialogue_nodes/icons/Profile.svg" type="Texture" id=2]
 
 [node name="DialogueNode" type="GraphNode"]
 margin_right = 200.0
@@ -40,9 +41,6 @@ slot/4/right_enabled = true
 slot/4/right_type = 0
 slot/4/right_color = Color( 1, 1, 1, 1 )
 script = ExtResource( 1 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="SpeakerLabel" type="Label" parent="."]
 margin_left = 16.0
@@ -51,12 +49,31 @@ margin_right = 184.0
 margin_bottom = 38.0
 text = "Speaker"
 
-[node name="Speaker" type="LineEdit" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 16.0
 margin_top = 39.0
 margin_right = 184.0
 margin_bottom = 63.0
+
+[node name="CustomSpeaker" type="LineEdit" parent="HBoxContainer"]
+margin_right = 136.0
+margin_bottom = 24.0
 hint_tooltip = "The name of the speaker shown in the dialogues."
+size_flags_horizontal = 3
+
+[node name="Speaker" type="OptionButton" parent="HBoxContainer"]
+visible = false
+margin_left = 70.0
+margin_right = 136.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="CharacterToggle" type="Button" parent="HBoxContainer"]
+margin_left = 140.0
+margin_right = 168.0
+margin_bottom = 24.0
+toggle_mode = true
+icon = ExtResource( 2 )
 
 [node name="DialogueLabel" type="Label" parent="."]
 margin_left = 16.0
@@ -86,5 +103,7 @@ margin_bottom = 195.0
 placeholder_text = "Option1"
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
-[connection signal="text_changed" from="Speaker" to="." method="_on_node_modified"]
+[connection signal="text_changed" from="HBoxContainer/CustomSpeaker" to="." method="_on_node_modified"]
+[connection signal="item_selected" from="HBoxContainer/Speaker" to="." method="_on_speaker_selected"]
+[connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
 [connection signal="text_changed" from="Dialogue" to="." method="_on_node_modified"]

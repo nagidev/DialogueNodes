@@ -1,0 +1,44 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://addons/dialogue_nodes/objects/DialogueData.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+starts = {
+"START": "0_1"
+}
+nodes = {
+"0_1": {
+"link": "1_1",
+"offset": Vector2( 0, 0 ),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "This would be some Japanese text if I knew Japanese.",
+"offset": Vector2( 220, 0 ),
+"options": {
+"0": {
+"link": "END",
+"text": "こんにちは。"
+}
+},
+"size": {
+"x": 200.0,
+"y": 255.0
+},
+"speaker": "Greg"
+},
+"2_1": {
+"comment": "A basic example",
+"offset": Vector2( -20, 80 ),
+"size": {
+"x": 200.0,
+"y": 100.0
+}
+}
+}
+variables = {
+}
+comments = [ "2_1" ]
+strays = [  ]
+characters = ""

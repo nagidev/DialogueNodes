@@ -11,7 +11,9 @@ onready var workspace = $Main/Workspace
 onready var graph = $Main/Workspace/Graph
 onready var side_panel = $Main/Workspace/SidePanel
 onready var files = $Main/Workspace/SidePanel/Files
-onready var variables = $Main/Workspace/SidePanel/Variables
+onready var data = $Main/Workspace/SidePanel/Data
+onready var characters = $Main/Workspace/SidePanel/Data/Characters
+onready var variables = $Main/Workspace/SidePanel/Data/Variables
 onready var dialogue = $DialogueBox
 onready var newDialogue = $NewDialog
 onready var saveDialogue = $SaveDialog
@@ -20,11 +22,11 @@ onready var openDialogue = $OpenDialog
 
 var start_nodes = []
 var comment_nodes = []
-var _empty_dict = {'start': {}, 'comments': {}}
 var _debug = false
 
 
 func _ready():
+	dialogue.popup_exclusive = false
 	init_menus()
 	
 	addMenu.get_popup().connect("id_pressed", workspace, "add_node")
@@ -50,12 +52,20 @@ func init_menus():
 
 
 # Run
-func _run_tree(start_node):	
-	var dict = start_node.tree_to_dict(graph)
-	dict['variables'] = variables.to_dict()
-	dialogue.dict = dict
+func _run_tree(start_node):
+	var data : DialogueData = DialogueData.new()
+	data.starts = {}
+	data.nodes = {}
+	data.variables = {}
+	data.comments = []
+	data.strays = []
 	
-	if dialogue.dict:
+	data = start_node.tree_to_data(graph, data)
+	data.variables = variables.to_dict()
+	data.characters = characters.filePath.text
+	dialogue.data = data
+	
+	if dialogue.data.starts.has(start_node.ID):
 		dialogue.start(start_node.ID)
 
 
@@ -72,72 +82,70 @@ func _update_run_menu():
 		runMenu.get_popup().add_item(ID)
 
 
-func get_dict():
-	var dict = {}
+func get_data():
+	var data = DialogueData.new()
 	
 	# add trees to dict
-	dict['start'] = {}
+	data.starts = {}
+	data.nodes = {}
 	for start_node_name in start_nodes:
 		var start_node = graph.get_node(start_node_name)
-		dict = start_node.tree_to_dict(graph, dict)
+		data = start_node.tree_to_data(graph, data)
 	
-	# add comments to dict
-	var comments = {}
+	# add comments to data
+	data.comments = []
 	for i in range(len(comment_nodes)):
 		var node = graph.get_node(comment_nodes[i])
-		comments[i] = node.name
-		dict[node.name] = node._to_dict(graph)
-		dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
-	dict['comments'] = comments
+		data.comments.append(node.name)
+		data.nodes[node.name] = node._to_dict(graph)
+		data.nodes[node.name]['offset'] = node.offset
 	
 	# add variables to dict
-	dict['variables'] = variables.to_dict()
+	data.variables = variables.to_dict()
 	
-	# add stray nodes #
-	var strays = {}
+	# add stray nodes
+	data.strays = []
 	for node in graph.get_children():
-		if node is GraphNode and not dict.has(node.name):
-			strays[node.name] = node.name
-			dict[node.name] = node._to_dict(graph)
-			dict[node.name]['offset'] = {'x' : node.offset.x, 'y' : node.offset.y}
-	dict['strays'] = strays
+		if node is GraphNode and not data.nodes.has(node.name):
+			data.strays.append(node.name)
+			data.nodes[node.name] = node._to_dict(graph)
+			data.nodes[node.name]['offset'] = node.offset
 	
-	return dict
+	data.characters = characters.filePath.text
+	
+	return data
 
 
-func open_dict(dict):
+func open_data(data : DialogueData):
 	
 	# clear graph
 	workspace.remove_all_nodes()
-	#yield(graph, "gui_input") #
+	yield(get_tree(), "idle_frame") #
 	
 	# add all start nodes with their trees
 	workspace.loading_file = true
-	for id in dict['start']:
-		var start_node_name = dict['start'][id]
+	for id in data.starts:
+		var start_node_name = data.starts[id]
 		var type = int(start_node_name.split('_')[0])
-		var offset = Vector2( float(dict[start_node_name]['offset']['x']), float(dict[start_node_name]['offset']['y']) )
+		var offset = data.nodes[start_node_name]['offset']
 		var start_node = workspace.add_node(type, null, start_node_name, offset)
-		start_node.dict_to_tree(workspace, dict)
+		start_node.data_to_tree(workspace, data)
 	
-	if dict.has('comments'):
-		for key in dict['comments']:
-			var node_name = dict['comments'][key]
-			var type = int(node_name.split('_')[0])
-			var offset = Vector2( float(dict[node_name]['offset']['x']), float(dict[node_name]['offset']['y']) )
-			var comment_node = workspace.add_node(type, null, node_name, offset)
-			comment_node._from_dict(graph, dict[node_name])
+	for node_name in data.comments:
+		var type = int(node_name.split('_')[0])
+		var offset = data.nodes[node_name]['offset']
+		var comment_node = workspace.add_node(type, null, node_name, offset)
+		comment_node._from_dict(graph, data.nodes[node_name])
 	
-	if dict.has('variables'):
-		variables.from_dict(dict['variables'])
+	variables.from_dict(data.variables)
 	
-	if dict.has('strays'):
-		for key in dict['strays']:
-			var node_name = dict['strays'][key]
-			var type = int(node_name.split('_')[0])
-			var offset = Vector2( float(dict[node_name]['offset']['x']), float(dict[node_name]['offset']['y']) )
-			var new_node = workspace.add_node(type, null, node_name, offset)
-			new_node._from_dict(graph, dict[node_name])
+	for node_name in data.strays:
+		var type = int(node_name.split('_')[0])
+		var offset = data.nodes[node_name]['offset']
+		var new_node = workspace.add_node(type, null, node_name, offset)
+		new_node._from_dict(graph, data.nodes[node_name])
+	
+	characters.load_file(data.characters)
 	
 	workspace.request_node = null
 	workspace.request_slot = null
@@ -147,15 +155,15 @@ func open_dict(dict):
 func new_file(path):
 	files.new_file(path)
 	graph.show()
-	variables.show()
+	data.show()
 
 
 func open_file(path):
 	files.open_file(path)
 
 
-func save_file(path, dict = get_dict()):
-	files.save_as_file(path, dict)
+func save_file(path, data = get_data()):
+	files.save_as_file(path, data)
 
 
 func toggle_side_panel():
@@ -170,6 +178,10 @@ func _on_node_added(node_name):
 			start_nodes.append(node_name)
 			var node = graph.get_node(node_name)
 			node.connect("run_tree", self, "_run_tree", [node])
+		'1':
+			var node = graph.get_node(node_name)
+			characters.connect("file_selected", node, "_on_characters_loaded")
+			node._on_characters_loaded(characters.characterList)
 		'2':
 			comment_nodes.append(node_name)
 
@@ -216,21 +228,19 @@ func _on_file_popup_pressed(id):
 		2:
 			# Close
 			files.close_file()
-			variables.remove_all_variables()
 		3:
 			# Close all
 			files.close_all()
-			variables.remove_all_variables()
 
 
-func _on_file_opened(dict):
-	open_dict(dict)
+func _on_file_opened(dialogueData : DialogueData):
+	open_data(dialogueData)
 	graph.show()
-	variables.show()
+	data.show()
 
 
-func _on_file_request_dict(file_button):
-	file_button.dict = get_dict()
+func _on_file_closed():
+	variables.remove_all_variables()
 
 
 func _on_run_menu_pressed(id):
@@ -252,5 +262,27 @@ func _on_graph_visibility_changed():
 	runMenu.visible = graph.visible
 
 
+func _on_dialogue_started(id):
+	if _debug:
+		print_debug('Dialogue started: ', id)
+
+
 func _on_dialogue_variable_changed(var_name, value):
 	variables.set_value(var_name, value)
+	
+	if _debug:
+		print_debug('Variable changed: ', var_name, ' = ', value)
+
+
+func _on_dialogue_signal(value):
+	if _debug:
+		print_debug('Signal emitted with value: ', value)
+
+
+func _on_dialogue_ended():
+	if _debug:
+		print_debug('Dialogue ended')
+
+
+func _on_dialogue_cancelled():
+	dialogue.stop()

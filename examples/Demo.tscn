@@ -1,10 +1,16 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/objects/dialogueBox.gd" type="Script" id=1]
 [ext_resource path="res://examples/demo.gd" type="Script" id=2]
 [ext_resource path="res://icon.png" type="Texture" id=3]
 [ext_resource path="res://addons/dialogue_nodes/themes/bubbly.theme" type="Theme" id=4]
 [ext_resource path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" type="Script" id=5]
+[ext_resource path="res://examples/ExampleCharacters.tres" type="Resource" id=6]
+[ext_resource path="res://examples/ExampleSignals.tres" type="Resource" id=7]
+[ext_resource path="res://examples/ExampleVariables.tres" type="Resource" id=8]
+[ext_resource path="res://examples/ExampleBBCodes.tres" type="Resource" id=9]
+[ext_resource path="res://examples/ExampleBranching.tres" type="Resource" id=10]
+[ext_resource path="res://examples/ExampleBasic.tres" type="Resource" id=11]
 
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.71435, 0.0, 0, 0 ]
@@ -17,17 +23,26 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 4 )
 script = ExtResource( 2 )
-demos = [ "res://examples/Example1.json", "res://examples/Example2.json", "res://examples/Example3.json", "res://examples/Example4.json" ]
+demos = [ ExtResource( 11 ), ExtResource( 9 ), ExtResource( 10 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ) ]
+
+[node name="LanguageSelector" type="OptionButton" parent="."]
+margin_left = 16.0
+margin_top = 16.0
+margin_right = 62.0
+margin_bottom = 47.0
+text = "en"
+items = [ "en", null, false, 0, null, "ja", null, false, 1, null ]
+selected = 0
 
 [node name="DemoSelector" type="OptionButton" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -67.0
-margin_top = 131.714
-margin_right = 68.0
-margin_bottom = 167.714
+margin_left = -107.0
+margin_top = 84.0
+margin_right = 107.0
+margin_bottom = 125.0
 
 [node name="Button" type="Button" parent="."]
 anchor_left = 0.5
@@ -64,17 +79,17 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -269.0
-margin_top = -180.0
-margin_right = 269.0
-margin_bottom = -28.0
+margin_left = -439.0
+margin_top = -205.0
+margin_right = 439.0
+margin_bottom = -29.0
 rect_min_size = Vector2( 300, 72 )
 popup_exclusive = true
 script = ExtResource( 1 )
-dialogue_file = "res://examples/Example1.json"
 start_id = "START"
 custom_effects = [ SubResource( 13 ) ]
 
+[connection signal="item_selected" from="LanguageSelector" to="." method="_on_language_selected"]
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
 [connection signal="pressed" from="Button" to="." method="_on_Button_pressed"]
 [connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]
