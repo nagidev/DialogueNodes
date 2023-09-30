@@ -9,19 +9,22 @@ signal dialogue_signal(value)
 signal dialogue_ended
 signal variable_changed(var_name, value)
 
-@export_file("*.json") var dialogue_file : set = load_file
+@export var dialogue_file : DialogueData = null : set = load_data
 @export var start_id: String
 @export_range(1, 8) var max_options = 4
 @export_enum('Begin', 'Center', 'End') var options_alignment = 2: set = _set_options_alignment
+@export var skip_input_action := 'ui_cancel'
+@export var next_icon := preload("res://addons/dialogue_nodes/icons/Play.svg")
 @export var custom_effects : Array[RichTextEffect] = [RichTextWait.new()]
 
 var speaker : Label
+var portrait : TextureRect
 var dialogue : RichTextLabel
 var options : HBoxContainer
-var dict = null: set = set_dict
+var data : DialogueData = null : set= set_data
 var variables = {}
 var running = false
-var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
+var characterList : CharacterList = null
 
 
 func _enter_tree():
@@ -32,19 +35,27 @@ func _enter_tree():
 	custom_minimum_size = Vector2(256, 128)
 	
 	# setup containers
-	var margin_container = MarginContainer.new()
+	var margin_container := MarginContainer.new()
 	add_child(margin_container)
-	margin_container.anchor_left = 0
-	margin_container.anchor_top = 0
-	margin_container.anchor_right = 1
-	margin_container.anchor_bottom = 1
+	margin_container.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin_container.offset_left = 4
 	margin_container.offset_top = 4
 	margin_container.offset_right = -4
 	margin_container.offset_bottom = -4
 	
+	var hbox_container = HBoxContainer.new()
+	margin_container.add_child(hbox_container)
+	
+	# setup portrait image
+	portrait = TextureRect.new()
+	hbox_container.add_child(portrait)
+	portrait.expand_mode = TextureRect.EXPAND_FIT_WIDTH
+	portrait.size_flags_stretch_ratio = 0
+	
+	
 	var vbox_container = VBoxContainer.new()
-	margin_container.add_child(vbox_container)
+	hbox_container.add_child(vbox_container)
+	vbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
 	# setup speaker, dialogue
 	speaker = Label.new()
@@ -73,8 +84,8 @@ func _enter_tree():
 func _ready():
 	hide()
 	
-	if dict:
-		init_variables(dict['variables'])
+	if data:
+		init_variables(data.variables)
 	
 	for effect in custom_effects:
 		if effect is RichTextWait:
@@ -83,31 +94,33 @@ func _ready():
 
 
 func _input(event):
-	if Input.is_action_just_pressed("ui_accept"):
+	if Input.is_action_just_pressed(skip_input_action):
 		custom_effects[0].skip = true
 
 
-func load_file(path):
-	dialogue_file = path
+func load_data(new_data : DialogueData):
+	data = null
 	
-	if path == '':
-		dict = null
-	else:
-		var file = FileAccess.open(path, FileAccess.READ)
-		var test_json_conv = JSON.new()
-		test_json_conv.parse(file.get_as_text())
-		dict = test_json_conv.get_data()
-		file.close()
+	if new_data and not new_data is DialogueData:
+		printerr('Unsupported file!')
+		return
+	
+	dialogue_file = new_data
+	set_data(new_data)
+
+
+func set_data(new_data : DialogueData):
+	data = new_data
+	if data:
+		# load variables from the data
+		init_variables(data.variables)
 		
-		if typeof(dict) != TYPE_DICTIONARY:
-			printerr('Unsupported file!')
-			dict = null
-
-
-func set_dict(new_dict):
-	dict = new_dict
-	if dict:
-		init_variables(dict['variables'])
+		# load characters
+		characterList = null
+		if data.characters.ends_with('.tres'):
+			var file = ResourceLoader.load(data.characters, '', ResourceLoader.CACHE_MODE_REPLACE)
+			if file is CharacterList:
+				characterList = file
 
 
 func init_variables(var_dict):
@@ -121,15 +134,15 @@ func init_variables(var_dict):
 
 
 func start(id = start_id):
-	if !dict:
+	if !data:
 		printerr('No dialogue data!')
 		return
-	elif !dict['start'].has(id):
+	elif !data.starts.has(id):
 		printerr('Start ID not present!')
 		return
 	
 	running = true
-	proceed(dict['start'][id])
+	proceed(data.starts[id])
 	dialogue_started.emit(id)
 
 
@@ -145,17 +158,17 @@ func proceed(idx):
 		'0':
 			# start
 			show()
-			proceed(dict[idx]['link'])
+			proceed(data.nodes[idx]['link'])
 		'1':
 			# dialogue
-			set_dialogue(dict[idx])
+			set_dialogue(data.nodes[idx])
 		'3':
 			# signal
-			dialogue_signal.emit(dict[idx]['signalValue'])
-			proceed(dict[idx]['link'])
+			dialogue_signal.emit(data.nodes[idx]['signalValue'])
+			proceed(data.nodes[idx]['link'])
 		'4':
 			# set
-			var var_dict = dict[idx]
+			var var_dict = data.nodes[idx]
 			
 			var var_name = var_dict['variable']
 			var value = var_dict['value']
@@ -170,10 +183,10 @@ func proceed(idx):
 			proceed(var_dict['link'])
 		'5':
 			# condition
-			handle_condition(dict[idx])
+			handle_condition(data.nodes[idx])
 		_:
-			if dict[idx].has('link'):
-				proceed(dict[idx]['link'])
+			if data.nodes[idx].has('link'):
+				proceed(data.nodes[idx]['link'])
 			else:
 				stop()
 	dialogue_proceeded.emit()
@@ -181,13 +194,25 @@ func proceed(idx):
 
 func stop():
 	running = false
-	dialogue.text = ""
+	dialogue.text = ''
 	hide()
 	dialogue_ended.emit()
 
 
 func set_dialogue(dict):
-	speaker.text = dict['speaker']
+	# set speaker and portrait
+	speaker.text = ''
+	portrait.texture = null
+	if dict['speaker'] is String:
+		speaker.text = dict['speaker']
+	elif dict['speaker'] is float and characterList:
+		var idx = int(dict['speaker'])
+		if idx > -1 and idx < characterList.characters.size():
+			speaker.text = characterList.characters[idx].name
+			if characterList.characters[idx].image:
+				portrait.texture = characterList.characters[idx].image
+	
+	dialogue.text = '' # workaround for bug
 	dialogue.text = process_text(dict['dialogue'])
 	custom_effects[0].skip = false
 	
@@ -202,8 +227,8 @@ func set_dialogue(dict):
 		var option = options.get_child(int(idx))
 		option.text = process_text(dict['options'][idx]['text'], false)
 		if option.is_connected('pressed', Callable(self, 'proceed')):
-			option.disconnect("pressed", Callable(self, 'proceed'))
-		option.connect("pressed", Callable(self, 'proceed').bind(dict['options'][idx]['link']))
+			option.disconnect('pressed', Callable(self, 'proceed'))
+		option.pressed.connect( Callable(self, 'proceed').bind(dict['options'][idx]['link']) )
 		option.show()
 	
 	# if single empty option
@@ -219,15 +244,19 @@ func process_text(text : String, is_dialogue = true):
 	# Add variables
 	text = text.format(variables, '{{_}}')
 	
-	# Add a wait if none present
-	if text.count('[wait') == 0 and is_dialogue:
+	# return text now if not a dialogue
+	if not is_dialogue:
+		return text
+	
+	# Add a wait if none present at beginning
+	if not text.begins_with('[wait'):
 		text = '[wait]' + text + '[/wait]'
 	
 	# Update [wait] with last attribute for showing options
 	# Find the actual position of the last character sans bbcode
 	var regex = RegEx.new()
-	regex.compile("\\[.*?\\]")
-	var textLength = regex.sub(text, "", true).length()
+	regex.compile('\\n|\\[img\\].*?\\[\\/img\\]|\\[.*?\\]')
+	var textLength = regex.sub(text, '', true).length()
 	
 	var idx = 0
 	var char_idx = -1
@@ -240,21 +269,30 @@ func process_text(text : String, is_dialogue = true):
 				var open_tag_end = text.findn(']', idx)
 				var end_tag = text.findn('[/wait]', idx)
 				
+				var img_tag = text.findn('[img', idx)
+				var img_tag_end = text.findn('[/img]', idx)
+				
 				if open_tag_start == idx:
 					var start = char_idx + 1
 					waits.push_back({ "at": open_tag_end, "start": start })
 					idx = open_tag_end + 1
 				elif end_tag == idx:
 					var start_data = waits.pop_back()
-					var insertText = ' start='+str(start_data.start)+' last='+str(char_count - 1)+' length='+str(textLength)
+					var insertText = ' start='+str(start_data.start)+' last='+str(start_data.last)+' length='+str(textLength)
 					text = text.insert(start_data.at, insertText)
 					idx = end_tag + insertText.length() + 7
+				elif img_tag == idx:
+					idx = img_tag_end + 6
 				else:
 					idx = open_tag_end + 1
+			'\n':
+				idx += 1
 			_:
 				idx += 1
 				char_idx += 1
 				char_count += 1
+				if waits.size():
+					waits[-1]["last"] = char_count - 1
 	
 	# insert waits if any left
 	while len(waits) > 0:
@@ -360,8 +398,9 @@ func handle_condition(cond_dict):
 
 
 func show_options():
-	options.show()
-	options.get_child(0).grab_focus()
+	if options.is_inside_tree():
+		options.show()
+		options.get_child(0).grab_focus()
 
 
 func _set_options_alignment(value):

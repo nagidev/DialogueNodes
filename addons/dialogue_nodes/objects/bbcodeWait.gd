@@ -12,7 +12,7 @@ var displayed = {}
 
 func _process_custom_fx(char_fx):
 	var waitTime = float(char_fx.env.get('time', 0.0))
-	var speed = float(char_fx.env.get('speed', 40.0))
+	var speed = float(char_fx.env.get('speed', 50.0))
 	var start = int(char_fx.env.get('start', 0))
 	var last = int(char_fx.env.get('last', 0))
 	var length = int(char_fx.env.get('length', 0))
@@ -21,10 +21,9 @@ func _process_custom_fx(char_fx):
 	if float(char_fx.elapsed_time) > float(absolute_index / speed) + waitTime or skip:
 		char_fx.visible = true
 		
-		if absolute_index >= last and not finished:
-			if absolute_index >= (length - 1):
-				finished = true
-				wait_finished.emit()
+		if not finished and absolute_index >= last and last == length - 1:
+			finished = true
+			wait_finished.emit()
 		
 		if not displayed.has(absolute_index):
 			displayed[absolute_index] = 1

@@ -1,0 +1,121 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://bjme2drtas671"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+starts = {
+"START": &"0_1",
+"START2": &"0_2"
+}
+nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(0, 0),
+"start_id": "START"
+},
+"0_2": {
+"link": &"1_4",
+"offset": Vector2(0, 600),
+"start_id": "START2"
+},
+"1_1": {
+"dialogue": "Which pill will you take?",
+"offset": Vector2(220, 0),
+"options": {
+0: {
+"link": &"1_2",
+"text": "Red pill"
+},
+1: {
+"link": &"1_3",
+"text": "Blue pill"
+}
+},
+"size": {
+"x": 200.0,
+"y": 289.0
+},
+"speaker": "Morpheus"
+},
+"1_2": {
+"dialogue": "Do you have the doctor's prescription for the pill?",
+"offset": Vector2(460, -80),
+"options": {
+"0": {
+"link": "END",
+"text": "Uh..."
+}
+},
+"size": {
+"x": 200.0,
+"y": 278.5
+},
+"speaker": "Morpheus"
+},
+"1_3": {
+"dialogue": "You shouldn't take pills from strangers, you know!",
+"offset": Vector2(460, 220),
+"options": {
+"0": {
+"link": "END",
+"text": "Oh..."
+}
+},
+"size": {
+"x": 200.0,
+"y": 261.0
+},
+"speaker": "Morpheus"
+},
+"1_4": {
+"dialogue": "Heck, you can even make multiple dialogue trees in the same file! (Say, all dialogues for one character or one act)",
+"offset": Vector2(220, 600),
+"options": {
+0: {
+"link": &"1_5",
+"text": ""
+}
+},
+"size": {
+"x": 200.0,
+"y": 261.0
+},
+"speaker": "Greg"
+},
+"1_5": {
+"dialogue": "When you want to call a specific dialogue tree, just pass the unique start ID when calling [color=yellow]$DialogueBox.start('MyID')[/color]",
+"offset": Vector2(460, 600),
+"options": {
+"0": {
+"link": "END",
+"text": "Cool!"
+}
+},
+"size": {
+"x": 200.0,
+"y": 261.0
+},
+"speaker": "Greg"
+},
+"2_1": {
+"comment": "Create branching dialogues using different options.",
+"offset": Vector2(-20, 80),
+"size": {
+"x": 200.0,
+"y": 129.9
+}
+},
+"2_2": {
+"comment": "Create multiple dialogue trees in the same file.",
+"offset": Vector2(-20, 680),
+"size": {
+"x": 200.0,
+"y": 129.9
+}
+}
+}
+variables = {}
+comments = Array[String](["2_1", "2_2"])
+strays = Array[String]([])
+characters = ""

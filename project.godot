@@ -13,16 +13,14 @@ config_version=5
 config/name="DialogueNodes"
 run/main_scene="res://examples/Demo.tscn"
 config/features=PackedStringArray("4.1")
-config/icon="res://icon.png"
+config/icon="res://icon.svg"
 
-[display]
+[internationalization]
 
-window/stretch/mode="canvas_items"
-window/handheld/orientation="sensor"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/dialogue_nodes/plugin.cfg")
+locale/translation_remaps={
+"res://examples/ExampleBasic.tres": PackedStringArray("res://examples/ExampleBasic_ja.tres:ja")
+}
+locale/locale_filter_mode=0
 
 [rendering]
 

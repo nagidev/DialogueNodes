@@ -1,9 +1,10 @@
 @tool
 extends ItemList
+class_name Files
 
 
-signal opened(dict)
-signal switched(dict)
+signal opened(data : DialogueData)
+signal switched(data : DialogueData)
 signal closed
 
 @export var editor_path: NodePath
@@ -66,7 +67,7 @@ func _get_file_idx(node_name):
 	return -1
 
 
-func create_file(file_name, file_dir, dict):
+func create_file(file_name, file_dir, data : DialogueData):
 	var new_idx : int
 	var node_name = file_dir.split('/')[-1] + '>' + file_name.split('.')[0]
 	
@@ -80,7 +81,7 @@ func create_file(file_name, file_dir, dict):
 		var new_file = {
 			'id': node_name,
 			'path': file_dir+'/'+file_name,
-			'dict': dict,
+			'data': data,
 			'modified': false}
 		
 		# add new file item
@@ -107,15 +108,15 @@ func select_file(idx):
 		return
 	
 	if current > -1:
-		# update the dict of old current
+		# update the data of previous current
 		var metadata = get_item_metadata(current)
-		metadata['dict'] = editor.get_dict()
+		metadata['data'] = editor.get_data()
 		set_item_metadata(current, metadata)
 	
 	current = idx
-	var dict = get_item_metadata(current)['dict']
+	var data : DialogueData= get_item_metadata(current)['data']
 	select(current)
-	switched.emit(dict)
+	switched.emit(data)
 
 
 func modify_file(idx = current):
@@ -130,27 +131,22 @@ func modify_file(idx = current):
 func new_file(path):
 	var file_name : String = newDialogue.current_file
 	var file_dir : String = newDialogue.current_dir
-	var dict = editor._empty_dict
+	var data = DialogueData.new()
 	
-	create_file(file_name, file_dir, dict)
+	create_file(file_name, file_dir, data)
 	save_file(current)
 	
-	switched.emit(dict)
+	switched.emit(data)
 
 
 func open_file(path, internal = false):
 	# open/read file
-	var file = FileAccess.open(path, FileAccess.READ)
-	
-	var test_json_conv = JSON.new()
-	test_json_conv.parse(file.get_as_text())
-	var dict = test_json_conv.get_data()
-	file.close()
+	var data = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_REPLACE)
 	
 	var file_name : String
 	var file_dir : String
 	
-	if typeof(dict) == TYPE_DICTIONARY:
+	if data is DialogueData:
 		file_name = openDialogue.current_file
 		file_dir = openDialogue.current_dir
 	else:
@@ -158,10 +154,10 @@ func open_file(path, internal = false):
 		return
 	
 	# create, setup file button
-	var file_idx = create_file(file_name, file_dir, dict)
+	var file_idx = create_file(file_name, file_dir, data)
 	
 	if not internal:
-		opened.emit(get_item_metadata(file_idx)['dict'])
+		opened.emit(get_item_metadata(file_idx)['data'])
 
 
 func save_file(idx = current):
@@ -169,16 +165,13 @@ func save_file(idx = current):
 		return
 	
 	var metadata = get_item_metadata(idx)
-	# update the dict if needed
+	# update the data if needed
 	if idx == current:
-		metadata['dict'] = editor.get_dict()
+		metadata['data'] = editor.get_data()
 		set_item_metadata(current, metadata)
 	
-	var file = FileAccess.open(metadata['path'], FileAccess.WRITE)
-	
-	# save dict to json file	
-	file.store_line(JSON.new().stringify(metadata['dict']))
-	file.close()
+	# save dialogue data to file
+	ResourceSaver.save(metadata['data'], metadata['path'])
 	
 	if editor._debug:
 		print('File saved: ', metadata['path'])
@@ -188,13 +181,13 @@ func save_file(idx = current):
 	set_item_text(idx, metadata['path'].split('/')[-1])
 
 
-func save_as_file(path, dict):
+func save_as_file(path, data):
 	var file_name : String = saveDialogue.current_file
 	var file_dir : String = saveDialogue.current_dir
 	
-	create_file(file_name, file_dir, dict)
+	create_file(file_name, file_dir, data)
 	save_file(current)
-	switched.emit(dict)
+	switched.emit(data)
 
 
 func save_all():
@@ -227,7 +220,7 @@ func close_file(idx = current):
 	
 	if current > -1:
 		select(current)
-		switched.emit(get_item_metadata(current)['dict'])
+		switched.emit(get_item_metadata(current)['data'])
 
 
 func close_all():
