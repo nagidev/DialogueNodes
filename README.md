@@ -5,16 +5,17 @@ Godot provides all the tools needed to create your own dialogue system, however,
 
 ## Features
 
-    Dialogue Tree editor
-    Open, Edit, & Save multiple files
-    Multiple Dialogue Trees per file
-    Built-in tester for your dialogue trees
-    Trigger signal, check conditions & change variable values from your dialogues
-    DialogueBox node to run your dialogue trees in-game
-    Easy to understand export files (JSON files)
-    Easily extend/add more nodes for advanced functionality
+- Dialogue Tree editor runs within the Godot engine
+- Open, Edit, & Save multiple files
+- Multiple Dialogue Trees per file
+- Built-in tester for your dialogue trees
+- Trigger signal, check conditions & change variable values from your dialogues
+- DialogueBox node to run your dialogue trees in-game
+- Dialogue files saved in .tres (Godot Resource) format which can be easily localized
+- Simple project structure to help extend the addon to your needs
 
 
 ## Known issues
 - DialogueNode in the workplace may have wrong colored slots on light themes
 - Icons do not look right in light theme
+- Using return character in the dialogue results in options not showing up in certain cases

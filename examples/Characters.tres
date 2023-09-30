@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="CharacterList" load_steps=6 format=3 uid="uid://di21ijmfa2s22"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/CharacterList.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/Character.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://b2hbqv3slgfxt" path="res://examples/profile0.png" id="3"]
+
+[sub_resource type="Resource" id="1"]
+script = ExtResource("2")
+name = "Greg"
+
+[sub_resource type="Resource" id="2"]
+script = ExtResource("2")
+name = "Clara"
+image = ExtResource("3")
+
+[resource]
+script = ExtResource("1")
+characters = Array[ExtResource("2")]([SubResource("1"), SubResource("2")])

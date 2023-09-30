@@ -1,5 +1,5 @@
 @tool
-extends HSplitContainer
+extends Control
 
 
 signal node_added(node_name)
@@ -8,7 +8,7 @@ signal node_deleted(node_name)
 @export var nodeScenes: Array[PackedScene]
 
 @onready var files = $SidePanel/Files
-@onready var variables = $SidePanel/Variables
+@onready var data = $SidePanel/Data
 @onready var graph = $Graph
 @onready var popup = $Graph/PopupMenu
 
@@ -149,7 +149,7 @@ func _on_nodes_duplicated():
 
 func _on_nodes_delete(node_names):
 	for node_name in node_names:
-		remove_node(graph.get_node(NodePath(node_name)))
+		remove_node(graph.get_node( NodePath(node_name) ))
 
 
 func _select_all_nodes(select = true):
@@ -183,10 +183,8 @@ func _on_file_modified():
 
 
 func _on_file_closed():
-	
 	remove_all_nodes()
 	
-	# child_count <= 1 because the file_button is still queued for deletion, hence, may be present
 	if files.get_item_count() == 0:
 		graph.hide()
-		variables.hide()
+		data.hide()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=20 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
@@ -14,6 +14,9 @@
 [ext_resource type="PackedScene" uid="uid://h3hkys0mgvji" path="res://addons/dialogue_nodes/nodes/CommentNode.tscn" id="8_nuo3d"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="9"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="10_cxec0"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="11_ku5xd"]
+[ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="12_tk1td"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="15_kpna5"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_3vpbk"]
@@ -116,6 +119,7 @@ custom_minimum_size = Vector2(150, 0)
 layout_mode = 2
 
 [node name="Files" type="ItemList" parent="Main/Workspace/SidePanel"]
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
@@ -137,17 +141,53 @@ item_2/id = 2
 item_3/text = "Close All"
 item_3/id = 3
 
-[node name="Variables" type="VBoxContainer" parent="Main/Workspace/SidePanel"]
+[node name="Data" type="VBoxContainer" parent="Main/Workspace/SidePanel"]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
+
+[node name="Characters" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data"]
+layout_mode = 2
+script = ExtResource("10_cxec0")
+
+[node name="Title" type="Label" parent="Main/Workspace/SidePanel/Data/Characters"]
+layout_mode = 2
+text = "Characters"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Workspace/SidePanel/Data/Characters"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="ResetButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("11_ku5xd")
+flat = true
+
+[node name="FilePath" type="TextEdit" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LoadButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+layout_mode = 2
+icon = ExtResource("12_tk1td")
+
+[node name="OpenDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Data/Characters"]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+filters = PackedStringArray("*.tres; Character resource")
+
+[node name="Variables" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data"]
+layout_mode = 2
 script = ExtResource("10")
 
-[node name="Title" type="Label" parent="Main/Workspace/SidePanel/Variables"]
+[node name="Title" type="Label" parent="Main/Workspace/SidePanel/Data/Variables"]
 layout_mode = 2
-text = "Variables:"
+text = "Variables"
 
-[node name="AddButton" type="Button" parent="Main/Workspace/SidePanel/Variables"]
+[node name="AddButton" type="Button" parent="Main/Workspace/SidePanel/Data/Variables"]
 layout_mode = 2
 tooltip_text = "Add a new variable."
 text = "+"
@@ -192,13 +232,13 @@ stretch_mode = 3
 title = "Create a file"
 size = Vector2i(600, 400)
 mode_overrides_title = false
-filters = PackedStringArray("*.json; Dialogue JSON File")
+filters = PackedStringArray("*.tres; Dialogue File")
 
 [node name="SaveDialog" type="FileDialog" parent="."]
 title = "Save a file"
 size = Vector2i(600, 400)
 mode_overrides_title = false
-filters = PackedStringArray("*.json; Dialogue JSON File")
+filters = PackedStringArray("*.tres; Dialogue File")
 
 [node name="OpenDialog" type="FileDialog" parent="."]
 title = "Open a file"
@@ -206,7 +246,7 @@ size = Vector2i(600, 400)
 ok_button_text = "Open"
 mode_overrides_title = false
 file_mode = 0
-filters = PackedStringArray("*.json; Dialogue JSON File")
+filters = PackedStringArray("*.tres; Dialogue File")
 
 [node name="ConfirmationDialog" type="AcceptDialog" parent="."]
 size = Vector2i(400, 109)
@@ -244,15 +284,21 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_3vpbk")])
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
 [connection signal="node_deleted" from="Main/Workspace" to="." method="_on_node_deleted"]
+[connection signal="closed" from="Main/Workspace/SidePanel/Files" to="." method="_on_file_closed"]
 [connection signal="closed" from="Main/Workspace/SidePanel/Files" to="Main/Workspace" method="_on_file_closed"]
 [connection signal="empty_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_empty_clicked"]
 [connection signal="item_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_item_clicked"]
 [connection signal="item_selected" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="select_file"]
 [connection signal="opened" from="Main/Workspace/SidePanel/Files" to="." method="_on_file_opened"]
-[connection signal="switched" from="Main/Workspace/SidePanel/Files" to="." method="open_dict"]
+[connection signal="switched" from="Main/Workspace/SidePanel/Files" to="." method="open_data"]
 [connection signal="id_pressed" from="Main/Workspace/SidePanel/Files/PopupMenu" to="." method="_on_file_popup_pressed"]
-[connection signal="modified" from="Main/Workspace/SidePanel/Variables" to="Main/Workspace" method="_on_file_modified"]
-[connection signal="pressed" from="Main/Workspace/SidePanel/Variables/AddButton" to="Main/Workspace/SidePanel/Variables" method="add_variable"]
+[connection signal="modified" from="Main/Workspace/SidePanel/Data/Characters" to="Main/Workspace" method="_on_file_modified"]
+[connection signal="pressed" from="Main/Workspace/SidePanel/Data/Characters/HBoxContainer/ResetButton" to="Main/Workspace/SidePanel/Data/Characters" method="_on_resetButton_pressed"]
+[connection signal="text_changed" from="Main/Workspace/SidePanel/Data/Characters/HBoxContainer/FilePath" to="Main/Workspace/SidePanel/Data/Characters" method="_on_filePath_changed"]
+[connection signal="pressed" from="Main/Workspace/SidePanel/Data/Characters/HBoxContainer/LoadButton" to="Main/Workspace/SidePanel/Data/Characters" method="_on_loadButton_pressed"]
+[connection signal="file_selected" from="Main/Workspace/SidePanel/Data/Characters/OpenDialog" to="Main/Workspace/SidePanel/Data/Characters" method="load_file"]
+[connection signal="modified" from="Main/Workspace/SidePanel/Data/Variables" to="Main/Workspace" method="_on_file_modified"]
+[connection signal="pressed" from="Main/Workspace/SidePanel/Data/Variables/AddButton" to="Main/Workspace/SidePanel/Data/Variables" method="add_variable"]
 [connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_request"]
 [connection signal="connection_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="connection_to_empty" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_connection_to_empty"]
