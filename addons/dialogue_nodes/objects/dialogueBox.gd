@@ -15,7 +15,10 @@ signal variable_changed(var_name, value)
 @export_enum('Begin', 'Center', 'End') var options_alignment = 2: set = _set_options_alignment
 @export var skip_input_action := 'ui_cancel'
 @export var next_icon := preload("res://addons/dialogue_nodes/icons/Play.svg")
-@export var custom_effects : Array[RichTextEffect] = [RichTextWait.new()]
+@export var custom_effects : Array[RichTextEffect] = [
+		RichTextWait.new(),
+		RichTextGhost.new()
+		]
 
 var speaker : Label
 var portrait : TextureRect
