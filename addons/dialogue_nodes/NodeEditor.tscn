@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=22 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
@@ -18,9 +18,13 @@
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="11_ku5xd"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="12_tk1td"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="15_kpna5"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="19_7vkda"]
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_3vpbk"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_orqxx"]
 script = ExtResource("15_kpna5")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ynero"]
+script = ExtResource("19_7vkda")
 
 [node name="NodeEditor" type="Control"]
 custom_minimum_size = Vector2(0, 300)
@@ -272,14 +276,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -343.5
-offset_top = -127.0
-offset_right = 343.5
-offset_bottom = 127.0
+offset_left = -320.0
+offset_top = -128.0
+offset_right = 320.0
+offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5")
-custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_3vpbk")])
+custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
@@ -308,6 +312,7 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_3vpbk")])
 [connection signal="disconnection_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="duplicate_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_nodes_duplicated"]
 [connection signal="duplicate_nodes_request" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
+[connection signal="end_node_move" from="Main/Workspace/Graph" to="Main/Workspace/Graph" method="_on_modified"]
 [connection signal="modified" from="Main/Workspace/Graph" to="Main/Workspace" method="_on_file_modified"]
 [connection signal="popup_request" from="Main/Workspace/Graph" to="Main/Workspace" method="show_menu"]
 [connection signal="visibility_changed" from="Main/Workspace/Graph" to="." method="_on_graph_visibility_changed"]

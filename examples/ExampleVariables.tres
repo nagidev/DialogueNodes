@@ -120,7 +120,7 @@ Current value: {{COINS}}
 },
 "1_7": {
 "dialogue": "Like right now you have more than 5 coins!",
-"offset": Vector2(1540, 260),
+"offset": Vector2(1600, 260),
 "options": {
 0: {
 "link": &"1_9",
@@ -129,13 +129,13 @@ Current value: {{COINS}}
 },
 "size": {
 "x": 200.0,
-"y": 261.0
+"y": 250.447
 },
 "speaker": "Greg"
 },
 "1_8": {
 "dialogue": "I can tell you don't have more than 5 coins...",
-"offset": Vector2(1540, 500),
+"offset": Vector2(1600, 540),
 "options": {
 0: {
 "link": &"1_9",
@@ -150,7 +150,7 @@ Current value: {{COINS}}
 },
 "1_9": {
 "dialogue": "Feel free to look at the example files to learn how to do it yourself!",
-"offset": Vector2(1800, 320),
+"offset": Vector2(1900, 260),
 "options": {
 0: {
 "link": &"1_2",

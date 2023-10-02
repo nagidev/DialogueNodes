@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://examples/demo.gd" id="2"]
 [ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_r2hw0"]
 [ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="4"]
-[ext_resource type="Resource" path="res://examples/ExampleBBCodes.tres" id="4_hv77k"]
+[ext_resource type="Resource" uid="uid://btriowhsx04c2" path="res://examples/ExampleBBCodes.tres" id="4_hv77k"]
 [ext_resource type="Resource" uid="uid://bjme2drtas671" path="res://examples/ExampleBranching.tres" id="5_quhw6"]
 [ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_ncvoa"]
 [ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_sjqsf"]
