@@ -244,6 +244,9 @@ func process_text(text : String, is_dialogue = true):
 	if text == '' and is_dialogue:
 		text = ' '
 	
+	#Translate the text
+	text = tr(text)
+	
 	# Add variables
 	text = text.format(variables, '{{_}}')
 	

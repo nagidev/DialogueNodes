@@ -1,0 +1,20 @@
+# LANGUAGE translation for DialogueNodes for the following files:
+# res://examples/tag_creator.gd
+#
+# FIRST AUTHOR < EMAIL @ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: DialogueNodes\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8-bit\n"
+
+#: examples/tag_creator.gd
+msgid "BASIC_1"
+msgstr ""
+
+#: examples/tag_creator.gd
+msgid "Greg"
+msgstr ""
