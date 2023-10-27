@@ -14,7 +14,7 @@ nodes = {
 "start_id": "START"
 },
 "1_1": {
-"dialogue": "Hey there!",
+"dialogue": "BASIC_1",
 "offset": Vector2(220, 0),
 "options": {
 "0": {

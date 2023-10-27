@@ -39,5 +39,5 @@ func _on_locale_selected(index):
 			TranslationServer.set_locale("en")
 		1:
 			# Japanese
-			TranslationServer.set_locale("ja")
+			TranslationServer.set_locale("es")
 			

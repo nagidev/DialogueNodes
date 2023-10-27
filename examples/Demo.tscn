@@ -73,7 +73,7 @@ item_count = 2
 selected = 0
 popup/item_0/text = "en"
 popup/item_0/id = 0
-popup/item_1/text = "ja"
+popup/item_1/text = "es"
 popup/item_1/id = 1
 
 [node name="Particles" type="CPUParticles2D" parent="."]
