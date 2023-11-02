@@ -40,7 +40,7 @@ func init_nodes():
 	for i in range(len(nodeScenes)):
 		var scene = nodeScenes[i]
 		var scene_name = scene.instantiate().name
-		nodes[i] = {"name": scene_name, "scene": scene}
+		nodes[i] = {'name': scene_name, 'scene': scene}
 
 
 func add_node(id, clone = null, node_name = '', offset = null):
@@ -60,14 +60,14 @@ func add_node(id, clone = null, node_name = '', offset = null):
 	new_node.position_offset = cursor_pos - (new_node.size * 0.5) if offset == null else offset
 	new_node.selected = true
 	
-	new_node.connect("dragged", Callable(self, "_on_node_dragged"))
-	new_node.connect("close_request", Callable(self, "remove_node").bind(new_node))
-	new_node.connect("modified", Callable(graph, "_on_modified"))
-	new_node.connect("close_request", Callable(graph, "_on_modified"))
+	new_node.dragged.connect(_on_node_dragged)
+	new_node.close_request.connect(remove_node.bind(new_node))
+	new_node.modified.connect(graph._on_modified)
+	new_node.close_request.connect(graph._on_modified)
 	
 	# dialogue node signals
-	if new_node.has_signal("connection_move"):
-		new_node.connect("connection_move", Callable(self, "_move_connection_slot").bind(new_node))
+	if new_node.has_signal('connection_move'):
+		new_node.connection_move.connect(_move_connection_slot.bind(new_node))
 	
 	# set nodeId and add to graph
 	new_node.name = (str(id)+'_1') if node_name == '' else node_name

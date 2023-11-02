@@ -10,16 +10,19 @@ signal connection_move(old_slot, new_slot)
 @onready var speaker = $HBoxContainer/Speaker
 @onready var customSpeaker := $HBoxContainer/CustomSpeaker
 @onready var characterToggle = $HBoxContainer/CharacterToggle
-@onready var dialogue = $Dialogue
+@onready var dialogue = %Dialogue
+@onready var dialogue_panel = %DialoguePanel
+@onready var dialogue_expanded = %DialogueExpanded
 
 var curSpeaker : int = -1
 var options : Array = []
+var option_scene := preload("res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn")
 var _base_color : Color = Color.WHITE
 
 func _ready():
 	for i in range(max_options):
-		if has_node("Option"+str(i+1)):
-			var option = get_node( NodePath("Option"+str(i+1)) )
+		if has_node('Option'+str(i+1)):
+			var option = get_node( NodePath('Option'+str(i+1)) )
 			options.append(option)
 			option.text_changed.connect(_on_option_changed.bind(option))
 			option.text_submitted.connect(_on_option_entered.bind(option))
@@ -31,23 +34,23 @@ func _ready():
 		dialogue.syntax_highlighter.add_color_region('[', ']', Color('a5efac'))
 
 
-func add_option(new_text= ''):
+func add_option(new_text= '', new_condition= {}):
 	if len(options) == max_options:
 		return
 	
-	var new_option = LineEdit.new()
+	var new_option = option_scene.instantiate()
 	var id = len(options)
 	
 	new_option.name = 'Option'+str(id+1)
-	new_option.text = new_text
-	new_option.placeholder_text = "Option"+str(id+1)
+	add_child(new_option, true)
+	new_option.set_text(new_text)
+	new_option.set_placeholder_text('Option'+str(id+1))
+	new_option.set_condition(new_condition)
 	
 	options.append(new_option)
-	new_option.connect("text_changed", Callable(self, "_on_option_changed").bind(new_option))
-	new_option.connect("text_submitted", Callable(self, "_on_option_entered").bind(new_option))
-	new_option.connect("focus_exited", Callable(self, "_on_option_entered").bind('', new_option))
-	
-	add_child(new_option, true)
+	new_option.text_changed.connect(_on_option_changed.bind(new_option))
+	new_option.text_submitted.connect(_on_option_entered.bind(new_option))
+	new_option.focus_exited.connect(_on_option_entered.bind('', new_option))
 
 
 func remove_option(option_node):
@@ -57,13 +60,17 @@ func remove_option(option_node):
 	var i = options.find(option_node) + 1
 	
 	while i < len(options):
-		options[i-1].text = options[i].text
+		options[i-1].set_text(options[i].text)
+		options[i-1].set_condition(options[i].get_condition())
 		connection_move.emit(i, i-1)
 		i += 1
 	
-	options[-1].text = ''
+	options[-1].set_text('')
 	options[-1].queue_free()
 	options.pop_back()
+	
+	if i == len(options):
+		options[i].grab_focus()
 
 
 func _update_slots():
@@ -87,7 +94,7 @@ func _to_dict(graph):
 	var dict = {}
 	
 	if customSpeaker.visible:
-		customSpeaker.text = customSpeaker.text.replace("{", "").replace("}", "")
+		customSpeaker.text = customSpeaker.text.replace('{', '').replace('}', '')
 		dict['speaker'] = customSpeaker.text
 	elif speaker.visible:
 		var speakerIdx := -1
@@ -104,23 +111,26 @@ func _to_dict(graph):
 	var options_dict = {}
 	for connection in graph.get_connection_list():
 		if connection['from'] == name:
-			var idx = connection['from_port'] # this returns index starting from 0
+			var idx : int = connection['from_port'] # this returns index starting from 0
 			options_dict[idx] = {}
-			options_dict[idx]['text'] = options[int(idx)].text
+			options_dict[idx]['text'] = options[idx].text
 			options_dict[idx]['link'] = connection['to']
+			options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else {}
 	
 	# get options not connected
 	for i in range(len(options)):
 		if not options_dict.has(i) and options[i].text != '':
-			options_dict[str(i)] = {}
-			options_dict[str(i)]['text'] = options[i].text
-			options_dict[str(i)]['link'] = 'END'
+			options_dict[i] = {}
+			options_dict[i]['text'] = options[i].text
+			options_dict[i]['link'] = 'END'
+			options_dict[i]['condition'] = options[i].get_condition()
 	
 	# single empty disconnected option
 	if not options_dict.has(0):
-		options_dict[str(0)] = {}
-		options_dict[str(0)]['text'] = options[0].text
-		options_dict[str(0)]['link'] = 'END'
+		options_dict[0] = {}
+		options_dict[0]['text'] = options[0].text
+		options_dict[0]['link'] = 'END'
+		options_dict[0]['condition'] = {}
 	
 	# store options info in dict
 	dict['options'] = options_dict
@@ -146,7 +156,10 @@ func _from_dict(graph, dict):
 	
 	# add new options
 	for key in dict['options']:
-		add_option(dict['options'][key]['text'])
+		var condition = {}
+		if dict['options'][key].has('condition'):
+			condition = dict['options'][key]['condition']
+		add_option(dict['options'][key]['text'], condition)
 		next_nodes.append(dict['options'][key]['link'])
 	
 	# set size of node
@@ -158,7 +171,7 @@ func _from_dict(graph, dict):
 	
 	return next_nodes
 
-
+# on text change
 func _on_option_changed(new_text, option_node):
 	if option_node == options[-1]:
 		add_option()
@@ -167,8 +180,9 @@ func _on_option_changed(new_text, option_node):
 	_on_node_modified()
 
 
-func _on_option_entered(new_text, option_node):
-	if option_node.text == '':
+# on text confirmation
+func _on_option_entered(_new_text, option_node):
+	if option_node.text == '' and option_node != options[-1]:
 		remove_option(option_node)
 		_update_slots()
 	_on_node_modified()
@@ -210,6 +224,20 @@ func _on_characters_loaded(newCharacterList : Array[Character]):
 func _on_speaker_selected(idx : int):
 	curSpeaker = idx
 	_on_node_modified()
+
+
+func _on_expand_button_pressed():
+	dialogue_expanded.text = dialogue.text
+	dialogue_panel.popup_centered()
+	dialogue_expanded.grab_focus()
+
+
+func _on_dialogue_expanded_text_changed():
+	dialogue.text = dialogue_expanded.text
+
+
+func _on_dialogue_close_button_pressed():
+	dialogue_panel.hide()
 
 
 func _on_node_modified(_a=0, _b=0):

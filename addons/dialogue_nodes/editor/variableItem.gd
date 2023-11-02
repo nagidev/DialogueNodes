@@ -39,7 +39,7 @@ func get_value():
 			return float_value.value
 		TYPE_BOOL:
 			return bool_value.button_pressed
-	return ""
+	return ''
 
 
 func set_value(new_value):

@@ -28,13 +28,13 @@ func _on_loadButton_pressed():
 
 
 func _on_resetButton_pressed():
-	filePath.text = ""
+	filePath.text = ''
 	_on_filePath_changed()
 
 
 func _on_filePath_changed():
 	characterList = []
-	if filePath.text == "":
+	if filePath.text == '':
 		resetButton.hide()
 	else:
 		resetButton.show()
