@@ -245,7 +245,13 @@ func process_text(text : String, is_dialogue = true):
 		text = ' '
 	
 	# Add variables
-	text = text.format(variables, '{{_}}')
+	var formatted_variables = {}
+	for key in variables.keys():
+		if variables[key] is float:
+			formatted_variables[key] = "%0.2f" % variables[key]
+		else:
+			formatted_variables[key] = variables[key]
+	text = text.format(formatted_variables, '{{_}}')
 	
 	# return text now if not a dialogue
 	if not is_dialogue:
@@ -326,12 +332,22 @@ func set_variable(var_name, type, value, operator = 0):
 	match type:
 		TYPE_STRING:
 			value = str(value)
+			
+			# Check for invalud operators
+			if operator > 2:
+				printerr("Invalid operator for type: String")
+				return
 		TYPE_INT:
 			value = int(value)
 		TYPE_FLOAT:
 			value = float(value)
 		TYPE_BOOL:
-			value = (value == "true")
+			value = (value == "true") if value is String else bool(value)
+			
+			# Check for invalid operators
+			if operator > 0:
+				printerr("Invalid operator for type: Boolean")
+				return
 	
 	# Perform operation
 	match operator:
