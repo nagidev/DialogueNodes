@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/setNode.gd" id="1"]
 
 [node name="SetNode" type="GraphNode"]
-offset_right = 240.0
-offset_bottom = 60.0
+offset_right = 300.0
+offset_bottom = 85.0
 title = "SetNode"
 show_close = true
 slot/0/left_enabled = true

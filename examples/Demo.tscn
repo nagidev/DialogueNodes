@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://bjme2drtas671" path="res://examples/ExampleBranching.tres" id="5_quhw6"]
 [ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_ncvoa"]
 [ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_sjqsf"]
-[ext_resource type="Resource" uid="uid://dwi6xcsj0px6w" path="res://examples/ExampleVariables.tres" id="8_872se"]
+[ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_872se"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="8_kplwy"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="9_4rd6n"]
 

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://dwi6xcsj0px6w"]
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://cbu4k4hs8fk5s"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
 
@@ -48,7 +48,7 @@ Like: You have {{COINS}} coins!",
 },
 "size": {
 "x": 258.164,
-"y": 317.0
+"y": 366.0
 },
 "speaker": "Greg"
 },
@@ -64,8 +64,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 261.0
+"x": 210.0,
+"y": 300.0
 },
 "speaker": "Greg"
 },
@@ -79,8 +79,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 261.0
+"x": 210.0,
+"y": 300.0
 },
 "speaker": "Greg"
 },
@@ -98,8 +98,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 289.0
+"x": 210.0,
+"y": 333.0
 },
 "speaker": "Greg"
 },
@@ -113,8 +113,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 261.0
+"x": 210.0,
+"y": 300.0
 },
 "speaker": "Greg"
 },
@@ -128,8 +128,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 250.447
+"x": 210.0,
+"y": 300.0
 },
 "speaker": "Greg"
 },
@@ -143,8 +143,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 261.0
+"x": 210.0,
+"y": 300.0
 },
 "speaker": "Greg"
 },
@@ -162,8 +162,8 @@ Current value: {{COINS}}
 }
 },
 "size": {
-"x": 200.0,
-"y": 289.0
+"x": 210.0,
+"y": 333.0
 },
 "speaker": "Greg"
 },
@@ -186,7 +186,7 @@ Current value: {{COINS}}
 variables = {
 "COINS": {
 "type": 2,
-"value": "10"
+"value": 10
 }
 }
 comments = Array[String]([])
