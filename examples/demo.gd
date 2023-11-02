@@ -8,7 +8,7 @@ extends Control
 
 func _ready():
 	for demo in demos:
-		var label = demo.resource_path.split("/")[-1].split(".")[0]
+		var label = demo.resource_path.split('/')[-1].split('.')[0]
 		$DemoSelector.add_item(label)
 	
 	dialogue_box.load_data(demos[0])
@@ -36,8 +36,8 @@ func _on_locale_selected(index):
 	match index:
 		0:
 			# English
-			TranslationServer.set_locale("en")
+			TranslationServer.set_locale('en')
 		1:
 			# Japanese
-			TranslationServer.set_locale("ja")
+			TranslationServer.set_locale('ja')
 			

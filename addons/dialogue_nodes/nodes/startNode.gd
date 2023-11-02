@@ -78,7 +78,7 @@ func _to_dict(graph):
 
 func _from_dict(graph, dict):
 	ID = dict['start_id']
-	get_node("HBoxContainer/ID").text = ID
+	get_node('HBoxContainer/ID').text = ID
 	return [dict['link']]
 
 

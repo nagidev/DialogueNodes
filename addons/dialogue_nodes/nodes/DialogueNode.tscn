@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://b60fa8vcjuoo6"]
+[gd_scene load_steps=6 format=3 uid="uid://b60fa8vcjuoo6"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Profile.svg" id="2_fthnh"]
+[ext_resource type="Texture2D" uid="uid://dps8mwnnuc5nm" path="res://addons/dialogue_nodes/icons/DistractionFree.svg" id="4_tpc70"]
+[ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_btpy8"]
 number_color = Color(1, 1, 1, 1)
@@ -13,9 +15,10 @@ color_regions = {
 }
 
 [node name="DialogueNode" type="GraphNode"]
-custom_minimum_size = Vector2(200, 200)
+custom_minimum_size = Vector2(300, 200)
 offset_right = 200.0
 offset_bottom = 201.0
+theme_override_constants/separation = 4
 title = "Dialogue"
 show_close = true
 resizable = true
@@ -92,21 +95,53 @@ icon = ExtResource("2_fthnh")
 layout_mode = 2
 text = "Dialogue"
 
-[node name="Dialogue" type="TextEdit" parent="."]
+[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Dialogue" type="TextEdit" parent="HBoxContainer3"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 tooltip_text = "The dialogue displayed in the DialogueBox.
 Use [bbcodes] to add extra effects to your dialogue."
 highlight_all_occurrences = true
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 
-[node name="Option1" type="LineEdit" parent="."]
+[node name="ExpandButton" type="Button" parent="HBoxContainer3"]
 layout_mode = 2
-placeholder_text = "Option1"
+icon = ExtResource("4_tpc70")
+
+[node name="DialoguePanel" type="PopupPanel" parent="HBoxContainer3"]
+unique_name_in_owner = true
+initial_position = 1
+size = Vector2i(800, 600)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer3/DialoguePanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 796.0
+offset_bottom = 596.0
+
+[node name="DialogueExpanded" type="TextEdit" parent="HBoxContainer3/DialoguePanel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CloseButton" type="Button" parent="HBoxContainer3/DialoguePanel/VBoxContainer"]
+layout_mode = 2
+text = "Close"
+
+[node name="Option1" parent="." instance=ExtResource("4_y6bt4")]
+layout_mode = 2
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="text_changed" from="HBoxContainer/CustomSpeaker" to="." method="_on_node_modified"]
 [connection signal="item_selected" from="HBoxContainer/Speaker" to="." method="_on_speaker_selected"]
 [connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
-[connection signal="text_changed" from="Dialogue" to="." method="_on_node_modified"]
+[connection signal="text_changed" from="HBoxContainer3/Dialogue" to="." method="_on_node_modified"]
+[connection signal="pressed" from="HBoxContainer3/ExpandButton" to="." method="_on_expand_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer3/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
+[connection signal="pressed" from="HBoxContainer3/DialoguePanel/VBoxContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]

@@ -283,6 +283,7 @@ offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5")
+hide_character_portrait = null
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]

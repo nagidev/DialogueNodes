@@ -15,7 +15,7 @@ signal closed
 
 @onready var popupMenu = $PopupMenu
 
-var script_icon = preload("res://addons/dialogue_nodes/icons/Script.svg")
+var script_icon = preload('res://addons/dialogue_nodes/icons/Script.svg')
 var editor
 var newDialogue
 var saveDialogue
@@ -35,9 +35,9 @@ func _ready():
 	
 	##
 	confirmDialogue.get_ok_button().hide()
-	confirmDialogue.add_button("Save", true, "save_file")
-	confirmDialogue.add_button("Discard", true, "discard_file")
-	confirmDialogue.add_cancel_button("Cancel")
+	confirmDialogue.add_button('Save', true, 'save_file')
+	confirmDialogue.add_button('Discard', true, 'discard_file')
+	confirmDialogue.add_cancel_button('Cancel')
 	
 	current = -1
 	queued = []
@@ -141,7 +141,7 @@ func new_file(path):
 
 func open_file(path, internal = false):
 	# open/read file
-	var data = ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_REPLACE)
+	var data = ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_REPLACE)
 	
 	var file_name : String
 	var file_dir : String
@@ -248,12 +248,12 @@ func close_all():
 func _on_confirmDialog_action(action):
 	if len(queued) > 0:
 		match (action):
-			"save_file":
+			'save_file':
 				for idx in queued:
 					save_file(idx)
 					close_file(idx)
 					await get_tree().idle_frame
-			"discard_file":
+			'discard_file':
 				for idx in queued:
 					close_file(idx)
 	confirmDialogue.hide()

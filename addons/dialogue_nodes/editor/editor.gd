@@ -189,7 +189,7 @@ func _on_node_added(node_name):
 		'0':
 			start_nodes.append(node_name)
 			node.set_slot_color_right(0, _base_color)
-			node.run_tree.connect(Callable(self, "_run_tree").bind(node))
+			node.run_tree.connect(_run_tree.bind(node))
 		'1':
 			node._set_syntax_color(_base_color)
 			characters.file_selected.connect(node._on_characters_loaded)
@@ -278,7 +278,7 @@ func _on_graph_visibility_changed():
 
 func _on_dialogue_started(id : String):
 	if _debug:
-		print_debug("Dialogue started: ", id)
+		print_debug('Dialogue started: ', id)
 
 
 func _on_dialogue_variable_changed(var_name, value):
@@ -286,18 +286,18 @@ func _on_dialogue_variable_changed(var_name, value):
 	files.modify_file()
 	
 	if _debug:
-		print("Variable changed:", var_name, ", value:", value)
+		print('Variable changed:', var_name, ', value:', value)
 
 
 func _on_dialogue_signal(value):
 	if _debug:
-		print("Dialogue emitted signal with value:", value)
+		print('Dialogue emitted signal with value:', value)
 
 
 func _on_dialogue_ended():
 	dialogueBG.hide()
 	if _debug:
-		print("Dialogue finished")
+		print('Dialogue finished')
 
 
 func _on_dialog_background_input(event):

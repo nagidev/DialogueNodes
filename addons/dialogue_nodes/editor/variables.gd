@@ -47,6 +47,8 @@ func get_value(var_name):
 
 
 func set_value(var_name, value):
+	if var_name == '':
+		return
 	get_variable(var_name).set_value(value)
 
 

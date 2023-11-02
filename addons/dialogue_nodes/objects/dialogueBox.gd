@@ -9,12 +9,32 @@ signal dialogue_signal(value)
 signal dialogue_ended
 signal variable_changed(var_name, value)
 
+@export_subgroup('Data')
+## Dialigue file created in the Dialogue Nodes editor
 @export var dialogue_file : DialogueData = null : set = load_data
+## Start ID to begin dialogue from
 @export var start_id: String
-@export_range(1, 8) var max_options = 4
+
+@export_subgroup('Visuals')
+## Maximum possible number of options
+@export_range(1, 8) var max_options = 4: set = _set_options_count
+## Alignment of options
 @export_enum('Begin', 'Center', 'End') var options_alignment = 2: set = _set_options_alignment
+## Orientation of options
+@export var options_vertical : bool = false: set = _set_options_vertical
+## Position of options along the dialogue box
+@export_enum('Top', 'Left', 'Right', 'Bottom') var options_position = 3: set = _set_options_position
+## Icon displayed when no options are available
+@export var next_icon := preload('res://addons/dialogue_nodes/icons/Play.svg')
+## Default color for the speaker label
+@export var default_speaker_color := Color.WHITE: set = _set_default_speaker_color
+## Hide the character portrait (useful for custom character portrait implementations)
+@export var hide_character_portrait := false
+
+@export_subgroup('Misc')
+## Input action used to skip dialougue animation
 @export var skip_input_action := 'ui_cancel'
-@export var next_icon := preload("res://addons/dialogue_nodes/icons/Play.svg")
+## Custom RichTextEffects used (Ex: wait, ghost)
 @export var custom_effects : Array[RichTextEffect] = [
 		RichTextWait.new(),
 		RichTextGhost.new()
@@ -23,7 +43,9 @@ signal variable_changed(var_name, value)
 var speaker : Label
 var portrait : TextureRect
 var dialogue : RichTextLabel
-var options : HBoxContainer
+var options : BoxContainer
+var hbox_container : HBoxContainer
+var vbox_container : VBoxContainer
 var data : DialogueData = null : set= set_data
 var variables = {}
 var running = false
@@ -31,6 +53,11 @@ var characterList : CharacterList = null
 
 
 func _enter_tree():
+	if get_child_count() > 0:
+		for child in get_children():
+			remove_child(child)
+			child.queue_free()
+	
 	## dialogue box setup code ##
 	# note : edit the code below to change the layout of your dialogue box
 	
@@ -46,7 +73,7 @@ func _enter_tree():
 	margin_container.offset_right = -4
 	margin_container.offset_bottom = -4
 	
-	var hbox_container = HBoxContainer.new()
+	hbox_container = HBoxContainer.new()
 	margin_container.add_child(hbox_container)
 	
 	# setup portrait image
@@ -56,7 +83,7 @@ func _enter_tree():
 	portrait.size_flags_stretch_ratio = 0
 	
 	
-	var vbox_container = VBoxContainer.new()
+	vbox_container = VBoxContainer.new()
 	hbox_container.add_child(vbox_container)
 	vbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
@@ -74,7 +101,7 @@ func _enter_tree():
 	dialogue.custom_effects = custom_effects
 	
 	# setup options
-	options = HBoxContainer.new()
+	options = BoxContainer.new()
 	vbox_container.add_child(options)
 	options.alignment = options_alignment
 	
@@ -186,7 +213,10 @@ func proceed(idx):
 			proceed(var_dict['link'])
 		'5':
 			# condition
-			handle_condition(data.nodes[idx])
+			var result = check_condition((data.nodes[idx]))
+			
+			# Proceed
+			proceed(data.nodes[idx][str(result).to_lower()])
 		_:
 			if data.nodes[idx].has('link'):
 				proceed(data.nodes[idx]['link'])
@@ -205,6 +235,7 @@ func stop():
 func set_dialogue(dict):
 	# set speaker and portrait
 	speaker.text = ''
+	speaker.modulate = default_speaker_color
 	portrait.texture = null
 	if dict['speaker'] is String:
 		speaker.text = dict['speaker']
@@ -212,7 +243,8 @@ func set_dialogue(dict):
 		var idx = int(dict['speaker'])
 		if idx > -1 and idx < characterList.characters.size():
 			speaker.text = characterList.characters[idx].name
-			if characterList.characters[idx].image:
+			speaker.modulate = characterList.characters[idx].color
+			if characterList.characters[idx].image and not hide_character_portrait:
 				portrait.texture = characterList.characters[idx].image
 	
 	dialogue.text = '' # workaround for bug
@@ -228,10 +260,28 @@ func set_dialogue(dict):
 	# set options
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
-		option.text = process_text(dict['options'][idx]['text'], false)
-		if option.is_connected('pressed', Callable(self, 'proceed')):
-			option.disconnect('pressed', Callable(self, 'proceed'))
-		option.pressed.connect( Callable(self, 'proceed').bind(dict['options'][idx]['link']) )
+		var option_dict = dict['options'][idx]
+		option.text = process_text(option_dict['text'], false)
+		if option.is_connected('pressed', proceed):
+			option.disconnect('pressed', proceed)
+		option.pressed.connect(proceed.bind(option_dict['link']))
+		
+		if option_dict.has('condition') and not option_dict['condition'].is_empty():
+			option.visible = check_condition(option_dict['condition'])
+		else:
+			option.show()
+	
+	# set single option to show if none visible
+	var _options_visible = 0
+	for option in options.get_children():
+		_options_visible += 1 if option.visible else 0
+	if _options_visible == 0:
+		var option = options.get_child(0)
+		option.text = ''
+		option.icon = next_icon
+		if option.is_connected('pressed', proceed):
+			option.disconnect('pressed', proceed)
+		option.pressed.connect(proceed.bind('END'))
 		option.show()
 	
 	# if single empty option
@@ -248,7 +298,7 @@ func process_text(text : String, is_dialogue = true):
 	var formatted_variables = {}
 	for key in variables.keys():
 		if variables[key] is float:
-			formatted_variables[key] = "%0.2f" % variables[key]
+			formatted_variables[key] = '%0.2f' % variables[key]
 		else:
 			formatted_variables[key] = variables[key]
 	text = text.format(formatted_variables, '{{_}}')
@@ -283,7 +333,7 @@ func process_text(text : String, is_dialogue = true):
 				
 				if open_tag_start == idx:
 					var start = char_idx + 1
-					waits.push_back({ "at": open_tag_end, "start": start })
+					waits.push_back({ 'at': open_tag_end, 'start': start })
 					idx = open_tag_end + 1
 				elif end_tag == idx:
 					var start_data = waits.pop_back()
@@ -301,7 +351,7 @@ func process_text(text : String, is_dialogue = true):
 				char_idx += 1
 				char_count += 1
 				if waits.size():
-					waits[-1]["last"] = char_count - 1
+					waits[-1]['last'] = char_count - 1
 	
 	# insert waits if any left
 	while len(waits) > 0:
@@ -335,18 +385,18 @@ func set_variable(var_name, type, value, operator = 0):
 			
 			# Check for invalud operators
 			if operator > 2:
-				printerr("Invalid operator for type: String")
+				printerr('Invalid operator for type: String')
 				return
 		TYPE_INT:
 			value = int(value)
 		TYPE_FLOAT:
 			value = float(value)
 		TYPE_BOOL:
-			value = (value == "true") if value is String else bool(value)
+			value = (value == 'true') if value is String else bool(value)
 			
 			# Check for invalid operators
 			if operator > 0:
-				printerr("Invalid operator for type: Boolean")
+				printerr('Invalid operator for type: Boolean')
 				return
 	
 	# Perform operation
@@ -368,7 +418,7 @@ func set_variable(var_name, type, value, operator = 0):
 			variables[var_name] /= value
 
 
-func handle_condition(cond_dict):
+func check_condition(cond_dict: Dictionary):
 	var value1 = cond_dict['value1']
 	var value2 = cond_dict['value2']
 	var type = TYPE_STRING
@@ -393,8 +443,8 @@ func handle_condition(cond_dict):
 			value1 = float(value1)
 			value2 = float(value2)
 		TYPE_BOOL:
-			value1 = (value1 == "true") if value1 is String else value1
-			value2 = (value2 == "true") if value2 is String else value2
+			value1 = (value1 == 'true') if value1 is String else value1
+			value2 = (value2 == 'true') if value2 is String else value2
 	
 	# Perform operation
 	var result : bool = false
@@ -412,17 +462,65 @@ func handle_condition(cond_dict):
 		5:
 			result = value1 <= value2
 	
-	# Proceed
-	proceed(cond_dict[str(result).to_lower()])
+	return result
 
 
 func show_options():
 	if options.is_inside_tree():
 		options.show()
-		options.get_child(0).grab_focus()
+		for option in options.get_children():
+			if option.visible:
+				option.grab_focus()
+				break
+
+
+func _set_options_count(value):
+	max_options = max(1, value)
+	
+	if options:
+		# clear all options
+		for option in options.get_children():
+			options.remove_child(option)
+			option.queue_free()
+		
+		for i in range(max_options):
+			var button = Button.new()
+			button.text = 'Option '+str(i+1)
+			options.add_child(button)
 
 
 func _set_options_alignment(value):
 	options_alignment = value
 	if options:
 		options.alignment = options_alignment
+
+
+func _set_options_vertical(value):
+	options_vertical = value
+	if options:
+		options.vertical = options_vertical
+
+
+func _set_options_position(value):
+	var cur_parent = options.get_parent()
+	cur_parent.remove_child(options)
+	
+	match value:
+		0:
+			vbox_container.add_child(options)
+			vbox_container.move_child(options, 0)
+		3:
+			vbox_container.add_child(options)
+		1:
+			hbox_container.add_child(options)
+			hbox_container.move_child(options, 0)
+		2:
+			hbox_container.add_child(options)
+	
+	options_position = value
+
+
+func _set_default_speaker_color(value):
+	default_speaker_color = value
+	if speaker:
+		speaker.modulate = default_speaker_color
