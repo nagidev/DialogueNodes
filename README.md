@@ -25,7 +25,7 @@ The dialogue editor was created with the focus on keeping the workflow simple an
 The real power of the plugin lies in the tools it provides the user to utilize the full potential of the feature rich dialogue editor. Be it using variable values in the dialogue, conditional dialogues or even conditional options, modifying variable values and even emitting signals which open up a world of posibilities when it comes to custom events during the dialogue.
 
 ### Test it before you save it
-The plugin allows for running any branching dialogue withing the editor itself for quick testing and faster iteration times. No need to run your game every time you modify the dialogue. Under the hood, this uses the same `DialogueBox` node you'll use in your project. So, you'll know exactly how your dialogue will run in-game without even running the game!
+The plugin allows for running any branching dialogue within the editor itself for quick testing and faster iteration times. No need to run your game every time you modify the dialogue. Under the hood, this uses the same `DialogueBox` node you'll use in your project. So, you'll know exactly how your dialogue will run in-game without even running the game!
 
 Additionally, enable the debugging toggle to understand what all events are occuring as the dialogue runs. Note: this feature only works in the editor, not the game.
 
@@ -51,7 +51,7 @@ Note: The wiki is still being updated frequently. Some of the functionalities mi
 #####
 ## Known issues
 - DialogueNode in the workplace may have wrong colored slots on light themes
-- Icons do not look right in light theme
+- Icons do not look right in light theme or scaled dpi
 - Using return character in the dialogue results in options not showing up in certain cases
 - Shifting focus to empty option from another empty option results in the option data moving around
 
