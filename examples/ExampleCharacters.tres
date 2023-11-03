@@ -44,7 +44,7 @@ nodes = {
 "x": 300.0,
 "y": 275.0
 },
-"speaker": 0.0
+"speaker": 0
 },
 "1_3": {
 "dialogue": "What's more you can even put character profiles to spice up the dialogue.",
@@ -60,7 +60,7 @@ nodes = {
 "x": 300.0,
 "y": 275.0
 },
-"speaker": 1.0
+"speaker": 1
 }
 }
 variables = {}

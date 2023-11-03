@@ -3,11 +3,11 @@ extends Panel
 class_name DialogueBox
 
 
-signal dialogue_started(id)
-signal dialogue_proceeded
-signal dialogue_signal(value)
+signal dialogue_started(id: String)
+signal dialogue_proceeded(node_type: String)
+signal dialogue_signal(value: String)
 signal dialogue_ended
-signal variable_changed(var_name, value)
+signal variable_changed(var_name: String, value)
 
 @export_subgroup('Data')
 ## Dialigue file created in the Dialogue Nodes editor
@@ -34,6 +34,8 @@ signal variable_changed(var_name, value)
 @export_subgroup('Misc')
 ## Input action used to skip dialougue animation
 @export var skip_input_action := 'ui_cancel'
+## Hide dialogue box at the end of a dialogue
+@export var hide_on_dialogue_end := true
 ## Custom RichTextEffects used (Ex: wait, ghost)
 @export var custom_effects : Array[RichTextEffect] = [
 		RichTextWait.new(),
@@ -112,7 +114,13 @@ func _enter_tree():
 
 
 func _ready():
+	_set_options_alignment(options_alignment)
+	_set_options_vertical(options_vertical)
+	_set_options_position(options_position)
+	
 	hide()
+	if hide_character_portrait:
+		portrait.hide()
 	
 	if data:
 		init_variables(data.variables)
@@ -126,6 +134,7 @@ func _ready():
 func _input(event):
 	if Input.is_action_just_pressed(skip_input_action):
 		custom_effects[0].skip = true
+		options.show()
 
 
 func load_data(new_data : DialogueData):
@@ -177,7 +186,7 @@ func start(id = start_id):
 
 
 func proceed(idx):
-	if idx == 'END':
+	if idx == 'END' or not running:
 		stop()
 		return
 	
@@ -222,14 +231,21 @@ func proceed(idx):
 				proceed(data.nodes[idx]['link'])
 			else:
 				stop()
-	dialogue_proceeded.emit()
+	dialogue_proceeded.emit(type)
 
 
 func stop():
 	running = false
-	dialogue.text = ''
-	hide()
+	if hide_on_dialogue_end:
+		reset()
+		hide()
 	dialogue_ended.emit()
+
+
+func reset():
+	speaker.text = ''
+	dialogue.text = ''
+	portrait.texture = null
 
 
 func set_dialogue(dict):
@@ -239,12 +255,12 @@ func set_dialogue(dict):
 	portrait.texture = null
 	if dict['speaker'] is String:
 		speaker.text = dict['speaker']
-	elif dict['speaker'] is float and characterList:
-		var idx = int(dict['speaker'])
+	elif dict['speaker'] is int and characterList:
+		var idx = dict['speaker']
 		if idx > -1 and idx < characterList.characters.size():
 			speaker.text = characterList.characters[idx].name
 			speaker.modulate = characterList.characters[idx].color
-			if characterList.characters[idx].image and not hide_character_portrait:
+			if characterList.characters[idx].image:
 				portrait.texture = characterList.characters[idx].image
 	
 	dialogue.text = '' # workaround for bug
@@ -502,22 +518,26 @@ func _set_options_vertical(value):
 
 
 func _set_options_position(value):
-	var cur_parent = options.get_parent()
-	cur_parent.remove_child(options)
-	
-	match value:
-		0:
-			vbox_container.add_child(options)
-			vbox_container.move_child(options, 0)
-		3:
-			vbox_container.add_child(options)
-		1:
-			hbox_container.add_child(options)
-			hbox_container.move_child(options, 0)
-		2:
-			hbox_container.add_child(options)
-	
 	options_position = value
+	if options:
+		var cur_parent = options.get_parent()
+		cur_parent.remove_child(options)
+		
+		match value:
+			0:
+				# top
+				vbox_container.add_child(options)
+				vbox_container.move_child(options, 0)
+			3:
+				# bottom
+				vbox_container.add_child(options)
+			1:
+				# left
+				hbox_container.add_child(options)
+				hbox_container.move_child(options, 0)
+			2:
+				# right
+				hbox_container.add_child(options)
 
 
 func _set_default_speaker_color(value):
