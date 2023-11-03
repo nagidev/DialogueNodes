@@ -100,7 +100,7 @@ func _to_dict(graph):
 		var speakerIdx := -1
 		if speaker.item_count > 0:
 			speakerIdx = curSpeaker
-		dict['speaker'] = float(speakerIdx)
+		dict['speaker'] = speakerIdx
 	
 	dict['dialogue'] = dialogue.text
 	dict['size'] = {}
@@ -144,8 +144,8 @@ func _from_dict(graph, dict):
 	# set values
 	if dict['speaker'] is String:
 		customSpeaker.text = dict['speaker']
-	elif dict['speaker'] is float:
-		curSpeaker = int(dict['speaker'])
+	elif dict['speaker'] is int:
+		curSpeaker = dict['speaker']
 		characterToggle.button_pressed = true
 	dialogue.text = dict['dialogue']
 	
