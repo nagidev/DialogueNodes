@@ -265,9 +265,9 @@ func _on_confirmDialog_hide():
 
 func _on_empty_clicked(at_pos, mouse_button_index):
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		popupMenu.popup(Rect2(global_position + at_pos, popupMenu.size))
+		var pop_pos = at_pos + global_position + Vector2(get_window().position)
+		popupMenu.popup(Rect2(pop_pos, popupMenu.size))
 
 
 func _on_item_clicked(index, at_pos, mouse_button_index):
-	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		popupMenu.popup(Rect2(global_position + at_pos, popupMenu.size))
+	_on_empty_clicked(at_pos, mouse_button_index)

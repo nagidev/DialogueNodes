@@ -24,7 +24,7 @@ func _ready():
 
 
 func show_menu(pos):
-	var pop_pos = pos + graph.global_position
+	var pop_pos = pos + graph.global_position + Vector2(get_window().position)
 	popup.popup(Rect2(pop_pos.x, pop_pos.y, popup.size.x, popup.size.y))
 	cursor_pos = (pos + graph.scroll_offset) / graph.zoom
 	
