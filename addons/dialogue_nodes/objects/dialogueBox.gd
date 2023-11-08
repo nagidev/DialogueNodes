@@ -9,13 +9,13 @@ signal dialogue_signal(value: String)
 signal dialogue_ended
 signal variable_changed(var_name: String, value)
 
-@export_subgroup('Data')
+@export_group('Data')
 ## Dialigue file created in the Dialogue Nodes editor
 @export var dialogue_file : DialogueData = null : set = load_data
 ## Start ID to begin dialogue from
 @export var start_id: String
 
-@export_subgroup('Visuals')
+@export_group('Visuals')
 ## Maximum possible number of options
 @export_range(1, 8) var max_options = 4: set = _set_options_count
 ## Alignment of options
@@ -31,7 +31,7 @@ signal variable_changed(var_name: String, value)
 ## Hide the character portrait (useful for custom character portrait implementations)
 @export var hide_character_portrait := false
 
-@export_subgroup('Misc')
+@export_group('Misc')
 ## Input action used to skip dialougue animation
 @export var skip_input_action := 'ui_cancel'
 ## Hide dialogue box at the end of a dialogue
