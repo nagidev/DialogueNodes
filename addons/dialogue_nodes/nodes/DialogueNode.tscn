@@ -68,6 +68,7 @@ slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
 slot/4/draw_stylebox = true
 script = ExtResource("1")
+bbcode_color = null
 
 [node name="SpeakerLabel" type="Label" parent="."]
 layout_mode = 2
@@ -95,11 +96,11 @@ icon = ExtResource("2_fthnh")
 layout_mode = 2
 text = "Dialogue"
 
-[node name="HBoxContainer3" type="HBoxContainer" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Dialogue" type="TextEdit" parent="HBoxContainer3"]
+[node name="Dialogue" type="TextEdit" parent="HBoxContainer2"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
@@ -110,27 +111,41 @@ Use [bbcodes] to add extra effects to your dialogue."
 highlight_all_occurrences = true
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 
-[node name="ExpandButton" type="Button" parent="HBoxContainer3"]
+[node name="ExpandButton" type="Button" parent="HBoxContainer2"]
 layout_mode = 2
 icon = ExtResource("4_tpc70")
 
-[node name="DialoguePanel" type="PopupPanel" parent="HBoxContainer3"]
+[node name="DialoguePanel" type="PopupPanel" parent="HBoxContainer2"]
 unique_name_in_owner = true
 initial_position = 1
 size = Vector2i(800, 600)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer3/DialoguePanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2/DialoguePanel"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 796.0
-offset_bottom = 596.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="DialogueExpanded" type="TextEdit" parent="HBoxContainer3/DialoguePanel/VBoxContainer"]
+[node name="DialogueExpanded" type="TextEdit" parent="HBoxContainer2/DialoguePanel/VBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
+tooltip_text = "The dialogue displayed in the DialogueBox.
+Use [bbcodes] to add extra effects to your dialogue."
+highlight_all_occurrences = true
+syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 
-[node name="CloseButton" type="Button" parent="HBoxContainer3/DialoguePanel/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer2/DialoguePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer"]
 layout_mode = 2
 text = "Close"
 
@@ -141,7 +156,7 @@ layout_mode = 2
 [connection signal="text_changed" from="HBoxContainer/CustomSpeaker" to="." method="_on_node_modified"]
 [connection signal="item_selected" from="HBoxContainer/Speaker" to="." method="_on_speaker_selected"]
 [connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
-[connection signal="text_changed" from="HBoxContainer3/Dialogue" to="." method="_on_node_modified"]
-[connection signal="pressed" from="HBoxContainer3/ExpandButton" to="." method="_on_expand_button_pressed"]
-[connection signal="text_changed" from="HBoxContainer3/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
-[connection signal="pressed" from="HBoxContainer3/DialoguePanel/VBoxContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer2/Dialogue" to="." method="_on_node_modified"]
+[connection signal="pressed" from="HBoxContainer2/ExpandButton" to="." method="_on_expand_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
+[connection signal="pressed" from="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]

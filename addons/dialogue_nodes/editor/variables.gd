@@ -4,12 +4,13 @@ extends Control
 
 signal modified
 
+@onready var var_container = $ScrollContainer/VBoxContainer
 
 var variable_item_scene = preload('res://addons/dialogue_nodes/editor/VariableItem.tscn')
 
 func add_variable(new_name= '', new_type= TYPE_STRING, new_value= ''):
 	var new_variable = variable_item_scene.instantiate()
-	add_child(new_variable, true)
+	var_container.add_child(new_variable, true)
 	
 	new_variable.var_name.text = new_name
 	new_variable.type.select(new_variable.types.find(new_type))
@@ -28,13 +29,13 @@ func remove_variable(variable):
 
 
 func remove_all_variables():
-	for child in get_children():
+	for child in var_container.get_children():
 		if child is HBoxContainer:
 			remove_variable(child)
 
 
 func get_variable(var_name):
-	for child in get_children():
+	for child in var_container.get_children():
 		if child is HBoxContainer and child.var_name.text == var_name:
 			return child
 	
@@ -55,7 +56,7 @@ func set_value(var_name, value):
 func to_dict():
 	var dict = {}
 	
-	for child in get_children():
+	for child in var_container.get_children():
 		if child is HBoxContainer:
 			var var_name = child.var_name.text
 			var type = child.type.get_item_id(child.type.selected)

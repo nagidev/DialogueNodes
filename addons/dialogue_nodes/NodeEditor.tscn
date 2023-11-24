@@ -185,6 +185,8 @@ filters = PackedStringArray("*.tres; Character resource")
 
 [node name="Variables" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("10")
 
 [node name="Title" type="Label" parent="Main/Workspace/SidePanel/Data/Variables"]
@@ -195,6 +197,16 @@ text = "Variables"
 layout_mode = 2
 tooltip_text = "Add a new variable."
 text = "+"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Main/Workspace/SidePanel/Data/Variables"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data/Variables/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Graph" type="GraphEdit" parent="Main/Workspace"]
 visible = false
@@ -284,6 +296,7 @@ offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5")
+sample_portrait = null
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]

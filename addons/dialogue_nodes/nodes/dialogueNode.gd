@@ -6,6 +6,7 @@ signal modified
 signal connection_move(old_slot, new_slot)
 
 @export var max_options = 4
+@export var bbcode_color = Color('a5efac')
 
 @onready var speaker = $HBoxContainer/Speaker
 @onready var customSpeaker := $HBoxContainer/CustomSpeaker
@@ -31,7 +32,9 @@ func _ready():
 	
 	# add bbcode syntax highlighting in dialogue
 	if not dialogue.syntax_highlighter.has_color_region('['):
-		dialogue.syntax_highlighter.add_color_region('[', ']', Color('a5efac'))
+		dialogue.syntax_highlighter.add_color_region('[', ']', bbcode_color)
+	if not dialogue_expanded.syntax_highlighter.has_color_region('['):
+		dialogue_expanded.syntax_highlighter.add_color_region('[', ']', bbcode_color)
 
 
 func add_option(new_text= '', new_condition= {}):
@@ -104,8 +107,7 @@ func _to_dict(graph):
 	
 	dict['dialogue'] = dialogue.text
 	dict['size'] = {}
-	dict['size']['x'] = size.x
-	dict['size']['y'] = size.y
+	dict['size'] = size
 	
 	# get options connected to other nodes
 	var options_dict = {}
@@ -164,12 +166,17 @@ func _from_dict(graph, dict):
 	
 	# set size of node
 	if dict.has('size'):
-		var new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+		var new_size: Vector2
+		if dict['size'] is Vector2:
+			new_size = dict['size']
+		else: # for dialogue files created before v1.0.2
+			new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
 		_on_resize(new_size, true)
 	
 	_update_slots()
 	
 	return next_nodes
+
 
 # on text change
 func _on_option_changed(new_text, option_node):

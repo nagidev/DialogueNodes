@@ -69,6 +69,7 @@ func _on_text_submitted(new_text):
 
 
 func _on_condition_changed(_a= 0):
+	text_changed.emit(text)
 	if value1.text == '' and operator.selected == -1 and value2.text == '':
 		reset_button.hide()
 		filter_button.text = ''
@@ -84,6 +85,7 @@ func _on_condition_reset():
 	value2.text = ''
 	filter_button.text = ''
 	reset_button.hide()
+	text_changed.emit(text)
 
 
 func _on_text_focus_exited():
