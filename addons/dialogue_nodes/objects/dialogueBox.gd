@@ -9,21 +9,29 @@ signal dialogue_signal(value)
 signal dialogue_ended
 signal variable_changed(var_name, value)
 
-export (Resource) var dialogue_file setget load_data
+export (Resource) var dialogue_data setget set_data
 export (String) var start_id
-export (int, 1, 8) var max_options = 4
+export (bool) var hide_on_dialogue_end = true
+export (int, 1, 8) var max_options = 4 setget _set_options_count
 export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_options_alignment
-export (Texture) var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
+export (bool) var options_vertical = false setget _set_options_vertical
+export (int, 'Top', 'Left', 'Right', 'Bottom') var options_position = 3 setget _set_options_position
+export (Texture) var next_icon = preload('res://addons/dialogue_nodes/icons/Play.svg')
+export (Texture) var sample_portrait = preload('res://addons/dialogue_nodes/icons/Portrait.png') setget _set_sample_portrait
+export var portrait_size = 128 setget _set_portrait_size
+export var hide_portrait := false setget _set_portrait_visibility
 export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 
 var speaker : Label
 var portrait : TextureRect
 var dialogue : RichTextLabel
-var options : HBoxContainer
-var data : DialogueData = null setget set_data
+var options : GridContainer
 var variables = {}
 var running = false
 var characterList : CharacterList = null
+
+var _hbox_container : HBoxContainer
+var _vbox_container : VBoxContainer
 
 
 func _enter_tree():
@@ -43,28 +51,28 @@ func _enter_tree():
 	margin_container.margin_right = -4
 	margin_container.margin_bottom = -4
 	
-	var hbox_container = HBoxContainer.new()
-	margin_container.add_child(hbox_container)
+	_hbox_container = HBoxContainer.new()
+	margin_container.add_child(_hbox_container)
 	
 	# setup portrait image
 	portrait = TextureRect.new()
-	hbox_container.add_child(portrait)
+	_hbox_container.add_child(portrait)
+	portrait.texture = sample_portrait
 	portrait.expand = true
-	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	portrait.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	portrait.size_flags_stretch_ratio = 0.2
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	portrait.rect_min_size = Vector2(portrait_size, 0)
 	
-	var vbox_container = VBoxContainer.new()
-	hbox_container.add_child(vbox_container)
-	vbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_vbox_container = VBoxContainer.new()
+	_hbox_container.add_child(_vbox_container)
+	_vbox_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	
 	# setup speaker, dialogue
 	speaker = Label.new()
-	vbox_container.add_child(speaker)
+	_vbox_container.add_child(speaker)
 	speaker.text = 'Speaker'
 	
 	dialogue = RichTextLabel.new()
-	vbox_container.add_child(dialogue)
+	_vbox_container.add_child(dialogue)
 	dialogue.bbcode_text = 'Sample dialogue.\nLoad a [u]dialogue file[/u].'
 	dialogue.scroll_following = true
 	dialogue.bbcode_enabled = true
@@ -72,19 +80,25 @@ func _enter_tree():
 	dialogue.custom_effects = custom_effects
 	
 	# setup options
-	options = HBoxContainer.new()
-	vbox_container.add_child(options)
-	options.alignment = options_alignment
+	options = GridContainer.new()
+	_vbox_container.add_child(options)
+	options.columns = max_options
 	
 	for i in range(max_options):
 		var button = Button.new()
-		button.text = 'Option '+str(i+1)
 		options.add_child(button)
+		button.text = 'Option '+str(i+1)
+		button.size_flags_horizontal = SIZE_EXPAND_FILL
+		button.size_flags_vertical = SIZE_EXPAND_FILL
 
 
 func _ready():
-	if data:
-		init_variables(data.variables)
+	_set_options_alignment(options_alignment)
+	_set_options_vertical(options_vertical)
+	_set_options_position(options_position)
+	
+	if dialogue_data:
+		_init_variables(dialogue_data.variables)
 	
 	for effect in custom_effects:
 		if effect is RichTextWait:
@@ -97,32 +111,25 @@ func _input(event):
 		custom_effects[0].skip = true
 
 
-func load_data(new_data : DialogueData):
-	data = null
-	
+func set_data(new_data : DialogueData):
 	if new_data and not new_data is DialogueData:
 		printerr('Unsupported file!')
 		return
 	
-	dialogue_file = new_data
-	set_data(new_data)
+	dialogue_data = new_data
+	if dialogue_data:
+		# load variables from the dialogue_data
+		_init_variables(dialogue_data.variables)
 
-
-func set_data(new_data : DialogueData):
-	data = new_data
-	if data:
-		# load variables from the data
-		init_variables(data.variables)
-		
 		# load characters
 		characterList = null
-		if data.characters.ends_with('.tres'):
-			var file = ResourceLoader.load(data.characters, '', true)
+		if dialogue_data.characters.ends_with('.tres'):
+			var file = ResourceLoader.load(dialogue_data.characters, '', true)
 			if file is CharacterList:
 				characterList = file
 
 
-func init_variables(var_dict):
+func _init_variables(var_dict):
 	variables.clear()
 	
 	for var_name in var_dict:
@@ -133,15 +140,15 @@ func init_variables(var_dict):
 
 
 func start(id = start_id):
-	if !data:
-		printerr('No dialogue data!')
+	if !dialogue_data:
+		printerr('No dialogue dialogue_data!')
 		return
-	elif !data.starts.has(id):
+	elif !dialogue_data.starts.has(id):
 		printerr('Start ID not present!')
 		return
 	
 	running = true
-	proceed(data.starts[id])
+	proceed(dialogue_data.starts[id])
 	emit_signal("dialogue_started", id)
 
 
@@ -157,17 +164,17 @@ func proceed(idx):
 		'0':
 			# start
 			popup()
-			proceed(data.nodes[idx]['link'])
+			proceed(dialogue_data.nodes[idx]['link'])
 		'1':
 			# dialogue
-			set_dialogue(data.nodes[idx])
+			_set_dialogue(dialogue_data.nodes[idx])
 		'3':
 			# signal
-			emit_signal('dialogue_signal', data.nodes[idx]['signalValue'])
-			proceed(data.nodes[idx]['link'])
+			emit_signal('dialogue_signal', dialogue_data.nodes[idx]['signalValue'])
+			proceed(dialogue_data.nodes[idx]['link'])
 		'4':
 			# set
-			var var_dict = data.nodes[idx]
+			var var_dict = dialogue_data.nodes[idx]
 			
 			var var_name = var_dict['variable']
 			var value = var_dict['value']
@@ -182,13 +189,13 @@ func proceed(idx):
 			proceed(var_dict['link'])
 		'5':
 			# condition
-			var result = _check_condition((data.nodes[idx]))
+			var result = _check_condition((dialogue_data.nodes[idx]))
 
 			# Proceed
-			proceed(data.nodes[idx][str(result).to_lower()])
+			proceed(dialogue_data.nodes[idx][str(result).to_lower()])
 		_:
-			if data.nodes[idx].has('link'):
-				proceed(data.nodes[idx]['link'])
+			if dialogue_data.nodes[idx].has('link'):
+				proceed(dialogue_data.nodes[idx]['link'])
 			else:
 				stop()
 	emit_signal("dialogue_proceeded")
@@ -196,11 +203,19 @@ func proceed(idx):
 
 func stop():
 	running = false
-	hide()
+	if hide_on_dialogue_end:
+		reset()
+		hide()
 	emit_signal("dialogue_ended")
 
 
-func set_dialogue(dict):
+func reset():
+	speaker.text = ''
+	dialogue.text = ''
+	portrait.texture = null
+
+
+func _set_dialogue(dict):
 	# set speaker and portrait
 	speaker.text = ''
 	portrait.texture = null
@@ -215,7 +230,7 @@ func set_dialogue(dict):
 				portrait.texture = characterList.characters[idx].image
 				portrait.show()
 	
-	dialogue.bbcode_text = process_text(dict['dialogue'])
+	dialogue.bbcode_text = _process_text(dict['dialogue'])
 	custom_effects[0].skip = false
 	
 	# hide all options
@@ -228,7 +243,7 @@ func set_dialogue(dict):
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
 		var option_dict = dict['options'][idx]
-		option.text = process_text(option_dict['text'], false)
+		option.text = _process_text(option_dict['text'], false)
 		if option.is_connected('pressed', self, 'proceed'):
 			option.disconnect("pressed", self, 'proceed')
 		option.connect('pressed', self, 'proceed', [option_dict['link']])
@@ -256,7 +271,7 @@ func set_dialogue(dict):
 		options.get_child(0).icon = next_icon
 
 
-func process_text(text : String, is_dialogue = true):
+func _process_text(text : String, is_dialogue = true):
 	# Fill if empty
 	if text == '' and is_dialogue:
 		text = ' '
@@ -299,7 +314,7 @@ func get_variable(text : String):
 	return value
 
 
-func set_variable(var_name, type, value, operator = 0):
+func set_variable(var_name: String, type: int, value, operator = 0):
 	
 	# Set datatype of value
 	match type:
@@ -389,7 +404,7 @@ func _check_condition(cond_dict: Dictionary):
 
 
 func show_options():
-	if options.is_inside_tree():
+	if options and options.is_inside_tree():
 		options.show()
 		for option in options.get_children():
 			if option.visible:
@@ -397,7 +412,82 @@ func show_options():
 				break
 
 
+func _set_options_count(value):
+	max_options = value
+	
+	if options:
+		# clear all options
+		for option in options.get_children():
+			options.remove_child(option)
+			option.queue_free()
+
+		for i in range(max_options):
+			var button = Button.new()
+			button.text = 'Option '+str(i+1)
+			options.add_child(button)
+		
+		_set_options_vertical(options_vertical)
+
+
 func _set_options_alignment(value):
 	options_alignment = value
+	
 	if options:
-		options.alignment = options_alignment
+		match options_alignment:
+			0:
+				# Begin
+				options.size_flags_horizontal = 0
+				options.size_flags_vertical = 0
+			1:
+				# Center
+				options.size_flags_horizontal = SIZE_SHRINK_CENTER
+				options.size_flags_vertical = SIZE_SHRINK_CENTER
+			2:
+				# End
+				options.size_flags_horizontal = SIZE_SHRINK_END
+				options.size_flags_vertical = SIZE_SHRINK_END
+
+
+func _set_options_vertical(value):
+	options_vertical = value
+	
+	if options:
+		options.columns = 1 if options_vertical else max_options
+
+
+func _set_options_position(value):
+	options_position = value
+	
+	if options:
+		options.get_parent().remove_child(options)
+
+		match value:
+			0:
+				# top
+				_vbox_container.add_child(options)
+				_vbox_container.move_child(options, 0)
+			3:
+				# bottom
+				_vbox_container.add_child(options)
+			1:
+				# left
+				_hbox_container.add_child(options)
+				_hbox_container.move_child(options, 1)
+			2:
+				# right
+				_hbox_container.add_child(options)
+
+
+func _set_sample_portrait(value):
+	sample_portrait = value
+	portrait.texture = sample_portrait
+
+
+func _set_portrait_size(value):
+	portrait_size = value
+	portrait.rect_min_size = Vector2(portrait_size, 0)
+
+
+func _set_portrait_visibility(value):
+	hide_portrait = value
+	portrait.visible = not hide_portrait

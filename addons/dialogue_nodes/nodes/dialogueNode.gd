@@ -6,11 +6,15 @@ signal modified
 signal connection_move(old_slot, new_slot)
 
 export var max_options = 4
+export var bbcode_color = Color('a5efac')
+export var dialogue_popup_size = Vector2(800, 600)
 
-onready var speaker = $HBoxContainer/Speaker
-onready var customSpeaker = $HBoxContainer/CustomSpeaker
-onready var characterToggle = $HBoxContainer/CharacterToggle
-onready var dialogue = $Dialogue
+onready var speaker = $'%Speaker'
+onready var customSpeaker = $'%CustomSpeaker'
+onready var characterToggle = $'%CharacterToggle'
+onready var dialogue = $'%Dialogue'
+onready var dialogue_panel = $'%DialoguePanel'
+onready var dialogue_expanded = $'%DialogueExpanded'
 
 var curSpeaker : int = -1
 var options : Array = []
@@ -27,7 +31,10 @@ func _ready():
 			option.connect("focus_exited", self, "_on_option_entered", ['', options[0]])
 			set_slot(option.get_index(), false, 0, Color.white, true, 0, Color.white)
 	
-	dialogue.add_color_region('[', ']', Color('a5efac'))
+	dialogue.add_color_region('[', ']', bbcode_color)
+	dialogue_expanded.add_color_region('[', ']', bbcode_color)
+	
+	dialogue_panel.rect_size = dialogue_popup_size
 
 
 func add_option(new_text= '', new_condition= {}):
@@ -215,6 +222,20 @@ func _on_characters_loaded(newCharacterList : Array):
 func _on_speaker_selected(idx : int):
 	curSpeaker = idx
 	_on_node_modified()
+
+
+func _on_expand_button_pressed():
+	dialogue_expanded.text = dialogue.text
+	dialogue_panel.popup_centered()
+	dialogue_expanded.grab_focus()
+
+
+func _on_dialogue_expanded_text_changed():
+	dialogue.text = dialogue_expanded.text
+
+
+func _on_dialogue_close_button_pressed():
+	dialogue_panel.hide()
 
 
 func _on_node_modified(_a=0, _b=0):

@@ -1,12 +1,13 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" type="Script" id=1]
 [ext_resource path="res://addons/dialogue_nodes/icons/Profile.svg" type="Texture" id=2]
 [ext_resource path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/dialogue_nodes/icons/DistractionFree.svg" type="Texture" id=4]
 
 [node name="DialogueNode" type="GraphNode"]
-margin_right = 200.0
-margin_bottom = 201.0
+margin_right = 300.0
+margin_bottom = 220.0
 rect_min_size = Vector2( 200, 200 )
 title = "Dialogue"
 show_close = true
@@ -46,23 +47,25 @@ script = ExtResource( 1 )
 [node name="SpeakerLabel" type="Label" parent="."]
 margin_left = 16.0
 margin_top = 24.0
-margin_right = 184.0
+margin_right = 284.0
 margin_bottom = 38.0
 text = "Speaker"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 margin_left = 16.0
 margin_top = 39.0
-margin_right = 184.0
+margin_right = 284.0
 margin_bottom = 63.0
 
 [node name="CustomSpeaker" type="LineEdit" parent="HBoxContainer"]
-margin_right = 136.0
+unique_name_in_owner = true
+margin_right = 236.0
 margin_bottom = 24.0
 hint_tooltip = "The name of the speaker shown in the dialogues."
 size_flags_horizontal = 3
 
 [node name="Speaker" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
 visible = false
 margin_left = 70.0
 margin_right = 136.0
@@ -70,8 +73,9 @@ margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="CharacterToggle" type="Button" parent="HBoxContainer"]
-margin_left = 140.0
-margin_right = 168.0
+unique_name_in_owner = true
+margin_left = 240.0
+margin_right = 268.0
 margin_bottom = 24.0
 toggle_mode = true
 icon = ExtResource( 2 )
@@ -79,31 +83,87 @@ icon = ExtResource( 2 )
 [node name="DialogueLabel" type="Label" parent="."]
 margin_left = 16.0
 margin_top = 64.0
-margin_right = 184.0
+margin_right = 284.0
 margin_bottom = 78.0
 text = "Dialogue"
 
-[node name="Dialogue" type="TextEdit" parent="."]
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
 margin_left = 16.0
 margin_top = 79.0
-margin_right = 184.0
-margin_bottom = 170.0
+margin_right = 284.0
+margin_bottom = 189.0
+size_flags_vertical = 3
+
+[node name="Dialogue" type="TextEdit" parent="HBoxContainer2"]
+unique_name_in_owner = true
+margin_right = 236.0
+margin_bottom = 110.0
 rect_min_size = Vector2( 0, 91 )
 hint_tooltip = "The dialogue displayed in the DialogueBox.
 Use [bbcodes] to add extra effects to your dialogue."
+size_flags_horizontal = 3
 size_flags_vertical = 3
 syntax_highlighting = true
 highlight_all_occurrences = true
 wrap_enabled = true
 
+[node name="ExpandButton" type="Button" parent="HBoxContainer2"]
+margin_left = 240.0
+margin_right = 268.0
+margin_bottom = 110.0
+icon = ExtResource( 4 )
+
+[node name="DialoguePanel" type="PopupPanel" parent="HBoxContainer2"]
+unique_name_in_owner = true
+margin_left = 113.0
+margin_right = 913.0
+margin_bottom = 600.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer2/DialoguePanel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="DialogueExpanded" type="TextEdit" parent="HBoxContainer2/DialoguePanel/VBoxContainer"]
+unique_name_in_owner = true
+margin_right = 136.0
+margin_bottom = 91.0
+rect_min_size = Vector2( 0, 91 )
+hint_tooltip = "The dialogue displayed in the DialogueBox.
+Use [bbcodes] to add extra effects to your dialogue."
+size_flags_horizontal = 3
+size_flags_vertical = 3
+syntax_highlighting = true
+highlight_all_occurrences = true
+wrap_enabled = true
+__meta__ = {
+"_editor_description_": ""
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer2/DialoguePanel/VBoxContainer"]
+margin_top = 63.0
+margin_right = 47.0
+margin_bottom = 83.0
+
+[node name="CloseButton" type="Button" parent="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer"]
+margin_right = 47.0
+margin_bottom = 20.0
+text = "Close"
+
 [node name="Option1" parent="." instance=ExtResource( 3 )]
 margin_left = 16.0
-margin_top = 171.0
-margin_right = 184.0
-margin_bottom = 195.0
+margin_top = 190.0
+margin_right = 284.0
+margin_bottom = 214.0
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="text_changed" from="HBoxContainer/CustomSpeaker" to="." method="_on_node_modified"]
 [connection signal="item_selected" from="HBoxContainer/Speaker" to="." method="_on_speaker_selected"]
 [connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
-[connection signal="text_changed" from="Dialogue" to="." method="_on_node_modified"]
+[connection signal="text_changed" from="HBoxContainer2/Dialogue" to="." method="_on_node_modified"]
+[connection signal="pressed" from="HBoxContainer2/ExpandButton" to="." method="_on_expand_button_pressed"]
+[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
+[connection signal="pressed" from="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]

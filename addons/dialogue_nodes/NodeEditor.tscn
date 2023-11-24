@@ -297,7 +297,6 @@ margin_top = -105.5
 margin_right = 335.0
 margin_bottom = 105.5
 rect_min_size = Vector2( 300, 72 )
-popup_exclusive = true
 script = ExtResource( 5 )
 custom_effects = [ SubResource( 1 ) ]
 

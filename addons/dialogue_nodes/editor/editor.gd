@@ -63,9 +63,9 @@ func _run_tree(start_node):
 	data = start_node.tree_to_data(graph, data)
 	data.variables = variables.to_dict()
 	data.characters = characters.filePath.text
-	dialogue.data = data
+	dialogue.dialogue_data = data
 	
-	if dialogue.data.starts.has(start_node.ID):
+	if dialogue.dialogue_data.starts.has(start_node.ID):
 		dialogue.start(start_node.ID)
 
 
