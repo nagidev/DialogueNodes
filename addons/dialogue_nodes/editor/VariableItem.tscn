@@ -43,16 +43,16 @@ placeholder_text = "Value"
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-min_value = -9999.0
-max_value = 9999.0
+allow_greater = true
+allow_lesser = true
 
 [node name="FloatValue" type="SpinBox" parent="."]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-min_value = -9999.0
-max_value = 9999.0
 step = 0.01
+allow_greater = true
+allow_lesser = true
 
 [node name="BoolValue" type="CheckBox" parent="."]
 visible = false

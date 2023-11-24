@@ -32,10 +32,12 @@ signal variable_changed(var_name: String, value)
 @export_enum('Top', 'Left', 'Right', 'Bottom') var options_position = 3: set = _set_options_position
 ## Icon displayed when no text options are available.
 @export var next_icon := preload('res://addons/dialogue_nodes/icons/Play.svg')
+## Sample portrait image. This will not show in-game.
+@export var sample_portrait := preload('res://addons/dialogue_nodes/icons/Portrait.png'): set = _set_sample_portrait
 ## Default color for the speaker label.
 @export var default_speaker_color := Color.WHITE: set = _set_default_speaker_color
 ## Hide the character portrait (useful for custom character portrait implementations).
-@export var hide_character_portrait := false
+@export var hide_portrait := false: set = _set_portrait_visibility
 
 @export_group('Misc')
 ## Input action used to skip dialougue animation
@@ -96,6 +98,7 @@ func _enter_tree():
 	# setup portrait image
 	portrait = TextureRect.new()
 	_hbox_container.add_child(portrait)
+	portrait.texture = sample_portrait
 	portrait.expand_mode = TextureRect.EXPAND_FIT_WIDTH
 	portrait.size_flags_stretch_ratio = 0
 
@@ -133,7 +136,7 @@ func _ready():
 	_set_options_position(options_position)
 
 	hide()
-	if hide_character_portrait:
+	if hide_portrait:
 		portrait.hide()
 
 	if dialogue_data:
@@ -538,8 +541,8 @@ func show_options():
 
 
 func _set_options_count(value):
-	max_options = max(1, value)
-
+	max_options = value
+	
 	if options:
 		# clear all options
 		for option in options.get_children():
@@ -554,21 +557,23 @@ func _set_options_count(value):
 
 func _set_options_alignment(value):
 	options_alignment = value
+	
 	if options:
 		options.alignment = options_alignment
 
 
 func _set_options_vertical(value):
 	options_vertical = value
+	
 	if options:
 		options.vertical = options_vertical
 
 
 func _set_options_position(value):
 	options_position = value
+	
 	if options:
-		var cur_parent = options.get_parent()
-		cur_parent.remove_child(options)
+		options.get_parent().remove_child(options)
 
 		match value:
 			0:
@@ -587,7 +592,18 @@ func _set_options_position(value):
 				_hbox_container.add_child(options)
 
 
+func _set_sample_portrait(value):
+	sample_portrait = value
+	portrait.texture = sample_portrait
+
+
 func _set_default_speaker_color(value):
 	default_speaker_color = value
+	
 	if speaker:
 		speaker.modulate = default_speaker_color
+
+
+func _set_portrait_visibility(value):
+	hide_portrait = value
+	portrait.visible = not hide_portrait

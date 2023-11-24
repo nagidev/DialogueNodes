@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="3_e66eu"]
 
 [node name="Option1" type="HBoxContainer"]
+offset_right = 80.0
+offset_bottom = 31.0
 script = ExtResource("1_hro80")
 
 [node name="FilterButton" type="Button" parent="."]
