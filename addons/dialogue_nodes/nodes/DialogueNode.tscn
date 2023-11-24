@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" type="Script" id=1]
 [ext_resource path="res://addons/dialogue_nodes/icons/Profile.svg" type="Texture" id=2]
+[ext_resource path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" type="PackedScene" id=3]
 
 [node name="DialogueNode" type="GraphNode"]
 margin_right = 200.0
@@ -95,12 +96,11 @@ syntax_highlighting = true
 highlight_all_occurrences = true
 wrap_enabled = true
 
-[node name="Option1" type="LineEdit" parent="."]
+[node name="Option1" parent="." instance=ExtResource( 3 )]
 margin_left = 16.0
 margin_top = 171.0
 margin_right = 184.0
 margin_bottom = 195.0
-placeholder_text = "Option1"
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="text_changed" from="HBoxContainer/CustomSpeaker" to="." method="_on_node_modified"]

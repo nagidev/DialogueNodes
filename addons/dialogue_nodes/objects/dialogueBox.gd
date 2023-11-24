@@ -182,7 +182,10 @@ func proceed(idx):
 			proceed(var_dict['link'])
 		'5':
 			# condition
-			handle_condition(data.nodes[idx])
+			var result = _check_condition((data.nodes[idx]))
+
+			# Proceed
+			proceed(data.nodes[idx][str(result).to_lower()])
 		_:
 			if data.nodes[idx].has('link'):
 				proceed(data.nodes[idx]['link'])
@@ -224,10 +227,28 @@ func set_dialogue(dict):
 	# set options
 	for idx in dict['options']:
 		var option = options.get_child(int(idx))
-		option.text = process_text(dict['options'][idx]['text'], false)
+		var option_dict = dict['options'][idx]
+		option.text = process_text(option_dict['text'], false)
 		if option.is_connected('pressed', self, 'proceed'):
 			option.disconnect("pressed", self, 'proceed')
-		option.connect("pressed", self, 'proceed', [dict['options'][idx]['link']])
+		option.connect('pressed', self, 'proceed', [option_dict['link']])
+		
+		if option_dict.has('condition') and not option_dict['condition'].empty():
+			option.visible = _check_condition(option_dict['condition'])
+		else:
+			option.show()
+	
+	# set single option to show if none visible
+	var _options_visible = 0
+	for option in options.get_children():
+		_options_visible += 1 if option.visible else 0
+	if _options_visible == 0:
+		var option = options.get_child(0)
+		option.text = ''
+		option.icon = next_icon
+		if option.is_connected('pressed', self, 'proceed'):
+			option.disconnect('pressed', self, 'proceed')
+		option.connect('pressed', self, 'proceed', ['END'])
 		option.show()
 	
 	# if single empty option
@@ -320,11 +341,11 @@ func set_variable(var_name, type, value, operator = 0):
 			variables[var_name] /= value
 
 
-func handle_condition(cond_dict):
+func _check_condition(cond_dict: Dictionary):
 	var value1 = cond_dict['value1']
 	var value2 = cond_dict['value2']
 	var type = TYPE_STRING
-	
+
 	# Get variables if needed
 	if value1.count('{{') > 0:
 		value1 = get_variable(value1)
@@ -332,7 +353,7 @@ func handle_condition(cond_dict):
 	if value2.count('{{') > 0:
 		value2 = get_variable(value2)
 		type = typeof(value2)
-	
+
 	# Set datatype of values
 	match type:
 		TYPE_STRING:
@@ -345,9 +366,9 @@ func handle_condition(cond_dict):
 			value1 = float(value1)
 			value2 = float(value2)
 		TYPE_BOOL:
-			value1 = (value1 == "true") if value1 is String else value1
-			value2 = (value2 == "true") if value2 is String else value2
-	
+			value1 = (value1 == 'true') if value1 is String else value1
+			value2 = (value2 == 'true') if value2 is String else value2
+
 	# Perform operation
 	var result : bool = false
 	match int(cond_dict['operator']):
@@ -363,14 +384,17 @@ func handle_condition(cond_dict):
 			result = value1 >= value2
 		5:
 			result = value1 <= value2
-	
-	# Proceed
-	proceed(cond_dict[str(result).to_lower()])
+
+	return result
 
 
 func show_options():
-	options.show()
-	options.get_child(0).grab_focus()
+	if options.is_inside_tree():
+		options.show()
+		for option in options.get_children():
+			if option.visible:
+				option.grab_focus()
+				break
 
 
 func _set_options_alignment(value):
