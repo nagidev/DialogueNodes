@@ -186,7 +186,7 @@ Current value: {{COINS}}
 variables = {
 "COINS": {
 "type": 2,
-"value": "10"
+"value": 10.0
 }
 }
 comments = [  ]

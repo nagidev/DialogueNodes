@@ -160,7 +160,8 @@ icon = ExtResource( 11 )
 [node name="Variables" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data"]
 margin_top = 54.0
 margin_right = 1016.0
-margin_bottom = 266.0
+margin_bottom = 270.0
+size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource( 10 )
 
@@ -176,10 +177,17 @@ margin_bottom = 38.0
 hint_tooltip = "Add a new variable."
 text = "+"
 
-[node name="TextureRect" type="TextureRect" parent="Main/Workspace/SidePanel/Data"]
-margin_top = 270.0
+[node name="ScrollContainer" type="ScrollContainer" parent="Main/Workspace/SidePanel/Data/Variables"]
+margin_top = 42.0
 margin_right = 1016.0
-margin_bottom = 270.0
+margin_bottom = 216.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+scroll_horizontal_enabled = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data/Variables/ScrollContainer"]
+margin_right = 1016.0
+size_flags_horizontal = 3
 
 [node name="Graph" type="GraphEdit" parent="Main/Workspace"]
 visible = false
@@ -289,6 +297,7 @@ margin_top = -105.5
 margin_right = 335.0
 margin_bottom = 105.5
 rect_min_size = Vector2( 300, 72 )
+popup_exclusive = true
 script = ExtResource( 5 )
 custom_effects = [ SubResource( 1 ) ]
 

@@ -13,7 +13,7 @@ export (Resource) var dialogue_file setget load_data
 export (String) var start_id
 export (int, 1, 8) var max_options = 4
 export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_options_alignment
-export var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
+export (Texture) var next_icon = preload("res://addons/dialogue_nodes/icons/Play.svg")
 export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 
 var speaker : Label
@@ -284,12 +284,22 @@ func set_variable(var_name, type, value, operator = 0):
 	match type:
 		TYPE_STRING:
 			value = str(value)
+			
+			# Check for invalud operators
+			if operator > 2:
+				printerr("Invalid operator for type: String")
+				return
 		TYPE_INT:
 			value = int(value)
 		TYPE_REAL:
 			value = float(value)
 		TYPE_BOOL:
-			value = (value == "true")
+			value = (value == "true") if value is String else bool(value)
+			
+			# Check for invalid operators
+			if operator > 0:
+				printerr("Invalid operator for type: Boolean")
+				return
 	
 	# Perform operation
 	match operator:
