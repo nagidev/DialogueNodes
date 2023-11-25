@@ -7,11 +7,13 @@
 [sub_resource type="Resource" id=1]
 script = ExtResource( 2 )
 name = "Greg"
+color = Color( 0.882353, 1, 0.392157, 1 )
 
 [sub_resource type="Resource" id=2]
 script = ExtResource( 2 )
 name = "Clara"
 image = ExtResource( 3 )
+color = Color( 1, 0.368627, 0.811765, 1 )
 
 [resource]
 script = ExtResource( 1 )

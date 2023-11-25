@@ -17,9 +17,13 @@ export (int, 'Begin', 'Center', 'End') var options_alignment = 2 setget _set_opt
 export (bool) var options_vertical = false setget _set_options_vertical
 export (int, 'Top', 'Left', 'Right', 'Bottom') var options_position = 3 setget _set_options_position
 export (Texture) var next_icon = preload('res://addons/dialogue_nodes/icons/Play.svg')
+
 export (Texture) var sample_portrait = preload('res://addons/dialogue_nodes/icons/Portrait.png') setget _set_sample_portrait
 export var portrait_size = 128 setget _set_portrait_size
 export var hide_portrait := false setget _set_portrait_visibility
+
+export (Color) var default_speaker_color = Color.white setget _set_default_speaker_color
+export (float, 1.0, 10.0) var scroll_speed = 4.0
 export (Array, RichTextEffect) var custom_effects = [RichTextWait.new()]
 
 var speaker : Label
@@ -74,7 +78,6 @@ func _enter_tree():
 	dialogue = RichTextLabel.new()
 	_vbox_container.add_child(dialogue)
 	dialogue.bbcode_text = 'Sample dialogue.\nLoad a [u]dialogue file[/u].'
-	dialogue.scroll_following = true
 	dialogue.bbcode_enabled = true
 	dialogue.size_flags_vertical = SIZE_EXPAND_FILL
 	dialogue.custom_effects = custom_effects
@@ -104,6 +107,21 @@ func _ready():
 		if effect is RichTextWait:
 			effect.connect("wait_finished", self, "show_options")
 			break
+
+
+func _process(delta):
+	# scrolling for longer dialogues
+	if not running:
+		return
+
+	var scroll_amt := 0.0
+	if options_vertical:
+		scroll_amt = Input.get_axis("ui_left", "ui_right")
+	else:
+		scroll_amt = Input.get_axis("ui_up", "ui_down")
+
+	if scroll_amt:
+		dialogue.get_v_scroll().value += int(scroll_amt * scroll_speed)
 
 
 func _input(event):
@@ -218,6 +236,7 @@ func reset():
 func _set_dialogue(dict):
 	# set speaker and portrait
 	speaker.text = ''
+	speaker.modulate = default_speaker_color
 	portrait.texture = null
 	portrait.hide()
 	if dict['speaker'] is String:
@@ -226,11 +245,13 @@ func _set_dialogue(dict):
 		var idx = int(dict['speaker'])
 		if idx > -1 and idx < characterList.characters.size():
 			speaker.text = characterList.characters[idx].name
+			speaker.modulate = characterList.characters[idx].color
 			if characterList.characters[idx].image:
 				portrait.texture = characterList.characters[idx].image
 				portrait.show()
 	
 	dialogue.bbcode_text = _process_text(dict['dialogue'])
+	dialogue.get_v_scroll().value = 0
 	custom_effects[0].skip = false
 	
 	# hide all options
@@ -491,3 +512,10 @@ func _set_portrait_size(value):
 func _set_portrait_visibility(value):
 	hide_portrait = value
 	portrait.visible = not hide_portrait
+
+
+func _set_default_speaker_color(value):
+	default_speaker_color = value
+	
+	if speaker:
+		speaker.modulate = default_speaker_color

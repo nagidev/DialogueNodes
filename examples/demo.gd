@@ -11,10 +11,10 @@ func _ready():
 		var label = demo.resource_path.split("/")[-1].split(".")[0]
 		$DemoSelector.add_item(label)
 	
-	dialogue_box.load_data(demos[0])
+	dialogue_box.set_data(demos[0])
 
 
-func explode(_a=0):
+func explode():
 	particles.emitting = true
 
 
@@ -29,7 +29,7 @@ func _on_dialogue_signal(value):
 
 
 func _on_demo_selected(index):
-	dialogue_box.load_data(demos[index])
+	dialogue_box.set_data(demos[index])
 
 
 func _on_language_selected(index):

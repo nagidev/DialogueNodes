@@ -15,7 +15,7 @@
 [sub_resource type="Curve" id=1]
 _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.71435, 0.0, 0, 0 ]
 
-[sub_resource type="RichTextEffect" id=13]
+[sub_resource type="RichTextEffect" id=2]
 script = ExtResource( 5 )
 
 [node name="Demo" type="Control"]
@@ -79,15 +79,15 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -439.0
-margin_top = -205.0
-margin_right = 439.0
-margin_bottom = -29.0
+margin_left = -352.5
+margin_top = -201.0
+margin_right = 352.5
+margin_bottom = -26.0
 rect_min_size = Vector2( 300, 72 )
 popup_exclusive = true
 script = ExtResource( 1 )
 start_id = "START"
-custom_effects = [ SubResource( 13 ) ]
+custom_effects = [ SubResource( 2 ) ]
 
 [connection signal="item_selected" from="LanguageSelector" to="." method="_on_language_selected"]
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]

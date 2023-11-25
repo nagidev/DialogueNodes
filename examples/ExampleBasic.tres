@@ -17,15 +17,14 @@ nodes = {
 "dialogue": "Hey there!",
 "offset": Vector2( 220, 0 ),
 "options": {
-"0": {
+0: {
+"condition": {
+},
 "link": "END",
 "text": ""
 }
 },
-"size": {
-"x": 200.0,
-"y": 255.0
-},
+"size": Vector2( 200, 255 ),
 "speaker": "Greg"
 },
 "2_1": {
