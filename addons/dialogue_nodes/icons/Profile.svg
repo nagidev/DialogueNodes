@@ -6,7 +6,7 @@
    version="1.1"
    id="svg1"
    sodipodi:docname="Profile.svg"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,14 +23,16 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="34.780815"
-     inkscape:cx="7.4035068"
-     inkscape:cy="8.783578"
+     inkscape:cx="7.4322583"
+     inkscape:cy="8.7979537"
      inkscape:window-width="1920"
-     inkscape:window-height="1001"
-     inkscape:window-x="-9"
-     inkscape:window-y="41"
+     inkscape:window-height="1011"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg1" />
+     inkscape:current-layer="svg1"
+     inkscape:pageshadow="2"
+     showgrid="false" />
   <path
      d="m 4,1048.4 h 8 z"
      fill="#e0e0e0"
@@ -43,9 +45,10 @@
      style="stroke-width:4;stroke-dasharray:none"
      sodipodi:nodetypes="ccc" />
   <circle
-     style="fill:#e0e0e0;fill-opacity:1;stroke-width:4.34008;stroke-dasharray:none"
+     style="fill-opacity:1;stroke-width:4.34008;stroke-dasharray:none"
      id="path2"
      cx="8"
      cy="6"
-     r="3" />
+     r="3"
+     fill="#e0e0e0" />
 </svg>

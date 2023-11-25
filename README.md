@@ -51,7 +51,6 @@ Note: The wiki is still being updated frequently. Some of the functionalities mi
 #####
 ## Known issues
 - DialogueNode in the workplace may have wrong colored slots on light themes
-- Icons do not look right in light theme or scaled dpi
 - Using return character in the dialogue results in options not showing up in certain cases
 - Shifting focus to empty option from another empty option results in the option data moving around
 

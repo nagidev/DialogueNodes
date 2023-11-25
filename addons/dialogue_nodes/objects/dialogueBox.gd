@@ -594,7 +594,9 @@ func _set_options_position(value):
 
 func _set_sample_portrait(value):
 	sample_portrait = value
-	portrait.texture = sample_portrait
+	
+	if portrait:
+		portrait.texture = sample_portrait
 
 
 func _set_default_speaker_color(value):
