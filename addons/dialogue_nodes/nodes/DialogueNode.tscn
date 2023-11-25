@@ -6,10 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_btpy8"]
-number_color = Color(1, 1, 1, 1)
-symbol_color = Color(1, 1, 1, 1)
-function_color = Color(1, 1, 1, 1)
-member_variable_color = Color(1, 1, 1, 1)
 color_regions = {
 "[ ]": Color(0.647059, 0.937255, 0.67451, 1)
 }
