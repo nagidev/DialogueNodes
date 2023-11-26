@@ -32,15 +32,15 @@ signal variable_changed(var_name: String, value)
 @export_enum('Top', 'Left', 'Right', 'Bottom') var options_position = 3: set = _set_options_position
 ## Icon displayed when no text options are available.
 @export var next_icon := preload('res://addons/dialogue_nodes/icons/Play.svg')
-## Sample portrait image. This will not show in-game.
+## Sample portrait image that is visible in editor. This will not show in-game.
 @export var sample_portrait := preload('res://addons/dialogue_nodes/icons/Portrait.png'): set = _set_sample_portrait
-## Default color for the speaker label.
+## The default color for the speaker label.
 @export var default_speaker_color := Color.WHITE: set = _set_default_speaker_color
 ## Hide the character portrait (useful for custom character portrait implementations).
 @export var hide_portrait := false: set = _set_portrait_visibility
 
 @export_group('Misc')
-## Input action used to skip dialougue animation
+## Input action used to skip dialogue animation
 @export var skip_input_action := 'ui_cancel'
 ## Speed of scroll when using joystick/keyboard input
 @export var scroll_speed := 4
@@ -350,6 +350,9 @@ func _process_text(text : String, is_dialogue = true):
 			formatted_variables[key] = variables[key]
 	text = text.format(formatted_variables, '{{_}}')
 
+	# Add line breaks (if any)
+	text = text.replace('[br]', '\n')
+
 	# return text now if not a dialogue
 	if not is_dialogue:
 		return text
@@ -436,7 +439,7 @@ func get_variable(text : String):
 ## # set COIN += 10
 ## $DialogueBox.set_variable("COIN", TYPE_INT, 10, 1)
 ## [/codeblock]
-## However, for the sake of simlicity, you can also change the variables directly:
+## However, for the sake of simplicity, you can also change the variables directly:
 ## [codeblock]
 ## # set COIN += 10
 ## $DialogueBox.variables["COIN"] += 10

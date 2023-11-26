@@ -154,6 +154,6 @@ layout_mode = 2
 [connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
 [connection signal="text_changed" from="HBoxContainer2/Dialogue" to="." method="_on_node_modified"]
 [connection signal="pressed" from="HBoxContainer2/ExpandButton" to="." method="_on_expand_button_pressed"]
-[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_node_modified"]
 [connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
+[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_node_modified"]
 [connection signal="pressed" from="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]

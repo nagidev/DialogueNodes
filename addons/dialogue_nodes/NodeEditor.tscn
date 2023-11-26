@@ -245,6 +245,12 @@ texture_normal = ExtResource("4")
 texture_pressed = ExtResource("3")
 stretch_mode = 3
 
+[node name="VersionNumber" type="Label" parent="Main/Statusbar"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
+text = "1.0.2"
+
 [node name="NewDialog" type="FileDialog" parent="."]
 title = "Create a file"
 size = Vector2i(600, 400)
