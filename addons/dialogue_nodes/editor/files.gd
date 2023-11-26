@@ -33,7 +33,6 @@ func _ready():
 	openDialogue = get_node(openDialogue_path)
 	confirmDialogue = get_node(confirmDialogue_path)
 	
-	##
 	confirmDialogue.get_ok_button().hide()
 	confirmDialogue.add_button('Save', true, 'save_file')
 	confirmDialogue.add_button('Discard', true, 'discard_file')
@@ -41,13 +40,14 @@ func _ready():
 	
 	current = -1
 	queued = []
-	
-	
+
+
 func _show_dir(idx):
 	var metadata = get_item_metadata(idx)
 	var parts = metadata['path'].split('/')
 	set_item_text(idx, parts[-2] + '/' + parts[-1])
 	
+
 
 func _is_file_open(node_name):
 	

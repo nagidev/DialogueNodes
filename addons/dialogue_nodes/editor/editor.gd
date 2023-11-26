@@ -40,6 +40,10 @@ func _ready():
 	dialogue.dialogue_signal.connect(_on_dialogue_signal)
 	dialogue.variable_changed.connect(_on_dialogue_variable_changed)
 	dialogue.dialogue_ended.connect(_on_dialogue_ended)
+	
+	var config = ConfigFile.new()
+	config.load('res://addons/dialogue_nodes/plugin.cfg')
+	$Main/Statusbar/VersionNumber.text = config.get_value('plugin', 'version')
 
 
 func init_menus():
