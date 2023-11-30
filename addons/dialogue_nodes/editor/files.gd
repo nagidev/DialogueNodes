@@ -15,7 +15,7 @@ signal closed
 
 @onready var popupMenu = $PopupMenu
 
-var script_icon = preload('res://addons/dialogue_nodes/icons/Script.svg')
+var file_icon = preload('res://addons/dialogue_nodes/icons/Script.svg')
 var editor
 var newDialogue
 var saveDialogue
@@ -85,7 +85,7 @@ func create_file(file_name, file_dir, data : DialogueData):
 			'modified': false}
 		
 		# add new file item
-		add_item(file_name, script_icon)
+		add_item(file_name, file_icon)
 		set_item_tooltip(new_idx, file_name)
 
 		# set metadata

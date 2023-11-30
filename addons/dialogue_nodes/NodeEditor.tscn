@@ -249,7 +249,7 @@ stretch_mode = 3
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "1.0.2"
+text = "0.0.0"
 
 [node name="NewDialog" type="FileDialog" parent="."]
 title = "Create a file"
@@ -302,7 +302,6 @@ offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5")
-sample_portrait = null
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]

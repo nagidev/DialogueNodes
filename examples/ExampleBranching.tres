@@ -24,48 +24,43 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_2",
 "text": "Red pill"
 },
 1: {
+"condition": {},
 "link": &"1_3",
 "text": "Blue pill"
 }
 },
-"size": {
-"x": 200.0,
-"y": 289.0
-},
+"size": Vector2(300, 349.5),
 "speaker": "Morpheus"
 },
 "1_2": {
 "dialogue": "Do you have the doctor's prescription for the pill?",
-"offset": Vector2(460, -80),
+"offset": Vector2(560, -80),
 "options": {
-"0": {
+0: {
+"condition": {},
 "link": "END",
 "text": "Uh..."
 }
 },
-"size": {
-"x": 200.0,
-"y": 278.5
-},
+"size": Vector2(300, 312.5),
 "speaker": "Morpheus"
 },
 "1_3": {
 "dialogue": "You shouldn't take pills from strangers, you know!",
-"offset": Vector2(460, 220),
+"offset": Vector2(560, 260),
 "options": {
-"0": {
+0: {
+"condition": {},
 "link": "END",
 "text": "Oh..."
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 312.5),
 "speaker": "Morpheus"
 },
 "1_4": {
@@ -73,36 +68,32 @@ nodes = {
 "offset": Vector2(220, 600),
 "options": {
 0: {
+"condition": {},
 "link": &"1_5",
 "text": ""
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 312.5),
 "speaker": "Greg"
 },
 "1_5": {
 "dialogue": "When you want to call a specific dialogue tree, just pass the unique start ID when calling [color=yellow]$DialogueBox.start('MyID')[/color]",
-"offset": Vector2(460, 600),
+"offset": Vector2(560, 600),
 "options": {
-"0": {
+0: {
+"condition": {},
 "link": "END",
 "text": "Cool!"
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 312.5),
 "speaker": "Greg"
 },
 "2_1": {
 "comment": "Create branching dialogues using different options.",
 "offset": Vector2(-20, 80),
 "size": {
-"x": 200.0,
+"x": 204.0,
 "y": 129.9
 }
 },
@@ -110,7 +101,7 @@ nodes = {
 "comment": "Create multiple dialogue trees in the same file.",
 "offset": Vector2(-20, 680),
 "size": {
-"x": 200.0,
+"x": 204.0,
 "y": 129.9
 }
 }
