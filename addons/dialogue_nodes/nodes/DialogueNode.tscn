@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://b60fa8vcjuoo6"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" id="1"]
-[ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Profile.svg" id="2_fthnh"]
+[ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Character.svg" id="2_n0qww"]
 [ext_resource type="Texture2D" uid="uid://dps8mwnnuc5nm" path="res://addons/dialogue_nodes/icons/DistractionFree.svg" id="4_tpc70"]
 [ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
 
@@ -82,11 +82,12 @@ tooltip_text = "The name of the speaker shown in the dialogues."
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
+fit_to_longest_item = false
 
 [node name="CharacterToggle" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 toggle_mode = true
-icon = ExtResource("2_fthnh")
+icon = ExtResource("2_n0qww")
 
 [node name="DialogueLabel" type="Label" parent="."]
 layout_mode = 2
@@ -122,8 +123,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = 796.0
+offset_bottom = 596.0
 grow_horizontal = 2
 grow_vertical = 2
 

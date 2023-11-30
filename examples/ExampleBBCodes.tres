@@ -18,83 +18,75 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_3",
 "text": "Yeah!"
 },
 1: {
+"condition": {},
 "link": &"1_2",
 "text": "Nah"
 }
 },
-"size": {
-"x": 200.0,
-"y": 289.0
-},
+"size": Vector2(300, 349.5),
 "speaker": "Greg"
 },
 "1_2": {
 "dialogue": "[shake]Oh... too bad...[/shake]",
-"offset": Vector2(460, 280),
+"offset": Vector2(560, 300),
 "options": {
-"0": {
+0: {
+"condition": {},
 "link": "END",
 "text": "..."
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 312.5),
 "speaker": "Greg"
 },
 "1_3": {
 "dialogue": "You can write special keywords between [ ] for different effects.",
-"offset": Vector2(460, 0),
+"offset": Vector2(560, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_4",
 "text": ""
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 312.5),
 "speaker": "Greg"
 },
 "1_4": {
 "dialogue": "Like u for [u]underlining[/u] or [fade start=26 length=4]fade[/fade] or [color=red]color=red[/color] or [rainbow]rainbow[/rainbow] or [shake]shake[/shake] or [wave]wave[/wave] or [tornado]tornado[/tornado]",
-"offset": Vector2(700, 0),
+"offset": Vector2(900, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_5",
 "text": ""
 }
 },
-"size": {
-"x": 459.881,
-"y": 360.827
-},
+"size": Vector2(300, 312.5),
 "speaker": "Greg"
 },
 "1_5": {
 "dialogue": "You can even combine two or more effects to create [rainbow][wave]EVEN MORE AWESOME EFFECTS![/wave][/rainbow]
 Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
-"offset": Vector2(1200, 0),
+"offset": Vector2(1240, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_3",
 "text": "One more time?"
 },
-"1": {
+1: {
+"condition": {},
 "link": "END",
 "text": "Got it!"
 }
 },
-"size": {
-"x": 397.4,
-"y": 353.4
-},
+"size": Vector2(300, 349.5),
 "speaker": "Greg"
 }
 }

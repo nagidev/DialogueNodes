@@ -63,12 +63,14 @@ var options : BoxContainer
 var _hbox_container : HBoxContainer
 var _vbox_container : VBoxContainer
 
-## [Dictionary] containing all the variables defined in the [member DialogueBox.dialogue_data].
-var variables = {}
 ## Stores whether a dialogue tree is running or not. Do not change this value directly.
 var running = false
+## [Dictionary] containing all the variables defined in the [member DialogueBox.dialogue_data].
+var variables = {}
 ## [Array] of all the [Character] used for the dialogue dialogue_data.
 var characterList : CharacterList = null
+
+var _bbcode_regex : RegEx
 
 
 func _enter_tree():
@@ -142,6 +144,9 @@ func _ready():
 	if dialogue_data:
 		_init_variables(dialogue_data.variables)
 
+	_bbcode_regex = RegEx.new()
+	_bbcode_regex.compile('\\n|\\[img\\].*?\\[\\/img\\]|\\[.*?\\]')
+	
 	for effect in custom_effects:
 		if effect is RichTextWait:
 			effect.wait_finished.connect(show_options)
@@ -361,12 +366,10 @@ func _process_text(text : String, is_dialogue = true):
 	if not text.begins_with('[wait'):
 		text = '[wait]' + text + '[/wait]'
 
-	# Update [wait] with last attribute for showing options
 	# Find the actual position of the last character sans bbcode
-	var regex = RegEx.new()
-	regex.compile('\\n|\\[img\\].*?\\[\\/img\\]|\\[.*?\\]')
-	var textLength = regex.sub(text, '', true).length()
+	var textLength = _bbcode_regex.sub(text, '', true).length()
 
+	# Update [wait] with last attribute for showing options
 	var idx = 0
 	var char_idx = -1
 	var char_count = 0

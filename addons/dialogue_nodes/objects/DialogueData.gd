@@ -1,3 +1,4 @@
+@icon("res://addons/dialogue_nodes/icons/Dialogue.svg")
 extends Resource
 class_name DialogueData
 
