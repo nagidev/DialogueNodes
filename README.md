@@ -53,5 +53,6 @@ Note: The wiki is still being updated frequently. Some of the functionalities mi
 - DialogueNode in the workplace may have wrong colored slots on light themes
 - Using return character in the dialogue results in options not showing up in certain cases
 - Shifting focus to empty option from another empty option results in the option data moving around
+- DialogNodes in the graph have options overflowing outside the edges. This seems to be a bug introduced in Godot 4.2
 
 If you find any bugs or issues, [report them in the issues page](https://github.com/nagidev/DialogueNodes/issues). Please ensure the same or a similar issues isn't already present before creating your own.

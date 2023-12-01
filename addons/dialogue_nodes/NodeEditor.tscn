@@ -249,7 +249,7 @@ stretch_mode = 3
 layout_mode = 2
 size_flags_horizontal = 10
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "0.0.0"
+text = "1.0.2"
 
 [node name="NewDialog" type="FileDialog" parent="."]
 title = "Create a file"
