@@ -112,11 +112,11 @@ func _to_dict(graph):
 	# get options connected to other nodes
 	var options_dict = {}
 	for connection in graph.get_connection_list():
-		if connection['from'] == name:
+		if connection['from_node'] == name:
 			var idx : int = connection['from_port'] # this returns index starting from 0
 			options_dict[idx] = {}
 			options_dict[idx]['text'] = options[idx].text
-			options_dict[idx]['link'] = connection['to']
+			options_dict[idx]['link'] = connection['to_node']
 			options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else {}
 	
 	# get options not connected

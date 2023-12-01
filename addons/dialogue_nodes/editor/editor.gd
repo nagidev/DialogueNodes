@@ -122,7 +122,7 @@ func get_data() -> DialogueData:
 		if node is GraphNode and not data.nodes.has(node.name):
 			data.strays.append(node.name)
 			data.nodes[node.name] = node._to_dict(graph)
-			data.nodes[node.name]['offset'] = node.offset
+			data.nodes[node.name]['offset'] = node.position_offset
 	
 	data.characters = characters.filePath.text
 	

@@ -3,13 +3,11 @@
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/commentNode.gd" id="1"]
 
 [node name="CommentNode" type="GraphNode"]
-custom_minimum_size = Vector2(200, 122)
+custom_minimum_size = Vector2(200, 237)
 offset_right = 200.0
-offset_bottom = 122.0
-title = "Comment"
-show_close = true
+offset_bottom = 237.0
 resizable = true
-comment = true
+title = "Comment"
 slot/0/left_enabled = false
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -22,7 +20,7 @@ slot/0/draw_stylebox = true
 script = ExtResource("1")
 
 [node name="TextEdit" type="TextEdit" parent="."]
-custom_minimum_size = Vector2(20, 90)
+custom_minimum_size = Vector2(20, 205)
 layout_mode = 2
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
