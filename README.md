@@ -1,4 +1,5 @@
 # DialogueNodes
+_⚠️ This is the alpha version of the plugin for Godot 4.2. There may be bugs in the plugin so it's not advised to use it in any serious projects for now. You can help me by bug-testing and creating issues if you find any issues!_
 ![DialogueNodes editor](.screenshots/DN0.png)
 <img src='.screenshots/DN1.png' width='51%'/>
 <img src='.screenshots/DN2.png' width='48%'/>
