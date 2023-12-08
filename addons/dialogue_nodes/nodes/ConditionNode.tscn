@@ -6,7 +6,6 @@
 offset_right = 300.0
 offset_bottom = 159.0
 title = "ConditionNode"
-show_close = true
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)

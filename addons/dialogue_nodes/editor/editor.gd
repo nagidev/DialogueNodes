@@ -62,7 +62,6 @@ func init_menus():
 		runMenu.hide()
 
 
-# Run
 func _run_tree(start_node):	
 	var data : DialogueData = DialogueData.new()
 	data.starts = {}

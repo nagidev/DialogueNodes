@@ -1,17 +1,11 @@
-[gd_scene load_steps=22 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=16 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="3"]
-[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/StartNode.tscn" id="3_kc00i"]
 [ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="4"]
-[ext_resource type="PackedScene" uid="uid://b60fa8vcjuoo6" path="res://addons/dialogue_nodes/nodes/DialogueNode.tscn" id="4_byype"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="5"]
-[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/SignalNode.tscn" id="5_6axxc"]
-[ext_resource type="PackedScene" uid="uid://3ofh51q0vhmg" path="res://addons/dialogue_nodes/nodes/ConditionNode.tscn" id="6_rpnyg"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/workspace.gd" id="7"]
-[ext_resource type="PackedScene" uid="uid://dsllcvm7vi10m" path="res://addons/dialogue_nodes/nodes/SetNode.tscn" id="7_yjl7f"]
-[ext_resource type="PackedScene" uid="uid://h3hkys0mgvji" path="res://addons/dialogue_nodes/nodes/CommentNode.tscn" id="8_nuo3d"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="9"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="10_cxec0"]
@@ -79,19 +73,6 @@ layout_mode = 2
 keep_pressed_outside = true
 text = "Add Node"
 switch_on_hover = true
-item_count = 6
-popup/item_0/text = "StartNode"
-popup/item_0/id = 0
-popup/item_1/text = "DialogueNode"
-popup/item_1/id = 1
-popup/item_2/text = "CommentNode"
-popup/item_2/id = 2
-popup/item_3/text = "SignalNode"
-popup/item_3/id = 3
-popup/item_4/text = "SetNode"
-popup/item_4/id = 4
-popup/item_5/text = "ConditionNode"
-popup/item_5/id = 5
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
 visible = false
@@ -115,7 +96,6 @@ popup/item_0/id = 0
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("7")
-nodeScenes = Array[PackedScene]([ExtResource("3_kc00i"), ExtResource("4_byype"), ExtResource("8_nuo3d"), ExtResource("5_6axxc"), ExtResource("7_yjl7f"), ExtResource("6_rpnyg")])
 
 [node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
 clip_contents = true
@@ -219,19 +199,6 @@ zoom_max = 2.0
 script = ExtResource("2")
 
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/Graph"]
-item_count = 6
-item_0/text = "StartNode"
-item_0/id = 0
-item_1/text = "DialogueNode"
-item_1/id = 1
-item_2/text = "CommentNode"
-item_2/id = 2
-item_3/text = "SignalNode"
-item_3/id = 3
-item_4/text = "SetNode"
-item_4/id = 4
-item_5/text = "ConditionNode"
-item_5/id = 5
 
 [node name="Statusbar" type="HBoxContainer" parent="Main"]
 layout_mode = 2

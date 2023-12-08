@@ -37,6 +37,11 @@ func _ready():
 		dialogue_expanded.syntax_highlighter.add_color_region('[', ']', bbcode_color)
 
 
+func _exit_tree():
+	option_scene = null
+	options.clear()
+
+
 func add_option(new_text= '', new_condition= {}):
 	if len(options) == max_options:
 		return
