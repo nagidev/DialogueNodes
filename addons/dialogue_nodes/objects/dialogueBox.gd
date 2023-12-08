@@ -299,9 +299,13 @@ func _process_text(text : String, is_dialogue = true):
 	
 	# Add variables
 	text = text.format(variables, '{{_}}')
+
+	# return text now if not a dialogue
+	if not is_dialogue:
+		return text
 	
 	# Add a wait if none present
-	if text.count('[wait') == 0 and is_dialogue:
+	if text.count('[wait') == 0:
 		text = '[wait]' + text + '[/wait]'
 	
 	# Update [wait] with last attribute for showing options
