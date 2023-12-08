@@ -39,8 +39,10 @@ func init_nodes():
 	# add entries for nodes
 	for i in range(len(nodeScenes)):
 		var scene = nodeScenes[i]
-		var scene_name = scene.instantiate().name
+		var scene_instance = scene.instantiate()
+		var scene_name = scene_instance.name
 		nodes[i] = {'name': scene_name, 'scene': scene}
+		scene_instance.queue_free()
 
 
 func add_node(id, clone = null, node_name = '', offset = null):
