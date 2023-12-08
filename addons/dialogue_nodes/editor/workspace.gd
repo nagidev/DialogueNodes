@@ -5,7 +5,14 @@ extends Control
 signal node_added(node_name)
 signal node_deleted(node_name)
 
-@export var nodeScenes: Array[PackedScene]
+@export var nodeScenes: Array[PackedScene] = [
+	preload("res://addons/dialogue_nodes/nodes/StartNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/DialogueNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/SignalNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/SetNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/ConditionNode.tscn")
+]
 
 @onready var files = $SidePanel/Files
 @onready var data = $SidePanel/Data
@@ -23,13 +30,17 @@ func _ready():
 	init_nodes()
 
 
+func _exit_tree():
+	request_node = null
+	nodeScenes.clear()
+
+
 func show_menu(pos):
 	var pop_pos = pos + graph.global_position + Vector2(get_window().position)
 	popup.popup(Rect2(pop_pos.x, pop_pos.y, popup.size.x, popup.size.y))
 	cursor_pos = (pos + graph.scroll_offset) / graph.zoom
-	
-	
-## Nodes 
+
+
 # maybe move the function to editor.gd
 func init_nodes():
 	# empty and resize the nodes list
@@ -39,8 +50,10 @@ func init_nodes():
 	# add entries for nodes
 	for i in range(len(nodeScenes)):
 		var scene = nodeScenes[i]
-		var scene_name = scene.instantiate().name
+		var scene_instance = scene.instantiate()
+		var scene_name = scene_instance.name
 		nodes[i] = {'name': scene_name, 'scene': scene}
+		scene_instance.queue_free()
 
 
 func add_node(id, clone = null, node_name = '', offset = null):
