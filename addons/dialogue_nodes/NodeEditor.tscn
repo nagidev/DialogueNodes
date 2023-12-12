@@ -1,17 +1,11 @@
-[gd_scene load_steps=22 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=16 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="3"]
-[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/StartNode.tscn" id="3_kc00i"]
 [ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="4"]
-[ext_resource type="PackedScene" uid="uid://b60fa8vcjuoo6" path="res://addons/dialogue_nodes/nodes/DialogueNode.tscn" id="4_byype"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="5"]
-[ext_resource type="PackedScene" path="res://addons/dialogue_nodes/nodes/SignalNode.tscn" id="5_6axxc"]
-[ext_resource type="PackedScene" uid="uid://3ofh51q0vhmg" path="res://addons/dialogue_nodes/nodes/ConditionNode.tscn" id="6_rpnyg"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/workspace.gd" id="7"]
-[ext_resource type="PackedScene" uid="uid://dsllcvm7vi10m" path="res://addons/dialogue_nodes/nodes/SetNode.tscn" id="7_yjl7f"]
-[ext_resource type="PackedScene" uid="uid://h3hkys0mgvji" path="res://addons/dialogue_nodes/nodes/CommentNode.tscn" id="8_nuo3d"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="9"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="10_cxec0"]
@@ -115,7 +109,6 @@ popup/item_0/id = 0
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("7")
-nodeScenes = Array[PackedScene]([ExtResource("3_kc00i"), ExtResource("4_byype"), ExtResource("8_nuo3d"), ExtResource("5_6axxc"), ExtResource("7_yjl7f"), ExtResource("6_rpnyg")])
 
 [node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
 clip_contents = true
@@ -234,10 +227,10 @@ item_5/text = "ConditionNode"
 item_5/id = 5
 
 [node name="Statusbar" type="HBoxContainer" parent="Main"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 
 [node name="PanelToggle" type="TextureButton" parent="Main/Statusbar"]
-custom_minimum_size = Vector2(20, 38)
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -245,11 +238,13 @@ texture_normal = ExtResource("4")
 texture_pressed = ExtResource("3")
 stretch_mode = 3
 
-[node name="VersionNumber" type="Label" parent="Main/Statusbar"]
+[node name="VersionNumber" type="LinkButton" parent="Main/Statusbar"]
 layout_mode = 2
 size_flags_horizontal = 10
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
 text = "0.0.0"
+underline = 1
 
 [node name="NewDialog" type="FileDialog" parent="."]
 title = "Create a file"
@@ -337,6 +332,7 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), Sub
 [connection signal="visibility_changed" from="Main/Workspace/Graph" to="." method="_on_graph_visibility_changed"]
 [connection signal="id_pressed" from="Main/Workspace/Graph/PopupMenu" to="Main/Workspace" method="add_node"]
 [connection signal="pressed" from="Main/Statusbar/PanelToggle" to="." method="toggle_side_panel"]
+[connection signal="pressed" from="Main/Statusbar/VersionNumber" to="." method="_on_version_number_pressed"]
 [connection signal="file_selected" from="NewDialog" to="." method="new_file"]
 [connection signal="file_selected" from="SaveDialog" to="." method="save_file"]
 [connection signal="file_selected" from="OpenDialog" to="." method="open_file"]

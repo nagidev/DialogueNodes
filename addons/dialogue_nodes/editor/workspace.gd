@@ -5,7 +5,14 @@ extends Control
 signal node_added(node_name)
 signal node_deleted(node_name)
 
-@export var nodeScenes: Array[PackedScene]
+@export var nodeScenes: Array[PackedScene] = [
+	preload("res://addons/dialogue_nodes/nodes/StartNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/DialogueNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/SignalNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/SetNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/ConditionNode.tscn")
+]
 
 @onready var files = $SidePanel/Files
 @onready var data = $SidePanel/Data
@@ -27,9 +34,8 @@ func show_menu(pos):
 	var pop_pos = pos + graph.global_position + Vector2(get_window().position)
 	popup.popup(Rect2(pop_pos.x, pop_pos.y, popup.size.x, popup.size.y))
 	cursor_pos = (pos + graph.scroll_offset) / graph.zoom
-	
-	
-## Nodes 
+
+
 # maybe move the function to editor.gd
 func init_nodes():
 	# empty and resize the nodes list
@@ -63,9 +69,9 @@ func add_node(id, clone = null, node_name = '', offset = null):
 	new_node.selected = true
 	
 	new_node.dragged.connect(_on_node_dragged)
-	new_node.close_request.connect(remove_node.bind(new_node))
+	new_node.delete_request.connect(remove_node.bind(new_node))
 	new_node.modified.connect(graph._on_modified)
-	new_node.close_request.connect(graph._on_modified)
+	new_node.delete_request.connect(graph._on_modified)
 	
 	# dialogue node signals
 	if new_node.has_signal('connection_move'):
@@ -115,27 +121,27 @@ func remove_all_nodes():
 
 func _remove_invalid_connections(from, from_slot= -1, to= null, to_slot= -1):
 	for connection in graph.get_connection_list():
-		if connection['from'] == from:
-			if connection['to'] != to and connection['from_port'] == from_slot:
+		if connection['from_node'] == from:
+			if connection['to_node'] != to and connection['from_port'] == from_slot:
 				graph.disconnect_node(
-					connection['from'], connection['from_port'], connection['to'], connection['to_port']
+					connection['from_node'], connection['from_port'], connection['to_node'], connection['to_port']
 				)
 
 
 func _remove_all_connections(node):
 	for connection in graph.get_connection_list():
-		if connection['from'] == node or connection['to'] == node:
-			graph.disconnect_node(connection['from'], connection['from_port'], connection['to'], connection['to_port'])
+		if connection['from_node'] == node or connection['to_node'] == node:
+			graph.disconnect_node(connection['from_node'], connection['from_port'], connection['to_node'], connection['to_port'])
 
 
 func _move_connection_slot(old_slot, new_slot, node):
 	for connection in graph.get_connection_list():
-		if connection['from'] == node.name:
+		if connection['from_node'] == node.name:
 			if connection['from_port'] == new_slot:
-				graph.disconnect_node(connection['from'], connection['from_port'], connection['to'], connection['to_port'])
+				graph.disconnect_node(connection['from_node'], connection['from_port'], connection['to_node'], connection['to_port'])
 			elif connection['from_port'] == old_slot:
-				graph.disconnect_node(connection['from'], connection['from_port'], connection['to'], connection['to_port'])
-				graph.connect_node(connection['from'], new_slot, connection['to'], connection['to_port'])
+				graph.disconnect_node(connection['from_node'], connection['from_port'], connection['to_node'], connection['to_port'])
+				graph.connect_node(connection['from_node'], new_slot, connection['to_node'], connection['to_port'])
 
 
 func _on_node_dragged(_from, to):
