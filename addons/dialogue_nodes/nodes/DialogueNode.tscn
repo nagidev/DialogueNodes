@@ -6,18 +6,21 @@
 [ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_btpy8"]
+number_color = Color(1, 1, 1, 1)
+symbol_color = Color(1, 1, 1, 1)
+function_color = Color(1, 1, 1, 1)
+member_variable_color = Color(1, 1, 1, 1)
 color_regions = {
 "[ ]": Color(0.647059, 0.937255, 0.67451, 1)
 }
 
 [node name="DialogueNode" type="GraphNode"]
 custom_minimum_size = Vector2(300, 200)
-offset_right = 200.0
-offset_bottom = 201.0
+offset_right = 300.0
+offset_bottom = 241.0
 theme_override_constants/separation = 4
-title = "Dialogue"
-show_close = true
 resizable = true
+title = "Dialogue"
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -76,7 +79,6 @@ layout_mode = 2
 [node name="CustomSpeaker" type="LineEdit" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "The name of the speaker shown in the dialogues."
 
 [node name="Speaker" type="OptionButton" parent="HBoxContainer"]
 visible = false
@@ -103,10 +105,8 @@ custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "The dialogue displayed in the DialogueBox.
-Use [bbcodes] to add extra effects to your dialogue."
-highlight_all_occurrences = true
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
+highlight_all_occurrences = true
 
 [node name="ExpandButton" type="Button" parent="HBoxContainer2"]
 layout_mode = 2
@@ -121,10 +121,10 @@ size = Vector2i(800, 600)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 796.0
-offset_bottom = 596.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -134,10 +134,8 @@ custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "The dialogue displayed in the DialogueBox.
-Use [bbcodes] to add extra effects to your dialogue."
-highlight_all_occurrences = true
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
+highlight_all_occurrences = true
 
 [node name="CenterContainer" type="CenterContainer" parent="HBoxContainer2/DialoguePanel/VBoxContainer"]
 layout_mode = 2

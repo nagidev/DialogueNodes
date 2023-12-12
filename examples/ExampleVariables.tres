@@ -19,164 +19,150 @@ Like: You have {{COINS}} coins!",
 "offset": Vector2(220, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_2",
 "text": ""
 }
 },
-"size": {
-"x": 465.5,
-"y": 309.0
-},
+"size": Vector2(300, 241),
 "speaker": "Greg"
 },
 "1_2": {
 "dialogue": "What would you like to try?",
-"offset": Vector2(720, 0),
+"offset": Vector2(700, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_3",
 "text": "Set value"
 },
 1: {
+"condition": {},
 "link": &"1_6",
 "text": "Check condition"
 },
-"2": {
+2: {
+"condition": {},
 "link": "END",
 "text": "Nothing"
 }
 },
-"size": {
-"x": 258.164,
-"y": 366.0
-},
+"size": Vector2(300, 307),
 "speaker": "Greg"
 },
 "1_3": {
 "dialogue": "Setting COINS to 5.
 Current value: {{COINS}}
 ",
-"offset": Vector2(1020, -60),
+"offset": Vector2(1040, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"4_1",
 "text": ""
 }
 },
-"size": {
-"x": 210.0,
-"y": 300.0
-},
+"size": Vector2(300, 241),
 "speaker": "Greg"
 },
 "1_4": {
 "dialogue": "New value: {{COINS}}",
-"offset": Vector2(1540, -60),
+"offset": Vector2(1700, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_5",
 "text": ""
 }
 },
-"size": {
-"x": 210.0,
-"y": 300.0
-},
+"size": Vector2(300, 241),
 "speaker": "Greg"
 },
 "1_5": {
 "dialogue": "You can even use the set node perform arithematic operations on values.",
-"offset": Vector2(1780, -60),
+"offset": Vector2(2040, 0),
 "options": {
 0: {
+"condition": {},
 "link": &"1_2",
 "text": "Got it!"
 },
-"1": {
+1: {
+"condition": {},
 "link": "END",
 "text": "Bye"
 }
 },
-"size": {
-"x": 210.0,
-"y": 333.0
-},
+"size": Vector2(300, 274),
 "speaker": "Greg"
 },
 "1_6": {
 "dialogue": "You can use the condition node to show dialogues based on a condition.",
-"offset": Vector2(1020, 260),
+"offset": Vector2(1040, 280),
 "options": {
 0: {
+"condition": {},
 "link": &"5_1",
 "text": ""
 }
 },
-"size": {
-"x": 210.0,
-"y": 300.0
-},
+"size": Vector2(300, 241),
 "speaker": "Greg"
 },
 "1_7": {
 "dialogue": "Like right now you have more than 5 coins!",
-"offset": Vector2(1600, 260),
+"offset": Vector2(1720, 380),
 "options": {
 0: {
+"condition": {},
 "link": &"1_9",
 "text": ""
 }
 },
-"size": {
-"x": 210.0,
-"y": 300.0
-},
+"size": Vector2(300, 241.001),
 "speaker": "Greg"
 },
 "1_8": {
 "dialogue": "I can tell you don't have more than 5 coins...",
-"offset": Vector2(1600, 540),
+"offset": Vector2(1720, 640),
 "options": {
 0: {
+"condition": {},
 "link": &"1_9",
 "text": ""
 }
 },
-"size": {
-"x": 210.0,
-"y": 300.0
-},
+"size": Vector2(300, 241),
 "speaker": "Greg"
 },
 "1_9": {
 "dialogue": "Feel free to look at the example files to learn how to do it yourself!",
-"offset": Vector2(1900, 260),
+"offset": Vector2(2080, 520),
 "options": {
 0: {
+"condition": {},
 "link": &"1_2",
 "text": "Got it!"
 },
-"1": {
+1: {
+"condition": {},
 "link": "END",
 "text": "Bye"
 }
 },
-"size": {
-"x": 210.0,
-"y": 333.0
-},
+"size": Vector2(300, 274),
 "speaker": "Greg"
 },
 "4_1": {
 "link": &"1_4",
-"offset": Vector2(1260, -60),
+"offset": Vector2(1360, 140),
 "type": 0,
 "value": "5",
 "variable": "COINS"
 },
 "5_1": {
 "false": &"1_8",
-"offset": Vector2(1260, 260),
+"offset": Vector2(1360, 380),
 "operator": 2,
 "true": &"1_7",
 "value1": "{{COINS}}",
@@ -186,7 +172,7 @@ Current value: {{COINS}}
 variables = {
 "COINS": {
 "type": 2,
-"value": 10
+"value": 10.0
 }
 }
 comments = Array[String]([])
