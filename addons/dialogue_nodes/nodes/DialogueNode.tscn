@@ -17,7 +17,7 @@ color_regions = {
 [node name="DialogueNode" type="GraphNode"]
 custom_minimum_size = Vector2(300, 200)
 offset_right = 300.0
-offset_bottom = 332.0
+offset_bottom = 241.0
 theme_override_constants/separation = 4
 resizable = true
 title = "Dialogue"
@@ -79,7 +79,6 @@ layout_mode = 2
 [node name="CustomSpeaker" type="LineEdit" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "The name of the speaker shown in the dialogues."
 
 [node name="Speaker" type="OptionButton" parent="HBoxContainer"]
 visible = false
@@ -106,8 +105,6 @@ custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "The dialogue displayed in the DialogueBox.
-Use [bbcodes] to add extra effects to your dialogue."
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 highlight_all_occurrences = true
 
@@ -126,8 +123,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 12.0
 offset_top = 12.0
-offset_right = 788.0
-offset_bottom = 588.0
+offset_right = -12.0
+offset_bottom = -12.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -137,8 +134,6 @@ custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-tooltip_text = "The dialogue displayed in the DialogueBox.
-Use [bbcodes] to add extra effects to your dialogue."
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 highlight_all_occurrences = true
 
@@ -158,6 +153,6 @@ layout_mode = 2
 [connection signal="toggled" from="HBoxContainer/CharacterToggle" to="." method="_on_character_toggled"]
 [connection signal="text_changed" from="HBoxContainer2/Dialogue" to="." method="_on_node_modified"]
 [connection signal="pressed" from="HBoxContainer2/ExpandButton" to="." method="_on_expand_button_pressed"]
-[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_node_modified"]
 [connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_expanded_text_changed"]
+[connection signal="text_changed" from="HBoxContainer2/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_node_modified"]
 [connection signal="pressed" from="HBoxContainer2/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_dialogue_close_button_pressed"]

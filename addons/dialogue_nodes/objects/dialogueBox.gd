@@ -14,6 +14,8 @@ signal dialogue_signal(value: String)
 signal dialogue_ended
 ## Triggered when a SetNode is encountered while processing the dialogue and the value of a variable is changed. Passes the name of the variable changed: [param var_name] of type [String] & the new [param value] of the variable which can be one of the types: [String], [int], [float] or [bool].
 signal variable_changed(var_name: String, value)
+## Triggered when an option is selected
+signal option_selected(idx: int)
 
 @export_group('Data')
 ## Contains the dialogue data created using the Dialogue Nodes editor. Use [method DialogueBox.set_data] to set its value.
@@ -314,8 +316,10 @@ func _set_dialogue(dict):
 		var option = options.get_child(int(idx))
 		var option_dict = dict['options'][idx]
 		option.text = _process_text(option_dict['text'], false)
-		if option.is_connected('pressed', proceed):
-			option.disconnect('pressed', proceed)
+		if not option.pressed.is_connected(_on_option_pressed):
+			option.pressed.connect(_on_option_pressed.bind(int(idx)))
+		if option.pressed.is_connected(proceed):
+			option.pressed.disconnect(proceed)
 		option.pressed.connect(proceed.bind(option_dict['link']))
 
 		if option_dict.has('condition') and not option_dict['condition'].is_empty():
@@ -615,3 +619,7 @@ func _set_default_speaker_color(value):
 func _set_portrait_visibility(value):
 	hide_portrait = value
 	portrait.visible = not hide_portrait
+
+
+func _on_option_pressed(idx: int):
+	option_selected.emit(idx)

@@ -30,11 +30,6 @@ func _ready():
 	init_nodes()
 
 
-func _exit_tree():
-	request_node = null
-	nodeScenes.clear()
-
-
 func show_menu(pos):
 	var pop_pos = pos + graph.global_position + Vector2(get_window().position)
 	popup.popup(Rect2(pop_pos.x, pop_pos.y, popup.size.x, popup.size.y))
