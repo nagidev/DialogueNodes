@@ -77,7 +77,7 @@ nodes = {
 "speaker": "Greg"
 },
 "1_5": {
-"dialogue": "When you want to call a specific dialogue tree, just pass the unique start ID when calling [color=yellow]$DialogueBox.start('MyID')[/color]",
+"dialogue": "When you want to call a specific dialogue tree, just pass the unique start ID when calling [color=green]$DialogueBox.start('MyID')[/color]",
 "offset": Vector2(560, 600),
 "options": {
 0: {
@@ -94,7 +94,7 @@ nodes = {
 "offset": Vector2(-20, 80),
 "size": {
 "x": 204.0,
-"y": 129.9
+"y": 237.0
 }
 },
 "2_2": {
@@ -102,7 +102,7 @@ nodes = {
 "offset": Vector2(-20, 680),
 "size": {
 "x": 204.0,
-"y": 129.9
+"y": 237.0
 }
 }
 }

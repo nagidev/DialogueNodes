@@ -73,6 +73,19 @@ layout_mode = 2
 keep_pressed_outside = true
 text = "Add Node"
 switch_on_hover = true
+item_count = 6
+popup/item_0/text = "StartNode"
+popup/item_0/id = 0
+popup/item_1/text = "DialogueNode"
+popup/item_1/id = 1
+popup/item_2/text = "CommentNode"
+popup/item_2/id = 2
+popup/item_3/text = "SignalNode"
+popup/item_3/id = 3
+popup/item_4/text = "SetNode"
+popup/item_4/id = 4
+popup/item_5/text = "ConditionNode"
+popup/item_5/id = 5
 
 [node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
 visible = false
@@ -199,12 +212,25 @@ zoom_max = 2.0
 script = ExtResource("2")
 
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/Graph"]
+item_count = 6
+item_0/text = "StartNode"
+item_0/id = 0
+item_1/text = "DialogueNode"
+item_1/id = 1
+item_2/text = "CommentNode"
+item_2/id = 2
+item_3/text = "SignalNode"
+item_3/id = 3
+item_4/text = "SetNode"
+item_4/id = 4
+item_5/text = "ConditionNode"
+item_5/id = 5
 
 [node name="Statusbar" type="HBoxContainer" parent="Main"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 
 [node name="PanelToggle" type="TextureButton" parent="Main/Statusbar"]
-custom_minimum_size = Vector2(20, 38)
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -212,11 +238,13 @@ texture_normal = ExtResource("4")
 texture_pressed = ExtResource("3")
 stretch_mode = 3
 
-[node name="VersionNumber" type="Label" parent="Main/Statusbar"]
+[node name="VersionNumber" type="LinkButton" parent="Main/Statusbar"]
 layout_mode = 2
 size_flags_horizontal = 10
+size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "1.0.2a"
+text = "0.0.0"
+underline = 1
 
 [node name="NewDialog" type="FileDialog" parent="."]
 title = "Create a file"
@@ -304,6 +332,7 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), Sub
 [connection signal="visibility_changed" from="Main/Workspace/Graph" to="." method="_on_graph_visibility_changed"]
 [connection signal="id_pressed" from="Main/Workspace/Graph/PopupMenu" to="Main/Workspace" method="add_node"]
 [connection signal="pressed" from="Main/Statusbar/PanelToggle" to="." method="toggle_side_panel"]
+[connection signal="pressed" from="Main/Statusbar/VersionNumber" to="." method="_on_version_number_pressed"]
 [connection signal="file_selected" from="NewDialog" to="." method="new_file"]
 [connection signal="file_selected" from="SaveDialog" to="." method="save_file"]
 [connection signal="file_selected" from="OpenDialog" to="." method="open_file"]

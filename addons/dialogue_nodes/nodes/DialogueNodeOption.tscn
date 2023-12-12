@@ -20,14 +20,14 @@ size_flags_horizontal = 3
 placeholder_text = "Option1"
 
 [node name="FilterPanel" type="PopupPanel" parent="."]
-position = Vector2i(0, 300)
-size = Vector2i(300, 40)
+position = Vector2i(0, 50)
+size = Vector2i(300, 54)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="FilterPanel"]
-offset_left = 4.0
-offset_top = 4.0
-offset_right = 296.0
-offset_bottom = 36.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 288.0
+offset_bottom = 42.0
 
 [node name="Value1" type="LineEdit" parent="FilterPanel/HBoxContainer"]
 layout_mode = 2
