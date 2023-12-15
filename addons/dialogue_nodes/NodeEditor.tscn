@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=21 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
@@ -10,9 +10,20 @@
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="10_cxec0"]
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="11_ku5xd"]
+[ext_resource type="FontFile" uid="uid://dv4rnn0ml62q3" path="res://addons/dialogue_nodes/themes/Poppins-Bold.ttf" id="11_ov01b"]
+[ext_resource type="FontFile" uid="uid://bcg26eik2m2o8" path="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf" id="12_k7lf3"]
+[ext_resource type="FontFile" uid="uid://bhtf12vvs2yjq" path="res://addons/dialogue_nodes/themes/Poppins-BoldItalic.ttf" id="12_pp4vk"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="12_tk1td"]
+[ext_resource type="FontFile" uid="uid://b1bq3eoec0j1b" path="res://addons/dialogue_nodes/themes/Poppins-Regular.ttf" id="13_oinhn"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="15_kpna5"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="19_7vkda"]
+
+[sub_resource type="Theme" id="Theme_3a3k7"]
+default_font = ExtResource("13_oinhn")
+RichTextLabel/fonts/bold_font = ExtResource("11_ov01b")
+RichTextLabel/fonts/bold_italics_font = ExtResource("12_pp4vk")
+RichTextLabel/fonts/italics_font = ExtResource("12_k7lf3")
+RichTextLabel/fonts/normal_font = ExtResource("13_oinhn")
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_orqxx"]
 script = ExtResource("15_kpna5")
@@ -243,7 +254,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "0.0.0"
+text = "1.0.3"
 underline = 1
 
 [node name="NewDialog" type="FileDialog" parent="."]
@@ -296,6 +307,7 @@ offset_right = 320.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_3a3k7")
 script = ExtResource("5")
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
