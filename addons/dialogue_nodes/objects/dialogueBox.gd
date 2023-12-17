@@ -248,7 +248,7 @@ func _set_dialogue(dict):
 			speaker.modulate = characterList.characters[idx].color
 			if characterList.characters[idx].image:
 				portrait.texture = characterList.characters[idx].image
-				portrait.show()
+				portrait.visible = not hide_portrait
 	
 	dialogue.bbcode_text = _process_text(dict['dialogue'])
 	dialogue.get_v_scroll().value = 0
@@ -505,17 +505,23 @@ func _set_options_position(value):
 
 func _set_sample_portrait(value):
 	sample_portrait = value
-	portrait.texture = sample_portrait
+	
+	if portrait:
+		portrait.texture = sample_portrait
 
 
 func _set_portrait_size(value):
 	portrait_size = value
-	portrait.rect_min_size = Vector2(portrait_size, 0)
+	
+	if portrait:
+		portrait.rect_min_size = Vector2(portrait_size, 0)
 
 
 func _set_portrait_visibility(value):
 	hide_portrait = value
-	portrait.visible = not hide_portrait
+	
+	if portrait:
+		portrait.visible = not hide_portrait
 
 
 func _set_default_speaker_color(value):
