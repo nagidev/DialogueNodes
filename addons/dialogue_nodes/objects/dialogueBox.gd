@@ -290,6 +290,7 @@ func _set_dialogue(dict):
 	speaker.text = ''
 	speaker.modulate = default_speaker_color
 	portrait.texture = null
+	portrait.hide()
 	if dict['speaker'] is String:
 		speaker.text = dict['speaker']
 	elif dict['speaker'] is int and characterList:
@@ -299,6 +300,7 @@ func _set_dialogue(dict):
 			speaker.modulate = characterList.characters[idx].color
 			if characterList.characters[idx].image:
 				portrait.texture = characterList.characters[idx].image
+				portrait.visible = not hide_portrait
 
 	dialogue.text = '' # workaround for bug
 	dialogue.text = _process_text(dict['dialogue'])
@@ -618,7 +620,9 @@ func _set_default_speaker_color(value):
 
 func _set_portrait_visibility(value):
 	hide_portrait = value
-	portrait.visible = not hide_portrait
+	
+	if portrait:
+		portrait.visible = not hide_portrait
 
 
 func _on_option_pressed(idx: int):
