@@ -2,8 +2,6 @@
 extends GraphNode
 
 
-enum {STRING, INT, FLOAT, BOOL}
-
 signal modified
 
 @onready var variable = $HBoxContainer/Variable
