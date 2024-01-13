@@ -146,7 +146,7 @@ func new_file(path):
 
 func open_file(path, internal = false):
 	# open/read file
-	var data = ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_REPLACE)
+	var data = ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_IGNORE)
 	
 	var file_name : String
 	var file_dir : String
@@ -257,11 +257,12 @@ func _on_confirmDialog_action(action):
 				for idx in queued:
 					save_file(idx)
 					close_file(idx)
-					await get_tree().idle_frame
+					await get_tree().process_frame
 			'discard_file':
 				for idx in queued:
 					close_file(idx)
 	confirmDialogue.hide()
+	queued.clear()
 
 
 func _on_confirmDialog_hide():
