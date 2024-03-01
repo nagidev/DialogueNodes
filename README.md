@@ -1,6 +1,6 @@
 # DialogueNodes
-![DialogueNodes editor](.screenshots/DN4.png)
-<img src='.screenshots/DN5.png' width='51%'/>
+![DialogueNodes editor](.screenshots/DN5.png)
+<img src='.screenshots/DN4.png' width='51%'/>
 <img src='.screenshots/DN3.png' width='48%'/>
 A plugin for creating and exporting dialogue trees from within the Godot Editor.
 Godot provides all the tools needed to create your own dialogue system, however, for most game developers, this task is tedious and complex. This is where Dialogue Nodes come into the picture. The plugin extends your Godot editor to allow for creating, testing and incorporating branching dialogues in your game.
