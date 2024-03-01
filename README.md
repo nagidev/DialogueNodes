@@ -7,14 +7,16 @@ Godot provides all the tools needed to create your own dialogue system, however,
 
 #####
 ## Installation
-- Open the `AssetLib` tab in Godot with your project open.
-- Search for "DialogueNodes" and install the plugin by Nagi
-- Once the download completes, deselect everything in the popup window except for the `addons` folder.
-- You can also select the examples folder if you want to check out some ready-made dialogues.
-- Open project settings > plugins, and enable DialogueNodes.
-- Done!
+The installation might be a bit tricky and you need to rely on version control to make this work... after copying and pasting the plugin into your project, Godot might complain about missing classes... that happens because Godot is attempting to load an addon that isn't compiled (we are using C#, and we need to compile the addon!). This might cause some addon scenes that contain serialized exposed fields to lose their references; that is a Godot bug which I hope gets solved soon because it's extremely annoying, so if you step into some missing classes error.. check that the addon scenes didn't lose their references.
 
-For installation from the github repo, you can find the instructions in [the wiki](https://github.com/nagidev/DialogueNodes/wiki).
+To install the addon:
+- Copy the addons/dlaogue_nodes and example folders and paste them into your project.
+- This is a C# plugin and currently on 4.2.1; C# plugins have a tricky behavior, you must have created a C# solution to make this work as we need the editor to have compiled the plugin before we load it.
+- In case you don't have a C# solution, go to Project > Tools > C# > Create C# Solution.
+- Now you should be able to "Build a project" (Alt+B) so that the plugin compiles.
+- I suggest you restart Godot at this point.
+- Go to Project > Project Settings > Plugins and Enable Dialogue Nodes for C#.
+- Done!
 
 #####
 ## Features
@@ -43,16 +45,15 @@ The dialogue files are stored as Godot Resources, which are not only easy to edi
 Prefer other localization methods? Stay tuned as more localization options are planned for future releases.
 
 #####
-## Learn more
-Read [the wiki](https://github.com/nagidev/DialogueNodes/wiki) to learn how to get started with using the plugin and adding dialogues to your awesome games!
-
-Note: The wiki is still being updated frequently. Some of the functionalities might not be documented. Please expect more updates soon, and feel free to [contact me](https://twitter.com/NagiDev) if you want to contribute to the documentation. (I could really use some help here lol!)
-
+## Known C# related issues
+- .NET: Failed to unload assemblies: This bug is a [Godot-related issue](https://github.com/godotengine/godot/issues/78513) and it's a very ugly one. It seems to trigger whenever you work on an addon-related script while having the plugin enabled. In that case, Godot will not be able to unload the assemblies (probably because they are in use by the editor). This will cause the editor to be unable to compile the project and you will need to restart the editor. Be aware that, if you have any scene that makes use of an addon-related file with serialized references... those references might get lost and the plugin might break (I highly suggest using version control to recover these references after stepping into this issue, a workaround is to hardcode any reference until this bug gets fixed).
+- When closing Godot you might get: "Attempt to disconnect a nonexistent connection from RichTextLabel". Although this is harmless.. this is another [Godot-related bug](https://github.com/godotengine/godot/issues/76708) caused by the [tool] keyword within C# scripts.
+  
 #####
-## Known issues
+## Known ORIGINAL Addon issues
 - DialogueNode in the workplace may have wrong colored slots on light themes
 - Using return character in the dialogue results in options not showing up in certain cases
 - Shifting focus to empty option from another empty option results in the option data moving around
 - DialogNodes in the graph have options overflowing outside the edges. This seems to be a bug introduced in Godot 4.2
 
-If you find any bugs or issues, [report them in the issues page](https://github.com/nagidev/DialogueNodes/issues). Please ensure the same or a similar issues isn't already present before creating your own.
+If you find any bugs or issues, [report them in the issues page](https://github.com/germanbv/DialogueNodesForCSharp/issues). Please ensure the same or a similar issues isn't already present before creating your own.
