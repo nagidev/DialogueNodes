@@ -56,3 +56,8 @@ Note: The wiki is still being updated frequently. Some of the functionalities mi
 - DialogNodes in the graph have options overflowing outside the edges. This seems to be a bug introduced in Godot 4.2
 
 If you find any bugs or issues, [report them in the issues page](https://github.com/nagidev/DialogueNodes/issues). Please ensure the same or a similar issues isn't already present before creating your own.
+
+####
+## C# Support
+The addon was built using GDscript and has not been tested for a proper C# support. However you can check out this repo:
+[DialogueNodesForCSharp](https://github.com/germanbv/DialogueNodesForCSharp)
