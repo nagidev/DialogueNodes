@@ -15,7 +15,7 @@ extends Control
 @onready var characters = $Main/Workspace/SidePanel/Data/Characters
 @onready var variables = $Main/Workspace/SidePanel/Data/Variables
 @onready var version_number = $Main/Statusbar/VersionNumber
-@onready var dialogue = $DialogueBox
+@onready var dialogue = $DialogueWindow
 @onready var dialogueBG = $DialogBackground
 @onready var newDialogue = $NewDialog
 @onready var saveDialogue = $SaveDialog
@@ -31,17 +31,18 @@ var _base_color : Color
 func _ready():
 	init_menus()
 	data.hide()
+	dialogue.Initialize()
 	
 	addMenu.get_popup().id_pressed.connect(workspace.add_node)
 	runMenu.get_popup().id_pressed.connect(_on_run_menu_pressed)
 	fileMenu.get_popup().id_pressed.connect(_on_file_menu_pressed)
 	debugMenu.get_popup().id_pressed.connect(_on_debug_menu_pressed)
 	
-	dialogue.dialogue_started.connect(_on_dialogue_started)
-	dialogue.dialogue_signal.connect(_on_dialogue_signal)
-	dialogue.variable_changed.connect(_on_dialogue_variable_changed)
-	dialogue.dialogue_ended.connect(_on_dialogue_ended)
-	dialogue.option_selected.connect(_on_dialogue_option_selected)
+	dialogue.DialogueStarted.connect(_on_dialogue_started)
+	dialogue.DialogueSignal.connect(_on_dialogue_signal)
+	dialogue.InternalVariableChanged.connect(_on_dialogue_variable_changed)
+	dialogue.DialogueEnded.connect(_on_dialogue_ended)
+	dialogue.OptionSelected.connect(_on_dialogue_option_selected)
 	
 	var config = ConfigFile.new()
 	config.load('res://addons/dialogue_nodes/plugin.cfg')
@@ -64,24 +65,22 @@ func init_menus():
 		runMenu.hide()
 
 
-func _run_tree(start_node):	
-	var data : DialogueData = DialogueData.new()
-	data.starts = {}
-	data.nodes = {}
-	data.variables = {}
-	data.comments = []
-	data.strays = []
+func _run_tree(start_node):
+	var csharp_dialogue_data = load("res://addons/dialogue_nodes/objects/DialogueData.cs")
+	var data = csharp_dialogue_data.new()
+	
+	data.Starts = {}
+	data.Nodes = {}
+	data.Variables = {}
+	data.Comments = []
+	data.Strays = []
 	
 	data = start_node.tree_to_data(graph, data)
-	data.variables = variables.to_dict()
-	data.characters = characters.filePath.text
-	dialogue.dialogue_data = data
+	data.Variables = variables.to_dict()
+	data.Characters = characters.filePath.text
 	
-	if dialogue.dialogue_data.starts.has(start_node.ID):
-		dialogueBG.show()
-		dialogue.options.get_child(0).grab_focus()
-		dialogue.start(start_node.ID)
-
+	dialogueBG.show()
+	dialogue.Start(data, start_node.ID)
 
 func _update_run_menu():
 	runMenu.get_popup().clear()
@@ -96,69 +95,69 @@ func _update_run_menu():
 		runMenu.get_popup().add_item(ID)
 
 
-func get_data() -> DialogueData:
-	var data = DialogueData.new()
+func get_data() -> Resource:
+	var csharp_dialogue_data = load("res://addons/dialogue_nodes/objects/DialogueData.cs")
+	var data = csharp_dialogue_data.new()
 	
 	# add trees to data
-	data.starts = {}
-	data.nodes = {}
+	data.Starts = {}
+	data.Nodes = {}
 	for start_node_name in start_nodes:
 		var start_node = graph.get_node( NodePath(start_node_name) )
 		data = start_node.tree_to_data(graph, data)
 	
 	# add comments to data
-	data.comments.clear()
+	data.Comments.clear()
+
 	for i in range(len(comment_nodes)):
 		var node = graph.get_node( NodePath(comment_nodes[i]) )
-		data.comments.append(node.name)
-		data.nodes[node.name] = node._to_dict(graph)
-		data.nodes[node.name]['offset'] = node.position_offset
+		data.Comments.append(node.name)
+		data.Nodes[node.name] = node._to_dict(graph)
+		data.Nodes[node.name]['offset'] = node.position_offset
 	
 	# add variables to data
-	data.variables = variables.to_dict()
+	data.Variables = variables.to_dict()
 	
 	# add stray nodes
-	data.strays.clear()
+	data.Strays.clear()
 	for node in graph.get_children():
-		if node is GraphNode and not data.nodes.has(node.name):
-			data.strays.append(node.name)
-			data.nodes[node.name] = node._to_dict(graph)
-			data.nodes[node.name]['offset'] = node.position_offset
+		if node is GraphNode and not data.Nodes.has(node.name):
+			data.Strays.append(node.name)
+			data.Nodes[node.name] = node._to_dict(graph)
+			data.Nodes[node.name]['offset'] = node.position_offset
 	
-	data.characters = characters.filePath.text
-	
+	data.Characters = characters.filePath.text
 	return data
 
 
-func open_data(data : DialogueData):
+func open_data(data : Resource):
 	# clear graph
 	workspace.remove_all_nodes()
 	#await get_tree().idle_frame
-	
 	# add all start nodes with their trees
 	workspace.loading_file = true
-	for id in data.starts:
-		var start_node_name = data.starts[id]
+	for id in data.Starts:
+		var start_node_name = data.Starts[id]
 		var type = int(start_node_name.split('_')[0])
-		var offset = data.nodes[start_node_name]['offset']
+		var offset = data.Nodes[start_node_name]['offset']
 		var start_node = workspace.add_node(type, null, start_node_name, offset)
 		start_node.data_to_tree(workspace, data)
 	
-	for node_name in data.comments:
+	for node_name in data.Comments:
 		var type = int(node_name.split('_')[0])
-		var offset = data.nodes[node_name]['offset']
+		var offset = data.Nodes[node_name]['offset']
 		var comment_node = workspace.add_node(type, null, node_name, offset)
-		comment_node._from_dict(graph, data.nodes[node_name])
+		comment_node._from_dict(graph, data.Nodes[node_name])
+		
+	variables.from_dict(data.Variables)
 	
-	variables.from_dict(data.variables)
-	
-	for node_name in data.strays:
+	for node_name in data.Strays:
 		var type = int(node_name.split('_')[0])
-		var offset = data.nodes[node_name]['offset']
+		var offset = data.Nodes[node_name]['offset']
 		var new_node = workspace.add_node(type, null, node_name, offset)
-		new_node._from_dict(graph, data.nodes[node_name])
+		new_node._from_dict(graph, data.Nodes[node_name])
 	
-	characters.load_file(data.characters)
+	characters.load_file(data.Characters)
 	
 	workspace.request_node = null
 	workspace.request_slot = null
@@ -175,7 +174,7 @@ func open_file(path):
 	files.open_file(path)
 
 
-func save_file(path, data : DialogueData = get_data()):
+func save_file(path, data : Resource = get_data()):
 	files.save_as_file(path, data)
 
 
@@ -216,7 +215,6 @@ func _on_node_deleted(node_name):
 
 
 func _on_file_menu_pressed(id):
-	
 	match( id ):
 		0:
 			newDialogue.popup_centered()
@@ -252,7 +250,7 @@ func _on_file_popup_pressed(id):
 			files.close_all()
 
 
-func _on_file_opened(dialogueData : DialogueData):
+func _on_file_opened(dialogueData : Resource):
 	open_data(dialogueData)
 	graph.show()
 	data.show()
@@ -307,12 +305,12 @@ func _on_dialogue_ended():
 
 func _on_dialogue_option_selected(idx):
 	if _debug:
-		print('Option selected. idx: ', idx, ', text: ', dialogue.options.get_child(idx).text)
+		print('Option selected. idx: ' + str(idx))
 
 
 func _on_dialog_background_input(event):
 	if event is InputEventMouseButton:
-		dialogue.stop()
+		dialogue.Stop()
 
 
 func _on_version_number_pressed():

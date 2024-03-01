@@ -9,9 +9,8 @@ signal run_tree
 
 
 # convert graph/tree from this node to data
-func tree_to_data(graph, data := DialogueData.new(), node : GraphNode = self):
+func tree_to_data(graph, data, node : GraphNode = self):
 	var next_nodes = graph.get_next(node.name)
-	
 	# setup
 	if node == self:
 		if ID == '':
@@ -20,16 +19,16 @@ func tree_to_data(graph, data := DialogueData.new(), node : GraphNode = self):
 		elif len(next_nodes) == 0:
 			printerr(title, ' is not connected!')
 			return data
-		data.starts[ID] = name
+		data.Starts[ID] = name
 	
 	# add data for current node
-	data.nodes[node.name] = node._to_dict(graph)
-	data.nodes[node.name]['offset'] = node.position_offset
+	data.Nodes[node.name] = node._to_dict(graph)
+	data.Nodes[node.name]['offset'] = node.position_offset
 	
 	# add data for next nodes
 	for next_node in next_nodes:
 		# if node already defined in data
-		if data.nodes.has(next_node):
+		if data.Nodes.has(next_node):
 			continue
 		# get data from node
 		data = tree_to_data(graph, data, graph.get_node( NodePath(next_node) ))
@@ -37,12 +36,12 @@ func tree_to_data(graph, data := DialogueData.new(), node : GraphNode = self):
 	return data
 
 
-func data_to_tree(workspace, data : DialogueData, node_name := name):
+func data_to_tree(workspace, data : Resource, node_name := name):
 	var next_nodes = []
 	
 	# setup and end
 	if node_name == name:
-		next_nodes = _from_dict(workspace.graph, data.nodes[node_name])
+		next_nodes = _from_dict(workspace.graph, data.Nodes[node_name])
 		workspace.request_node = node_name
 		workspace.request_slot = 0
 	elif node_name == 'END':
@@ -51,9 +50,9 @@ func data_to_tree(workspace, data : DialogueData, node_name := name):
 		return
 	elif not workspace.graph.has_node( NodePath(node_name) ):
 		var type = int(node_name.split('_')[0])
-		var offset = data.nodes[node_name]['offset']
+		var offset = data.Nodes[node_name]['offset']
 		var node = workspace.add_node(type, null, node_name, offset)
-		next_nodes = node._from_dict(workspace.graph, data.nodes[node_name])
+		next_nodes = node._from_dict(workspace.graph, data.Nodes[node_name])
 	elif workspace.graph.has_node( NodePath(node_name) ):
 		workspace.graph.connect_node(workspace.request_node, workspace.request_slot, node_name, 0)
 	

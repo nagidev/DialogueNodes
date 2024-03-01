@@ -1,22 +1,22 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://cbu4k4hs8fk5s"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cdnm5h03jwcik"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.cs" id="1_sg8jr"]
 
 [resource]
-script = ExtResource("1")
-starts = {
-"START": &"0_1"
+script = ExtResource("1_sg8jr")
+FileName = "ExampleVariables"
+Starts = {
+"Start": &"0_1"
 }
-nodes = {
+Nodes = {
 "0_1": {
 "link": &"1_1",
-"offset": Vector2(0, 0),
-"start_id": "START"
+"offset": Vector2(1253.97, -933.225),
+"start_id": "Start"
 },
 "1_1": {
-"dialogue": "You can store and use variables from your dialogue tree.
-Like: You have {{COINS}} coins!",
-"offset": Vector2(220, 0),
+"dialogue": "You can store and use variables from your dialogue tree.",
+"offset": Vector2(1560, -960),
 "options": {
 0: {
 "condition": {},
@@ -24,157 +24,61 @@ Like: You have {{COINS}} coins!",
 "text": ""
 }
 },
-"size": Vector2(300, 241),
-"speaker": "Greg"
+"size": Vector2(300, 271),
+"speaker": -1
 },
 "1_2": {
-"dialogue": "What would you like to try?",
-"offset": Vector2(700, 0),
-"options": {
-0: {
-"condition": {},
-"link": &"1_3",
-"text": "Set value"
-},
-1: {
-"condition": {},
-"link": &"1_6",
-"text": "Check condition"
-},
-2: {
-"condition": {},
-"link": "END",
-"text": "Nothing"
-}
-},
-"size": Vector2(300, 307),
-"speaker": "Greg"
-},
-"1_3": {
-"dialogue": "Setting COINS to 5.
-Current value: {{COINS}}
-",
-"offset": Vector2(1040, 0),
+"dialogue": "Let's use the variable COIN to store the number of coins. Now we have {{COINS}} coins.",
+"offset": Vector2(2020, -920),
 "options": {
 0: {
 "condition": {},
 "link": &"4_1",
-"text": ""
-}
-},
-"size": Vector2(300, 241),
-"speaker": "Greg"
-},
-"1_4": {
-"dialogue": "New value: {{COINS}}",
-"offset": Vector2(1700, 0),
-"options": {
-0: {
-"condition": {},
-"link": &"1_5",
-"text": ""
-}
-},
-"size": Vector2(300, 241),
-"speaker": "Greg"
-},
-"1_5": {
-"dialogue": "You can even use the set node perform arithematic operations on values.",
-"offset": Vector2(2040, 0),
-"options": {
-0: {
-"condition": {},
-"link": &"1_2",
-"text": "Got it!"
+"text": "Add 50 Coins"
 },
 1: {
 "condition": {},
-"link": "END",
-"text": "Bye"
+"link": &"4_2",
+"text": "Remove 10 Coins"
 }
 },
-"size": Vector2(300, 274),
-"speaker": "Greg"
+"size": Vector2(300, 307),
+"speaker": ""
 },
-"1_6": {
-"dialogue": "You can use the condition node to show dialogues based on a condition.",
-"offset": Vector2(1040, 280),
+"1_3": {
+"dialogue": "Now the value of coins is: {{COINS}}. Open the example in the Dialogue Node Plugin to learn how it works!",
+"offset": Vector2(3080, -900),
 "options": {
 0: {
-"condition": {},
-"link": &"5_1",
-"text": ""
-}
-},
-"size": Vector2(300, 241),
-"speaker": "Greg"
-},
-"1_7": {
-"dialogue": "Like right now you have more than 5 coins!",
-"offset": Vector2(1720, 380),
-"options": {
-0: {
-"condition": {},
-"link": &"1_9",
-"text": ""
-}
-},
-"size": Vector2(300, 241.001),
-"speaker": "Greg"
-},
-"1_8": {
-"dialogue": "I can tell you don't have more than 5 coins...",
-"offset": Vector2(1720, 640),
-"options": {
-0: {
-"condition": {},
-"link": &"1_9",
-"text": ""
-}
-},
-"size": Vector2(300, 241),
-"speaker": "Greg"
-},
-"1_9": {
-"dialogue": "Feel free to look at the example files to learn how to do it yourself!",
-"offset": Vector2(2080, 520),
-"options": {
-0: {
-"condition": {},
-"link": &"1_2",
-"text": "Got it!"
-},
-1: {
 "condition": {},
 "link": "END",
-"text": "Bye"
+"text": ""
 }
 },
-"size": Vector2(300, 274),
-"speaker": "Greg"
+"size": Vector2(300, 307),
+"speaker": ""
 },
 "4_1": {
-"link": &"1_4",
-"offset": Vector2(1360, 140),
-"type": 0,
-"value": "5",
+"link": &"1_3",
+"offset": Vector2(2460, -920),
+"type": 1,
+"value": 50,
 "variable": "COINS"
 },
-"5_1": {
-"false": &"1_8",
-"offset": Vector2(1360, 380),
-"operator": 2,
-"true": &"1_7",
-"value1": "{{COINS}}",
-"value2": "5"
+"4_2": {
+"link": &"1_3",
+"offset": Vector2(2480, -700),
+"type": 2,
+"value": 10,
+"variable": "COINS"
 }
 }
-variables = {
+Variables = {
 "COINS": {
 "type": 2,
-"value": 10.0
+"value": 0
 }
 }
-comments = Array[String]([])
-strays = Array[String]([])
-characters = ""
+Comments = []
+Strays = []
+Characters = ""

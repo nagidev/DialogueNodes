@@ -1,0 +1,62 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://dos1ctbqlspt5"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.cs" id="1_4ft51"]
+
+[resource]
+script = ExtResource("1_4ft51")
+FileName = "ExampleSignal"
+Starts = {
+"Start": &"0_1"
+}
+Nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(-247.338, -253.432),
+"start_id": "Start"
+},
+"1_1": {
+"dialogue": "You can trigger a signal from your dialogue. Additionally you can pass a value with the signal.",
+"offset": Vector2(120, -240),
+"options": {
+0: {
+"condition": {},
+"link": &"3_1",
+"text": "Try it!"
+},
+1: {
+"condition": {},
+"link": "END",
+"text": "Got it, bye!"
+}
+},
+"size": Vector2(300, 308),
+"speaker": 0
+},
+"1_2": {
+"dialogue": "The signal triggered the code in the demo to create an explosion.",
+"offset": Vector2(820, -220),
+"options": {
+0: {
+"condition": {},
+"link": &"3_1",
+"text": "Do it again!"
+},
+1: {
+"condition": {},
+"link": "END",
+"text": "Got it!"
+}
+},
+"size": Vector2(300, 308),
+"speaker": 0
+},
+"3_1": {
+"link": &"1_2",
+"offset": Vector2(860, -480),
+"signalValue": "explode"
+}
+}
+Variables = {}
+Comments = []
+Strays = []
+Characters = "res://examples/CharacterList.tres"

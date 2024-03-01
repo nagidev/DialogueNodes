@@ -1,21 +1,22 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://dj818hys8f3u8"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cdtj6y35wq1fy"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.cs" id="1_a1qmr"]
 
 [resource]
-script = ExtResource("1")
-starts = {
-"START": &"0_1"
+script = ExtResource("1_a1qmr")
+FileName = "ExampleBasic"
+Starts = {
+"Start": &"0_1"
 }
-nodes = {
+Nodes = {
 "0_1": {
 "link": &"1_1",
-"offset": Vector2(0, 0),
-"start_id": "START"
+"offset": Vector2(520, -20),
+"start_id": "Start"
 },
 "1_1": {
-"dialogue": "Hey there!",
-"offset": Vector2(220, 0),
+"dialogue": "This is just an example.",
+"offset": Vector2(840, -20),
 "options": {
 0: {
 "condition": {},
@@ -23,19 +24,16 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
-"speaker": "Greg"
-},
-"2_1": {
-"comment": "A basic example",
-"offset": Vector2(-20, 100),
-"size": {
-"x": 218.0,
-"y": 237.0
+"size": Vector2(305.325, 275),
+"speaker": 1
 }
 }
+Variables = {
+"Delta": {
+"type": 4,
+"value": "Cuao"
 }
-variables = {}
-comments = Array[String](["2_1"])
-strays = Array[String]([])
-characters = ""
+}
+Comments = []
+Strays = []
+Characters = "res://examples/CharacterList.tres"

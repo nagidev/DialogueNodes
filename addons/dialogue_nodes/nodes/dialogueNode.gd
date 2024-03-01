@@ -220,12 +220,25 @@ func _on_character_toggled(useCharacter):
 	_on_node_modified()
 
 
-func _on_characters_loaded(newCharacterList : Array[Character]):
+func _on_characters_loaded(newCharacterList : Array[Resource]):
 	speaker.clear()
+	var index : int
 	
 	for newCharacter in newCharacterList:
-		speaker.add_item(newCharacter.name)
-	
+		var valid_character : bool = false
+		
+		for dict in newCharacter.get_property_list():
+			if dict.name == 'Name':
+				speaker.add_item(newCharacter.Name)
+				valid_character = true
+				break
+
+		if not valid_character:
+			printerr('Character List file has an invalid Character of index = ' + str(index))
+			return
+			
+		index += 1
+			
 	if newCharacterList.size() > 0:
 		if curSpeaker < newCharacterList.size():
 			speaker.selected = curSpeaker

@@ -25,11 +25,11 @@ func _to_dict(_graph):
 
 
 func _from_dict(_graph, dict):
+	
 	if dict.has('size'):
 		size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
 	
 	_on_resize(size)
-	
 	textEdit.text = dict['comment']
 
 

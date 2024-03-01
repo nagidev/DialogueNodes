@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-signal file_selected(characterList : Array[Character])
+signal file_selected(characterList : Array[Resource])
 signal modified
 
 @onready var loadButton = $HBoxContainer/LoadButton
@@ -9,15 +9,19 @@ signal modified
 @onready var resetButton = $HBoxContainer/ResetButton
 @onready var openDialog = $OpenDialog
 
-var characterList : Array[Character]
+var characterList : Array[Resource]
 
 
 func load_file(path : String):
 	filePath.text = path
 	_on_filePath_changed()
 	
-	if path.ends_with('.tres') and load(path) is CharacterList:
-		return
+	if path.ends_with('.tres'):
+		var resource = load(path)
+		if resource is Resource:
+			for dict in resource.get_property_list():
+				if dict.name == 'Characters':
+					return
 	
 	if path != '':
 		printerr('Invalid character resource file!')
@@ -42,7 +46,10 @@ func _on_filePath_changed():
 		var path = filePath.text
 		if path.ends_with('.tres'):
 			var file = load(path)
-			if file is CharacterList:
-				characterList = file.characters
+			if file is Resource:
+				for dict in file.get_property_list():
+					if dict.name == 'Characters':
+						characterList = file.Characters
+
 	file_selected.emit(characterList)
 	modified.emit()

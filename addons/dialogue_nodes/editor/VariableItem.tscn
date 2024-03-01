@@ -12,11 +12,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_o70cd")
 
-[node name="Name" type="LineEdit" parent="."]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Variable Name"
-
 [node name="Type" type="OptionButton" parent="."]
 layout_mode = 2
 item_count = 4
@@ -33,6 +28,11 @@ popup/item_2/id = 3
 popup/item_3/text = ""
 popup/item_3/icon = ExtResource("5_fyv4x")
 popup/item_3/id = 1
+
+[node name="Name" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Variable Name"
 
 [node name="StringValue" type="LineEdit" parent="."]
 layout_mode = 2

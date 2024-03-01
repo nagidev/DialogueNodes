@@ -1,35 +1,16 @@
-[gd_scene load_steps=21 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=12 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="3"]
 [ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="4"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="5"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/workspace.gd" id="7"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="9"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="10"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="10_cxec0"]
+[ext_resource type="PackedScene" uid="uid://cfx67xt0p3i2j" path="res://addons/dialogue_nodes/editor/DialogueWindow.tscn" id="11_bynup"]
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="11_ku5xd"]
-[ext_resource type="FontFile" uid="uid://dv4rnn0ml62q3" path="res://addons/dialogue_nodes/themes/Poppins-Bold.ttf" id="11_ov01b"]
-[ext_resource type="FontFile" uid="uid://bcg26eik2m2o8" path="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf" id="12_k7lf3"]
-[ext_resource type="FontFile" uid="uid://bhtf12vvs2yjq" path="res://addons/dialogue_nodes/themes/Poppins-BoldItalic.ttf" id="12_pp4vk"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="12_tk1td"]
-[ext_resource type="FontFile" uid="uid://b1bq3eoec0j1b" path="res://addons/dialogue_nodes/themes/Poppins-Regular.ttf" id="13_oinhn"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="15_kpna5"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="19_7vkda"]
-
-[sub_resource type="Theme" id="Theme_3a3k7"]
-default_font = ExtResource("13_oinhn")
-RichTextLabel/fonts/bold_font = ExtResource("11_ov01b")
-RichTextLabel/fonts/bold_italics_font = ExtResource("12_pp4vk")
-RichTextLabel/fonts/italics_font = ExtResource("12_k7lf3")
-RichTextLabel/fonts/normal_font = ExtResource("13_oinhn")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_orqxx"]
-script = ExtResource("15_kpna5")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_ynero"]
-script = ExtResource("19_7vkda")
 
 [node name="NodeEditor" type="Control"]
 custom_minimum_size = Vector2(0, 300)
@@ -292,24 +273,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DialogueBox" type="Panel" parent="."]
+[node name="DialogueWindow" parent="." instance=ExtResource("11_bynup")]
 visible = false
-custom_minimum_size = Vector2(256, 128)
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -128.0
-offset_right = 320.0
-offset_bottom = 128.0
-grow_horizontal = 2
-grow_vertical = 2
-theme = SubResource("Theme_3a3k7")
-script = ExtResource("5")
-custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_update_run_menu"]
 [connection signal="node_added" from="Main/Workspace" to="." method="_on_node_added"]
@@ -349,4 +315,5 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), Sub
 [connection signal="file_selected" from="SaveDialog" to="." method="save_file"]
 [connection signal="file_selected" from="OpenDialog" to="." method="open_file"]
 [connection signal="custom_action" from="ConfirmationDialog" to="Main/Workspace/SidePanel/Files" method="_on_confirmDialog_action"]
+[connection signal="visibility_changed" from="ConfirmationDialog" to="Main/Workspace/SidePanel/Files" method="_on_confirmDialog_hide"]
 [connection signal="gui_input" from="DialogBackground" to="." method="_on_dialog_background_input"]

@@ -1,10 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://3ofh51q0vhmg"]
+[gd_scene load_steps=7 format=3 uid="uid://3ofh51q0vhmg"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/conditionNode.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://dmqyuf4427yvx" path="res://addons/dialogue_nodes/icons/String.svg" id="2_treie"]
+[ext_resource type="Texture2D" uid="uid://kp1pbk80apuh" path="res://addons/dialogue_nodes/icons/int.svg" id="3_fb4j7"]
+[ext_resource type="Texture2D" uid="uid://dlx1ii3oc506a" path="res://addons/dialogue_nodes/icons/float.svg" id="4_8dmo1"]
+[ext_resource type="Texture2D" uid="uid://bvx0t8yu4vne8" path="res://addons/dialogue_nodes/icons/bool.svg" id="5_ay60f"]
+[ext_resource type="Texture2D" uid="uid://ddkq7xxsfq7ix" path="res://addons/dialogue_nodes/icons/var.svg" id="6_w6bxa"]
 
 [node name="ConditionNode" type="GraphNode"]
-offset_right = 300.0
-offset_bottom = 159.0
+offset_right = 324.0
+offset_bottom = 160.0
 title = "ConditionNode"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -38,36 +43,72 @@ script = ExtResource("1")
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Value1" type="LineEdit" parent="HBoxContainer"]
+[node name="VarLogo" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("6_w6bxa")
+expand_mode = 2
+stretch_mode = 3
+
+[node name="Variable" type="LineEdit" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "The property to set the value of."
-placeholder_text = "Value"
+placeholder_text = "Variable"
 
 [node name="Operator" type="OptionButton" parent="HBoxContainer"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 tooltip_text = "The type of the value to set."
-item_count = 6
+item_count = 2
+selected = 0
 popup/item_0/text = "=="
 popup/item_0/id = 0
 popup/item_1/text = "!="
 popup/item_1/id = 1
-popup/item_2/text = ">"
-popup/item_2/id = 2
-popup/item_3/text = "<"
-popup/item_3/id = 3
-popup/item_4/text = ">="
-popup/item_4/id = 4
-popup/item_5/text = "<="
-popup/item_5/id = 5
 
-[node name="Value2" type="LineEdit" parent="HBoxContainer"]
+[node name="Type" type="OptionButton" parent="HBoxContainer"]
+layout_mode = 2
+item_count = 5
+selected = 0
+popup/item_0/text = ""
+popup/item_0/icon = ExtResource("2_treie")
+popup/item_0/id = 4
+popup/item_1/text = ""
+popup/item_1/icon = ExtResource("3_fb4j7")
+popup/item_1/id = 2
+popup/item_2/text = ""
+popup/item_2/icon = ExtResource("4_8dmo1")
+popup/item_2/id = 3
+popup/item_3/text = ""
+popup/item_3/icon = ExtResource("5_ay60f")
+popup/item_3/id = 1
+popup/item_4/text = ""
+popup/item_4/icon = ExtResource("6_w6bxa")
+popup/item_4/id = 5
+
+[node name="StringValue" type="LineEdit" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-tooltip_text = "The value to set the property to.
-Eg: Bob, 12, 0.5, false, etc."
 placeholder_text = "Value"
+
+[node name="IntValue" type="SpinBox" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+allow_greater = true
+allow_lesser = true
+
+[node name="FloatValue" type="SpinBox" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.01
+allow_greater = true
+allow_lesser = true
+
+[node name="BoolValue" type="CheckBox" parent="HBoxContainer"]
+visible = false
+layout_mode = 2
 
 [node name="TrueLabel" type="ItemList" parent="."]
 layout_mode = 2
@@ -83,6 +124,6 @@ auto_height = true
 item_count = 1
 item_0/text = "False"
 
-[connection signal="text_changed" from="HBoxContainer/Value1" to="." method="set_value"]
-[connection signal="item_selected" from="HBoxContainer/Operator" to="." method="set_type"]
-[connection signal="text_changed" from="HBoxContainer/Value2" to="." method="set_value"]
+[connection signal="text_changed" from="HBoxContainer/Variable" to="." method="set_value"]
+[connection signal="item_selected" from="HBoxContainer/Operator" to="." method="set_operator"]
+[connection signal="item_selected" from="HBoxContainer/Type" to="." method="_on_type_changed"]

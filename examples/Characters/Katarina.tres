@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://baema2gs1fy5c"]
+
+[ext_resource type="Texture2D" uid="uid://b6mswt8wotndm" path="res://examples/katIcon.png" id="1_j1q3a"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/Character.cs" id="2_8odba"]
+
+[resource]
+script = ExtResource("2_8odba")
+Name = "{{PlayerName}}"
+Image = ExtResource("1_j1q3a")
+Color = Color(1, 0.635294, 0, 1)

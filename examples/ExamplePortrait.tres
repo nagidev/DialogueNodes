@@ -1,0 +1,73 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://w4eyaokt7tld"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.cs" id="1_367en"]
+
+[resource]
+script = ExtResource("1_367en")
+FileName = "ExamplePortrait"
+Starts = {
+"Start": &"0_1"
+}
+Nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(-318.773, 101.026),
+"start_id": "Start"
+},
+"1_1": {
+"dialogue": "You can't sneak up on me, Bones.",
+"offset": Vector2(-60, 20),
+"options": {
+0: {
+"condition": {},
+"link": &"1_2",
+"text": ""
+}
+},
+"size": Vector2(300, 275),
+"speaker": 0
+},
+"1_2": {
+"dialogue": "I don't need to. You can't outrun time.",
+"offset": Vector2(340, 20),
+"options": {
+0: {
+"condition": {},
+"link": &"1_3",
+"text": ""
+}
+},
+"size": Vector2(300, 275),
+"speaker": 1
+},
+"1_3": {
+"dialogue": "My claws are faster.",
+"offset": Vector2(720, 20),
+"options": {
+0: {
+"condition": {},
+"link": &"1_4",
+"text": ""
+}
+},
+"size": Vector2(313.31, 275),
+"speaker": 0
+},
+"1_4": {
+"dialogue": "Time will tell, feline.",
+"offset": Vector2(1140, 20),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(309.33, 275),
+"speaker": 1
+}
+}
+Variables = {}
+Comments = []
+Strays = []
+Characters = "res://examples/CharacterList.tres"

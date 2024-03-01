@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://7hfeobbdke10"]
+
+[ext_resource type="Texture2D" uid="uid://qope5qg2c2kj" path="res://examples/skelIcon.png" id="1_xoycf"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/Character.cs" id="2_wa2c6"]
+
+[resource]
+script = ExtResource("2_wa2c6")
+Name = "Skeleton"
+Image = ExtResource("1_xoycf")
+Color = Color(1, 0, 0.0156863, 1)

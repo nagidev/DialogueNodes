@@ -1,21 +1,23 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://btriowhsx04c2"]
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cwlc8glwb7opk"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.cs" id="1_twuyw"]
 
 [resource]
-script = ExtResource("1")
-starts = {
-"START": &"0_1"
+script = ExtResource("1_twuyw")
+FileName = "ExampleBBCodes"
+Starts = {
+"Start": &"0_1"
 }
-nodes = {
+Nodes = {
 "0_1": {
 "link": &"1_1",
-"offset": Vector2(0, 0),
-"start_id": "START"
+"offset": Vector2(292.582, -534.125),
+"start_id": "Start"
 },
 "1_1": {
-"dialogue": "Wanna learn about [u]bbcodes[/u]?",
-"offset": Vector2(220, 0),
+"dialogue": "Wanna learn about [u]bbcodes[/u]?
+",
+"offset": Vector2(540, -500),
 "options": {
 0: {
 "condition": {},
@@ -25,28 +27,29 @@ nodes = {
 1: {
 "condition": {},
 "link": &"1_2",
-"text": "Nah"
+"text": "Nah!"
 }
 },
-"size": Vector2(300, 349.5),
-"speaker": "Greg"
+"size": Vector2(300, 308),
+"speaker": 1
 },
 "1_2": {
-"dialogue": "[shake]Oh... too bad...[/shake]",
-"offset": Vector2(560, 300),
+"dialogue": "[shake]Oh... too bad...[/shake]
+",
+"offset": Vector2(1000, -240),
 "options": {
 0: {
 "condition": {},
 "link": "END",
-"text": "..."
+"text": ""
 }
 },
-"size": Vector2(300, 312.5),
-"speaker": "Greg"
+"size": Vector2(300, 275),
+"speaker": 1
 },
 "1_3": {
-"dialogue": "You can write special keywords between [ ] for different effects.",
-"offset": Vector2(560, 0),
+"dialogue": "You can write special keywords between〚 〛 for different effects.",
+"offset": Vector2(1000, -580),
 "options": {
 0: {
 "condition": {},
@@ -54,12 +57,12 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
-"speaker": "Greg"
+"size": Vector2(300, 275),
+"speaker": 1
 },
 "1_4": {
 "dialogue": "Like u for [u]underlining[/u] or [fade start=26 length=4]fade[/fade] or [color=red]color=red[/color] or [rainbow]rainbow[/rainbow] or [shake]shake[/shake] or [wave]wave[/wave] or [tornado]tornado[/tornado]",
-"offset": Vector2(900, 0),
+"offset": Vector2(1460, -580),
 "options": {
 0: {
 "condition": {},
@@ -67,13 +70,12 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
-"speaker": "Greg"
+"size": Vector2(347.273, 275),
+"speaker": 1
 },
 "1_5": {
-"dialogue": "You can even combine two or more effects to create [rainbow][wave]EVEN MORE AWESOME EFFECTS![/wave][/rainbow]
-Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
-"offset": Vector2(1240, 0),
+"dialogue": "You can even combine two or more effects to create [rainbow][wave]EVEN MORE AWESOME EFFECTS![/wave][/rainbow]",
+"offset": Vector2(2000, -960),
 "options": {
 0: {
 "condition": {},
@@ -82,15 +84,28 @@ Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
 },
 1: {
 "condition": {},
-"link": "END",
+"link": &"1_6",
 "text": "Got it!"
 }
 },
-"size": Vector2(300, 349.5),
-"speaker": "Greg"
+"size": Vector2(300, 308),
+"speaker": 1
+},
+"1_6": {
+"dialogue": "Usage: 〚 effect1〛 〚 effect2〛 text goes here 〚 /effect2〛 〚 /effect1〛",
+"offset": Vector2(2460, -660),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 275),
+"speaker": 0
 }
 }
-variables = {}
-comments = Array[String]([])
-strays = Array[String]([])
-characters = ""
+Variables = {}
+Comments = []
+Strays = []
+Characters = "res://examples/CharacterList.tres"

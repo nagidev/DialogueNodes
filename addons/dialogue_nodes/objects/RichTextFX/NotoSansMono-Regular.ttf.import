@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://bcg26eik2m2o8"
-path="res://.godot/imported/Poppins-Italic.ttf-acd32fe0814fbfe0b89787ac4a468774.fontdata"
+uid="uid://c2hcaes8mp3vv"
+path="res://.godot/imported/NotoSansMono-Regular.ttf-bfc3a581615fa4949cf243d534936e37.fontdata"
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf"
-dest_files=["res://.godot/imported/Poppins-Italic.ttf-acd32fe0814fbfe0b89787ac4a468774.fontdata"]
+source_file="res://addons/dialogue_nodes/objects/RichTextFX/NotoSansMono-Regular.ttf"
+dest_files=["res://.godot/imported/NotoSansMono-Regular.ttf-bfc3a581615fa4949cf243d534936e37.fontdata"]
 
 [params]
 

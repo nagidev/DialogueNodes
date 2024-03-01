@@ -3,8 +3,8 @@ extends ItemList
 class_name Files
 
 
-signal opened(data : DialogueData)
-signal switched(data : DialogueData)
+signal opened(data : Resource)
+signal switched(data : Resource)
 signal closed
 
 @export var editor_path: NodePath
@@ -72,7 +72,7 @@ func _get_file_idx(node_name):
 	return -1
 
 
-func create_file(file_name, file_dir, data : DialogueData):
+func create_file(file_name, file_dir, data : Resource):
 	var new_idx : int
 	var node_name = file_dir.split('/')[-1] + '>' + file_name.split('.')[0]
 	
@@ -85,6 +85,7 @@ func create_file(file_name, file_dir, data : DialogueData):
 		new_idx = get_item_count()
 		var new_file = {
 			'id': node_name,
+			'file_name': file_name.split(".")[0],
 			'path': file_dir+'/'+file_name,
 			'data': data,
 			'modified': false}
@@ -119,7 +120,7 @@ func select_file(idx):
 		set_item_metadata(current, metadata)
 	
 	current = idx
-	var data : DialogueData= get_item_metadata(current)['data']
+	var data : Resource = get_item_metadata(current)['data']
 	select(current)
 	switched.emit(data)
 
@@ -136,7 +137,8 @@ func modify_file(idx = current):
 func new_file(path):
 	var file_name : String = newDialogue.current_file
 	var file_dir : String = newDialogue.current_dir
-	var data = DialogueData.new()
+	var csharp_dialogue_data = load("res://addons/dialogue_nodes/objects/DialogueData.cs")
+	var data = csharp_dialogue_data.new()
 	
 	create_file(file_name, file_dir, data)
 	save_file(current)
@@ -151,9 +153,18 @@ func open_file(path, internal = false):
 	var file_name : String
 	var file_dir : String
 	
-	if data is DialogueData:
-		file_name = openDialogue.current_file
-		file_dir = openDialogue.current_dir
+	if data is Resource:
+		var validator = false
+		for dict in data.get_property_list():
+			if dict.name == 'Starts':
+				validator = true
+				break
+		if validator:
+			file_name = openDialogue.current_file
+			file_dir = openDialogue.current_dir
+		else:
+			printerr('File not supported!')
+			return
 	else:
 		printerr('File not supported!')
 		return
@@ -174,8 +185,8 @@ func save_file(idx = current):
 	if idx == current:
 		metadata['data'] = editor.get_data()
 		set_item_metadata(current, metadata)
-	
 	# save dialogue data to file
+	metadata['data'].FileName = metadata['file_name']
 	ResourceSaver.save(metadata['data'], metadata['path'])
 	
 	if editor._debug:
@@ -206,7 +217,7 @@ func close_file(idx = current):
 	
 	var metadata = get_item_metadata(idx)
 	var count = get_item_count()
-
+	
 	if metadata['modified'] and not idx in queued:
 		queued.append(idx)
 		confirmDialogue.popup_centered()
@@ -262,12 +273,12 @@ func _on_confirmDialog_action(action):
 				for idx in queued:
 					close_file(idx)
 	confirmDialogue.hide()
-	queued.clear()
 
 
 func _on_confirmDialog_hide():
-	queued.clear()
-
+	if not confirmDialogue.visible:
+		queued.clear()
+	
 
 func _on_empty_clicked(at_pos, mouse_button_index):
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:

@@ -34,7 +34,7 @@ func get_value():
 		TYPE_STRING:
 			return string_value.text
 		TYPE_INT:
-			return int_value.value
+			return int(int_value.value)
 		TYPE_FLOAT:
 			return float_value.value
 		TYPE_BOOL:

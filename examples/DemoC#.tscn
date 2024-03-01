@@ -1,0 +1,118 @@
+[gd_scene load_steps=14 format=3 uid="uid://drufh0gle7l46"]
+
+[ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="1_k2bqc"]
+[ext_resource type="Script" path="res://examples/Demo.cs" id="2_mg0sf"]
+[ext_resource type="Resource" uid="uid://cdtj6y35wq1fy" path="res://examples/ExampleBasic.tres" id="3_63jeg"]
+[ext_resource type="PackedScene" uid="uid://dymew1b2ekylv" path="res://examples/DialogueBox.tscn" id="4_ijvhy"]
+[ext_resource type="Resource" uid="uid://cjgko337t5am4" path="res://examples/ExampleBranching.tres" id="4_xm30m"]
+[ext_resource type="Resource" uid="uid://w4eyaokt7tld" path="res://examples/ExamplePortrait.tres" id="5_5cjaq"]
+[ext_resource type="Resource" uid="uid://dos1ctbqlspt5" path="res://examples/ExampleSignal.tres" id="6_olc3x"]
+[ext_resource type="Resource" uid="uid://cwlc8glwb7opk" path="res://examples/ExampleBBCodes.tres" id="7_h4g4f"]
+[ext_resource type="Resource" uid="uid://cdnm5h03jwcik" path="res://examples/ExampleVariables.tres" id="8_8q183"]
+[ext_resource type="Script" path="res://examples/ExternalVariablesDemo.cs" id="10_mt08k"]
+[ext_resource type="AudioStream" uid="uid://cclo8ra1ep3cy" path="res://examples/textSFX.ogg" id="11_nq8dq"]
+
+[sub_resource type="Curve" id="1"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.67805, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_fvoor"]
+offsets = PackedFloat32Array(0, 0.332268, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1)
+
+[node name="Demo" type="Control" node_paths=PackedStringArray("dialogueBox", "cpuParticles", "demoSelector", "audioStreamPlayer", "externalVariablesDemo")]
+texture_filter = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_k2bqc")
+script = ExtResource("2_mg0sf")
+dialogueData = Array[Resource]([ExtResource("3_63jeg"), ExtResource("4_xm30m"), ExtResource("5_5cjaq"), ExtResource("6_olc3x"), ExtResource("7_h4g4f"), ExtResource("8_8q183")])
+dialogueBox = NodePath("DialogueBox")
+cpuParticles = NodePath("Particles")
+demoSelector = NodePath("DemoSelector")
+audioStreamPlayer = NodePath("AudioStreamPlayer")
+externalVariablesDemo = NodePath("ExternalVariables")
+
+[node name="DemoSelector" type="OptionButton" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -67.5
+offset_top = -62.0
+offset_right = 67.5
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -52.0
+offset_top = 56.5
+offset_right = 52.0
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Start Demo"
+
+[node name="Particles" type="CPUParticles2D" parent="."]
+z_index = 2
+position = Vector2(600, 200.498)
+emitting = false
+amount = 64
+lifetime = 1.5
+one_shot = true
+speed_scale = 2.5
+explosiveness = 0.9
+randomness = 0.2
+lifetime_randomness = 0.87
+emission_shape = 1
+emission_sphere_radius = 32.0
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 400)
+initial_velocity_min = 10.0
+initial_velocity_max = 200.33
+scale_amount_min = 10.0
+scale_amount_max = 50.0
+scale_amount_curve = SubResource("1")
+color_ramp = SubResource("Gradient_fvoor")
+hue_variation_min = -1.0
+hue_variation_max = 1.0
+
+[node name="DialogueBox" parent="." instance=ExtResource("4_ijvhy")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 12.0
+offset_top = 124.0
+offset_right = 12.0
+offset_bottom = 124.0
+grow_horizontal = 2
+grow_vertical = 2
+transitionType = 1
+
+[node name="ExternalVariables" type="Node" parent="."]
+script = ExtResource("10_mt08k")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_nq8dq")
+
+[connection signal="item_selected" from="DemoSelector" to="." method="OnDemoSelected"]
+[connection signal="pressed" from="StartButton" to="." method="OnButtonPressed"]
+[connection signal="DialogueCharDisplayed" from="DialogueBox" to="." method="OnCharacterDisplayed"]
+[connection signal="DialogueSignal" from="DialogueBox" to="." method="OnDialogueSignal"]

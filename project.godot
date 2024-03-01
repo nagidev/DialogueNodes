@@ -11,9 +11,17 @@ config_version=5
 [application]
 
 config/name="DialogueNodes"
-run/main_scene="res://examples/Demo.tscn"
-config/features=PackedStringArray("4.2")
+run/main_scene="res://examples/DemoC#.tscn"
+config/features=PackedStringArray("4.2", "C#")
 config/icon="res://icon.svg"
+
+[dotnet]
+
+project/assembly_name="DialogueNodes"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/dialogue_nodes/plugin.cfg")
 
 [filesystem]
 

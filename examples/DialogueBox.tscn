@@ -1,0 +1,154 @@
+[gd_scene load_steps=30 format=3 uid="uid://dymew1b2ekylv"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueManager.cs" id="1_hel5a"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueCore.cs" id="2_6i725"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueUI.cs" id="3_gcl0s"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeGhost.cs" id="5_te861"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeColormod.cs" id="6_2uown"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueInput.cs" id="6_3yo6x"]
+[ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Character.svg" id="7_qm32g"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeCuss.cs" id="7_y80iq"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeJump.cs" id="8_802sb"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeHeart.cs" id="9_tx4om"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeL33T.cs" id="10_x0ciu"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeUwU.cs" id="11_klavl"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeSparkle.cs" id="12_35lj7"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeNervous.cs" id="13_ebaad"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeWoo.cs" id="14_fhm8c"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeRain.cs" id="15_ohdl6"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeNumber.cs" id="16_s37nf"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_y3350"]
+script = ExtResource("5_te861")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_02pyk"]
+script = ExtResource("6_2uown")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_dxo3o"]
+script = ExtResource("7_y80iq")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_dw665"]
+script = ExtResource("8_802sb")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_71dc5"]
+script = ExtResource("9_tx4om")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_2uxr7"]
+script = ExtResource("10_x0ciu")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_k1pbr"]
+script = ExtResource("11_klavl")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_yobeh"]
+script = ExtResource("12_35lj7")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_qtfq3"]
+script = ExtResource("13_ebaad")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_xxvnh"]
+script = ExtResource("14_fhm8c")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_2s6ey"]
+script = ExtResource("15_ohdl6")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_3e7i8"]
+script = ExtResource("16_s37nf")
+
+[node name="DialogueBox" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 2
+script = ExtResource("1_hel5a")
+transitionType = 2
+
+[node name="DialogueCore" type="Node" parent="."]
+script = ExtResource("2_6i725")
+
+[node name="DialogueUI" type="Panel" parent="." node_paths=PackedStringArray("speaker", "speakerPortrait", "dialogue", "optionsButtons")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -307.5
+offset_top = -89.5
+offset_right = 307.5
+offset_bottom = 89.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_gcl0s")
+speaker = NodePath("MarginContainer/HBoxContainer/VBoxContainer/SpeakerLabel")
+speakerPortrait = NodePath("MarginContainer/HBoxContainer/PortraitTexture")
+dialogue = NodePath("MarginContainer/HBoxContainer/VBoxContainer/DialogueTxt")
+optionsButtons = [NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button2"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button3"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button4")]
+customEffects = [SubResource("RichTextEffect_y3350"), SubResource("RichTextEffect_02pyk"), SubResource("RichTextEffect_dxo3o"), SubResource("RichTextEffect_dw665"), SubResource("RichTextEffect_71dc5"), SubResource("RichTextEffect_2uxr7"), SubResource("RichTextEffect_k1pbr"), SubResource("RichTextEffect_yobeh"), SubResource("RichTextEffect_qtfq3"), SubResource("RichTextEffect_xxvnh"), SubResource("RichTextEffect_2s6ey"), SubResource("RichTextEffect_3e7i8")]
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+metadata/_edit_lock_ = true
+
+[node name="DialogueInput" type="Control" parent="DialogueUI/MarginContainer"]
+layout_mode = 2
+script = ExtResource("6_3yo6x")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueUI/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PortraitTexture" type="TextureRect" parent="DialogueUI/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("7_qm32g")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueUI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="SpeakerLabel" type="Label" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Speaker"
+
+[node name="DialogueTxt" type="RichTextLabel" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = true
+text = "This is a test  dialogue"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 1"
+
+[node name="Button2" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 2"
+
+[node name="Button3" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 3"
+
+[node name="Button4" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 4"

@@ -1,0 +1,133 @@
+[gd_scene load_steps=18 format=3 uid="uid://cfx67xt0p3i2j"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueManager.cs" id="1_6k1wd"]
+[ext_resource type="Resource" uid="uid://cjgko337t5am4" path="res://examples/ExampleBranching.tres" id="2_5141j"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueInput.cs" id="2_xelva"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueCore.cs" id="3_htdk7"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueUI.cs" id="3_n3i0m"]
+[ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Character.svg" id="4_kuxk6"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeGhost.cs" id="7_r7tlj"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeColormod.cs" id="7_y5u3m"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeCuss.cs" id="8_o7v6t"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeHeart.cs" id="9_fgwdj"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/RichTextFX/BBCodeJump.cs" id="10_sqj6g"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_vdd6h"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_y3350"]
+script = ExtResource("7_r7tlj")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_bdxw0"]
+script = ExtResource("7_y5u3m")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_x60h5"]
+script = ExtResource("8_o7v6t")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_dqms5"]
+script = ExtResource("9_fgwdj")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ivxln"]
+script = ExtResource("10_sqj6g")
+
+[node name="DialogueWindow" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+script = ExtResource("1_6k1wd")
+data = ExtResource("2_5141j")
+
+[node name="DialogueCore" type="Node" parent="."]
+script = ExtResource("3_htdk7")
+
+[node name="DialogueUI" type="Panel" parent="." node_paths=PackedStringArray("speaker", "speakerPortrait", "dialogue", "optionsButtons")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -318.0
+offset_top = -109.5
+offset_right = 318.0
+offset_bottom = 109.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_n3i0m")
+speaker = NodePath("MarginContainer/HBoxContainer/VBoxContainer/SpeakerLabel")
+speakerPortrait = NodePath("MarginContainer/HBoxContainer/PortraitTexture")
+dialogue = NodePath("MarginContainer/HBoxContainer/VBoxContainer/DialogueTxt")
+optionsButtons = [NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button2"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button3"), NodePath("MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer/Button4")]
+customEffects = [SubResource("RichTextEffect_vdd6h"), SubResource("RichTextEffect_y3350"), SubResource("RichTextEffect_bdxw0"), SubResource("RichTextEffect_x60h5"), SubResource("RichTextEffect_dqms5"), SubResource("RichTextEffect_ivxln")]
+metadata/_edit_lock_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="DialogueUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+metadata/_edit_lock_ = true
+
+[node name="DialogueInput" type="Control" parent="DialogueUI/MarginContainer"]
+layout_mode = 2
+script = ExtResource("2_xelva")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueUI/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PortraitTexture" type="TextureRect" parent="DialogueUI/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("4_kuxk6")
+expand_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueUI/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="SpeakerLabel" type="Label" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Speaker"
+
+[node name="DialogueTxt" type="RichTextLabel" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+bbcode_enabled = true
+text = "This is a test  dialogue"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="Button" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 1"
+
+[node name="Button2" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 2"
+
+[node name="Button3" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 3"
+
+[node name="Button4" type="Button" parent="DialogueUI/MarginContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Option 4"
