@@ -1,3 +1,5 @@
+# Godot 4+ specific ignores
+.godot/
 
 # Godot-specific ignores
 .import/
@@ -7,9 +9,8 @@ export_presets.cfg
 # Mono-specific ignores
 .mono/
 data_*/
+
+# Project-specific ignores
 exports/DialogueNodes.exe
 exports/DialogueNodes.pck
 exports/exports.zip
-
-# Project-specific ignores
-.godot
