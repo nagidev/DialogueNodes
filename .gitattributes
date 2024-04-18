@@ -5,3 +5,5 @@
 /**        export-ignore
 /addons    !export-ignore
 /addons/** !export-ignore
+/examples    !export-ignore
+/examples/** !export-ignore
