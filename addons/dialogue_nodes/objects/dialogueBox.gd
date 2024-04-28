@@ -44,6 +44,9 @@ signal option_selected(idx: int)
 @export_group('Misc')
 ## Input action used to skip dialogue animation
 @export var skip_input_action := 'ui_cancel'
+## When there is more than 1 option in a node, automatically apply focus to the first option. 
+## Disable this if the player should always be required to manually select a choice 
+@export var automatically_focus_choices := true
 ## Speed of scroll when using joystick/keyboard input
 @export var scroll_speed := 4
 ## Hide dialogue box at the end of a dialogue
@@ -546,10 +549,17 @@ func _check_condition(cond_dict: Dictionary):
 func show_options():
 	if options.is_inside_tree():
 		options.show()
+		
+		var visible_option_count = 0
 		for option in options.get_children():
 			if option.visible:
-				option.grab_focus()
-				break
+				visible_option_count += 1
+		
+		if automatically_focus_choices || visible_option_count <= 1:
+			for option in options.get_children():
+				if option.visible:
+					option.grab_focus()
+					break
 
 
 func _set_options_count(value):

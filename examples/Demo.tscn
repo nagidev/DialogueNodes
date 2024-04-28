@@ -117,6 +117,7 @@ grow_horizontal = 2
 grow_vertical = 0
 script = ExtResource("8_kplwy")
 start_id = "START"
+automatically_focus_choices = true
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_fpwbw")])
 
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
