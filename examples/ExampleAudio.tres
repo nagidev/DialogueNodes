@@ -23,7 +23,7 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 235),
+"size": Vector2(300, 240),
 "speaker": 1
 },
 "1_2": {
@@ -36,7 +36,7 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 235),
+"size": Vector2(300, 240),
 "speaker": 1
 },
 "1_3": {
@@ -68,6 +68,5 @@ nodes = {
 }
 }
 variables = {}
-comments = Array[String]([])
 strays = Array[String]([])
 characters = "res://examples/Characters.tres"

@@ -4,43 +4,75 @@ extends GraphNode
 
 signal modified
 
-@onready var textEdit = $TextEdit
+@onready var text_edit = $TextEdit
+@onready var resize_timer = $ResizeTimer
+@onready var text_timer = $TextTimer
 
-var _minsize = Vector2.ZERO
-
-func _ready():
-	_on_resize(size)
-	_minsize = size
+var undo_redo : EditorUndoRedoManager
+var last_size := size
+var last_text := ''
 
 
 func _to_dict(_graph):
 	var dict = {}
 	
-	dict['comment'] = textEdit.text
-	dict['size'] = {}
-	dict['size']['x'] = size.x
-	dict['size']['y'] = size.y
+	dict['comment'] = text_edit.text
+	dict['size'] = size
 	
 	return dict
 
 
-func _from_dict(_graph, dict):
-	if dict.has('size'):
-		size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+func _from_dict(dict : Dictionary):
+	if dict.has('size') and dict['size'] is Vector2:
+		size = dict['size']
+		last_size = size
 	
-	_on_resize(size)
+	text_edit.text = dict['comment']
+	last_text = text_edit.text
+
+
+func set_text(new_text : String):
+	if text_edit.text != new_text:
+		text_edit.text = new_text
+	last_text = new_text
+
+
+func _on_resize(_new_size):
+	resize_timer.stop()
+	resize_timer.start()
+
+
+func _on_resize_timer_timeout():
+	if not undo_redo:
+		print_rich('[shake][color="FF8866"]WOMP WOMP no undo_redo??[/color][/shake]')
+		return
 	
-	textEdit.text = dict['comment']
+	undo_redo.create_action('Set node size')
+	undo_redo.add_do_method(self, 'set_size', size)
+	undo_redo.add_do_property(self, 'last_size', size)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_property(self, 'last_size', last_size)
+	undo_redo.add_undo_method(self, 'set_size', last_size)
+	undo_redo.commit_action()
 
 
-func _on_resize(new_minsize):
-	new_minsize.x = max(new_minsize.x, _minsize.x)
-	new_minsize.y = max(new_minsize.y, _minsize.y)
-	custom_minimum_size = new_minsize
-	size = new_minsize
-	textEdit.custom_minimum_size.y = new_minsize.y - 32
-	_on_node_modified()
+func _on_text_changed():
+	text_timer.stop()
+	text_timer.start()
 
 
-func _on_node_modified(_a=0, _b=0):
+func _on_text_timer_timeout():
+	if not undo_redo:
+		return
+	
+	undo_redo.create_action('Set comment text')
+	undo_redo.add_do_method(self, 'set_text', text_edit.text)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, 'set_text', last_text)
+	undo_redo.commit_action()
+
+
+func _on_modified():
 	modified.emit()

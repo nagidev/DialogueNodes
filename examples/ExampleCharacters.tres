@@ -55,6 +55,5 @@ nodes = {
 }
 }
 variables = {}
-comments = Array[String]([])
 strays = Array[String]([])
 characters = "res://examples/Characters.tres"

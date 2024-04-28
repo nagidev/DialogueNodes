@@ -1,8 +1,8 @@
 @tool
 extends EditorPlugin
-# TODO : Undo/Redo support
 
-const EditorScene = preload('res://addons/dialogue_nodes/NodeEditor.tscn')
+
+const EditorScene = preload('res://addons/dialogue_nodes/Editor.tscn')
 const DialogueBoxScene = preload('res://addons/dialogue_nodes/objects/dialogueBox.gd')
 const DialogueBoxIcon = preload('res://addons/dialogue_nodes/icons/Dialogue.svg')
 
@@ -15,10 +15,8 @@ func _enter_tree():
 	# add editor to main viewport
 	get_editor_interface().get_editor_main_screen().add_child(editor)
 	
-	# get base color from editor settings
-	var editor_settings = get_editor_interface().get_editor_settings()
-	var base_color : Color = editor_settings.get_setting('interface/theme/base_color')
-	editor._base_color = Color.WHITE if base_color.v < 0.5 else Color.BLACK
+	# get undo redo manager
+	editor.undo_redo = get_undo_redo()
 	
 	_make_visible(false)
 	
@@ -52,14 +50,22 @@ func _make_visible(visible):
 
 
 func _get_plugin_name():
-	return 'Dialogue Nodes'
+	return 'Dialogue'
 
 
 func _get_plugin_icon():
 	return preload('res://addons/dialogue_nodes/icons/Dialogue.svg')
 
 
+func _handles(object):
+	return object is DialogueData
+
+
+func _edit(object):
+	if object is DialogueData and is_instance_valid(editor):
+		editor.files.open_file(object.resource_path)
+
+
 func _save_external_data():
 	if is_instance_valid(editor):
 		editor.files.save_all()
-

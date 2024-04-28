@@ -4,9 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://b10pucyepsb2s" path="res://addons/dialogue_nodes/icons/Filter.svg" id="1_pklbs"]
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="3_e66eu"]
 
-[node name="Option1" type="HBoxContainer"]
-offset_right = 80.0
-offset_bottom = 31.0
+[node name="Option1" type="HBoxContainer" groups=["dialogue_node_options"]]
+offset_right = 150.0
+offset_bottom = 32.0
 script = ExtResource("1_hro80")
 
 [node name="FilterButton" type="Button" parent="."]
@@ -17,16 +17,16 @@ icon = ExtResource("1_pklbs")
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Option1"
+placeholder_text = "Option Text"
 
 [node name="FilterPanel" type="PopupPanel" parent="."]
 position = Vector2i(0, 50)
-size = Vector2i(300, 54)
+size = Vector2i(204, 54)
 
 [node name="HBoxContainer" type="HBoxContainer" parent="FilterPanel"]
 offset_left = 12.0
 offset_top = 12.0
-offset_right = 288.0
+offset_right = 192.0
 offset_bottom = 42.0
 
 [node name="Value1" type="LineEdit" parent="FilterPanel/HBoxContainer"]
@@ -65,7 +65,6 @@ flat = true
 [connection signal="pressed" from="FilterButton" to="." method="_on_filter_button_pressed"]
 [connection signal="focus_exited" from="LineEdit" to="." method="_on_text_focus_exited"]
 [connection signal="text_changed" from="LineEdit" to="." method="_on_text_changed"]
-[connection signal="text_submitted" from="LineEdit" to="." method="_on_text_submitted"]
 [connection signal="text_changed" from="FilterPanel/HBoxContainer/Value1" to="." method="_on_condition_changed"]
 [connection signal="item_selected" from="FilterPanel/HBoxContainer/Operator" to="." method="_on_condition_changed"]
 [connection signal="text_changed" from="FilterPanel/HBoxContainer/Value2" to="." method="_on_condition_changed"]
