@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bvx0t8yu4vne8" path="res://addons/dialogue_nodes/icons/bool.svg" id="5_fyv4x"]
 
 [node name="Variable0" type="HBoxContainer"]
-offset_right = 40.0
+offset_right = 320.0
 offset_bottom = 40.0
 script = ExtResource("1_o70cd")
 
@@ -62,4 +62,10 @@ layout_mode = 2
 layout_mode = 2
 icon = ExtResource("2_uy2mf")
 
+[connection signal="text_changed" from="Name" to="." method="_on_name_changed"]
+[connection signal="item_selected" from="Type" to="." method="_on_type_changed"]
+[connection signal="text_changed" from="StringValue" to="." method="_on_value_changed"]
+[connection signal="value_changed" from="IntValue" to="." method="_on_value_changed"]
+[connection signal="value_changed" from="FloatValue" to="." method="_on_value_changed"]
+[connection signal="toggled" from="BoolValue" to="." method="_on_value_changed"]
 [connection signal="pressed" from="DeleteButton" to="." method="_on_delete_pressed"]

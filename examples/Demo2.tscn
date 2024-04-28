@@ -36,6 +36,7 @@ grow_vertical = 2
 text = "Talk"
 
 [node name="DialogueBox" type="Panel" parent="."]
+visible = false
 custom_minimum_size = Vector2(256, 128)
 layout_mode = 1
 anchors_preset = 7

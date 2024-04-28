@@ -91,6 +91,5 @@ Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
 }
 }
 variables = {}
-comments = Array[String]([])
 strays = Array[String]([])
 characters = ""

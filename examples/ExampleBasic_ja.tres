@@ -17,27 +17,21 @@ nodes = {
 "dialogue": "This would be some Japanese text if I knew Japanese.",
 "offset": Vector2(220, 0),
 "options": {
-"0": {
+0: {
+"condition": {},
 "link": "END",
 "text": "こんにちは。"
 }
 },
-"size": {
-"x": 200.0,
-"y": 261.0
-},
+"size": Vector2(300, 261),
 "speaker": "Greg"
 },
 "2_1": {
 "comment": "A basic example",
 "offset": Vector2(-20, 80),
-"size": {
-"x": 200.0,
-"y": 122.0
-}
+"size": Vector2(200, 100)
 }
 }
 variables = {}
-comments = Array[String](["2_1"])
-strays = Array[String]([])
+strays = Array[String](["2_1"])
 characters = ""

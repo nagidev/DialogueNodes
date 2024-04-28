@@ -1,7 +1,7 @@
 @tool
 extends Panel
-class_name DialogueBox
 ## A node for displaying branching dialogues, primarily created using the Dialogue Nodes editor.
+class_name DialogueBox
 
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.
@@ -70,7 +70,7 @@ var running = false
 ## [Dictionary] containing all the variables defined in the [member DialogueBox.dialogue_data].
 var variables = {}
 ## [Array] of all the [Character] used for the dialogue dialogue_data.
-var characterList : CharacterList = null
+var character_list : CharacterList = null
 
 var _bbcode_regex : RegEx
 
@@ -188,11 +188,11 @@ func set_data(new_data : DialogueData):
 		_init_variables(dialogue_data.variables)
 
 		# load characters
-		characterList = null
+		character_list = null
 		if dialogue_data.characters.ends_with('.tres'):
 			var file = ResourceLoader.load(dialogue_data.characters, '', ResourceLoader.CACHE_MODE_REPLACE)
 			if file is CharacterList:
-				characterList = file
+				character_list = file
 
 
 func _init_variables(var_dict):
@@ -293,13 +293,13 @@ func _set_dialogue(dict):
 	portrait.hide()
 	if dict['speaker'] is String:
 		speaker.text = dict['speaker']
-	elif dict['speaker'] is int and characterList:
+	elif dict['speaker'] is int and character_list:
 		var idx = dict['speaker']
-		if idx > -1 and idx < characterList.characters.size():
-			speaker.text = characterList.characters[idx].name
-			speaker.modulate = characterList.characters[idx].color
-			if characterList.characters[idx].image:
-				portrait.texture = characterList.characters[idx].image
+		if idx > -1 and idx < character_list.characters.size():
+			speaker.text = character_list.characters[idx].name
+			speaker.modulate = character_list.characters[idx].color
+			if character_list.characters[idx].image:
+				portrait.texture = character_list.characters[idx].image
 				portrait.visible = not hide_portrait
 
 	dialogue.text = '' # workaround for bug
@@ -373,7 +373,7 @@ func _process_text(text : String, is_dialogue = true):
 		text = '[wait]' + text + '[/wait]'
 
 	# Find the actual position of the last character sans bbcode
-	var textLength = _bbcode_regex.sub(text, '', true).length()
+	var text_length = _bbcode_regex.sub(text, '', true).length()
 
 	# Update [wait] with last attribute for showing options
 	var idx = 0
@@ -396,9 +396,9 @@ func _process_text(text : String, is_dialogue = true):
 					idx = open_tag_end + 1
 				elif end_tag == idx:
 					var start_data = waits.pop_back()
-					var insertText = ' start='+str(start_data.start)+' last='+str(start_data.last)+' length='+str(textLength)
-					text = text.insert(start_data.at, insertText)
-					idx = end_tag + insertText.length() + 7
+					var insert_text = ' start='+str(start_data.start)+' last='+str(start_data.last)+' length='+str(text_length)
+					text = text.insert(start_data.at, insert_text)
+					idx = end_tag + insert_text.length() + 7
 				elif img_tag == idx:
 					idx = img_tag_end + 6
 				else:
@@ -415,8 +415,8 @@ func _process_text(text : String, is_dialogue = true):
 	# insert waits if any left
 	while len(waits) > 0:
 		var start_data = waits.pop_back()
-		var insertText = ' start='+str(start_data.start)+' last='+str(char_count - 1)+' length='+str(textLength)
-		text = text.insert(start_data.at, insertText)
+		var insert_text = ' start='+str(start_data.start)+' last='+str(char_count - 1)+' length='+str(text_length)
+		text = text.insert(start_data.at, insert_text)
 
 	return text
 
