@@ -3,24 +3,43 @@ extends GraphNode
 
 
 signal modified
-signal run_tree
+signal run_requested
 
-@onready var ID = $HBoxContainer/ID.text
+@onready var ID = $HBoxContainer/ID
+@onready var start_id : String = ID.text
+@onready var timer = $Timer
+
+var undo_redo : EditorUndoRedoManager
 
 
-# convert graph/tree from this node to data
-func tree_to_data(graph, data := DialogueData.new(), node : GraphNode = self):
-	var next_nodes = graph.get_next(node.name)
+func _to_dict(graph : GraphEdit):
+	var dict = {}
+	var connections = graph.get_connections(name)
+	
+	dict['start_id'] = start_id
+	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
+	
+	return dict
+
+
+func _from_dict(dict : Dictionary):
+	start_id = dict['start_id']
+	ID.text = start_id
+	return [dict['link']]
+
+
+## convert graph/tree from this node to data
+func tree_to_data(graph : GraphEdit, data := DialogueData.new(), node : GraphNode = self):
+	var next_nodes = graph.get_connections(node.name)
 	
 	# setup
 	if node == self:
-		if ID == '':
-			printerr(title, ' has no ID!')
+		if start_id == '':
 			return data
-		elif len(next_nodes) == 0:
+		elif next_nodes.size() == 0:
 			printerr(title, ' is not connected!')
 			return data
-		data.starts[ID] = name
+		data.starts[start_id] = name
 	
 	# add data for current node
 	data.nodes[node.name] = node._to_dict(graph)
@@ -29,63 +48,71 @@ func tree_to_data(graph, data := DialogueData.new(), node : GraphNode = self):
 	# add data for next nodes
 	for next_node in next_nodes:
 		# if node already defined in data
-		if data.nodes.has(next_node):
+		if data.nodes.has(next_node['to_node']):
 			continue
 		# get data from node
-		data = tree_to_data(graph, data, graph.get_node( NodePath(next_node) ))
+		data = tree_to_data(graph, data, graph.get_node(NodePath(next_node['to_node'])))
 	
 	return data
 
 
-func data_to_tree(workspace, data : DialogueData, node_name := name):
+## create tree on this node from the given data
+func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
 	var next_nodes = []
 	
 	# setup and end
 	if node_name == name:
-		next_nodes = _from_dict(workspace.graph, data.nodes[node_name])
-		workspace.request_node = node_name
-		workspace.request_slot = 0
+		next_nodes = _from_dict(data.nodes[node_name])
+		graph.request_node = node_name
+		graph.request_port = 0
 	elif node_name == 'END':
-		workspace.request_node = null
-		workspace.request_slot = null
+		graph.request_node = ''
+		graph.request_port = -1
 		return
-	elif not workspace.graph.has_node( NodePath(node_name) ):
+	elif not graph.has_node(NodePath(node_name)):
 		var type = int(node_name.split('_')[0])
 		var offset = data.nodes[node_name]['offset']
-		var node = workspace.add_node(type, null, node_name, offset)
-		next_nodes = node._from_dict(workspace.graph, data.nodes[node_name])
-	elif workspace.graph.has_node( NodePath(node_name) ):
-		workspace.graph.connect_node(workspace.request_node, workspace.request_slot, node_name, 0)
+		var node = graph.add_node(type, node_name, offset)
+		next_nodes = node._from_dict(data.nodes[node_name])
+	elif graph.has_node(NodePath(node_name)) and graph.request_port > -1:
+		graph.connect_node(graph.request_node, graph.request_port, node_name, 0)
 	
-	for i in range(len(next_nodes)):
-		workspace.request_node = node_name
-		workspace.request_slot = i
-		data_to_tree(workspace, data, next_nodes[i])
+	for i in range(next_nodes.size()):
+		graph.request_node = node_name
+		graph.request_port = i
+		data_to_tree(graph, data, next_nodes[i])
 
 
-func _to_dict(graph):
-	var dict = {}
-	var next = graph.get_next(name)
+func set_ID(new_id : String):
+	start_id = new_id
+	if ID.text != start_id:
+		ID.text = start_id
+
+
+func _on_ID_changed(_id):
+	timer.stop()
+	timer.start()
+
+
+func _on_timer_timeout():
+	if not undo_redo:
+		start_id = ID.text
+		return
 	
-	if len(next) == 0:
-		next.append('END')
-	
-	dict['start_id'] = ID
-	dict['link'] = next[0]
-	
-	return dict
-
-
-func _from_dict(graph, dict):
-	ID = dict['start_id']
-	get_node('HBoxContainer/ID').text = ID
-	return [dict['link']]
-
-
-func _on_ID_changed(new_id):
-	ID = new_id
-	modified.emit()
+	undo_redo.create_action('Set start ID')
+	undo_redo.add_do_method(self, 'set_ID', ID.text)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, 'set_ID', start_id)
+	undo_redo.commit_action()
 
 
 func _on_run_pressed():
-	run_tree.emit()
+	if start_id != '':
+		run_requested.emit()
+	else:
+		printerr(title, ' has no start_id!')
+
+
+func _on_modified():
+	modified.emit()

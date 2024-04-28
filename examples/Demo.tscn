@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bwk7tjlhnu23j"]
+[gd_scene load_steps=14 format=3 uid="uid://bwk7tjlhnu23j"]
 
 [ext_resource type="Script" path="res://examples/demo.gd" id="2"]
 [ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_r2hw0"]
@@ -10,7 +10,6 @@
 [ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_872se"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="8_kplwy"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="9_4rd6n"]
-[ext_resource type="Resource" uid="uid://dp3enlibqhftj" path="res://myDialogue.tres" id="9_qyrwr"]
 
 [sub_resource type="Curve" id="1"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.67805, 0.0, 0, 0]
@@ -33,7 +32,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("4")
 script = ExtResource("2")
-demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_r2hw0"), ExtResource("4_hv77k"), ExtResource("5_quhw6"), ExtResource("6_ncvoa"), ExtResource("7_sjqsf"), ExtResource("8_872se"), ExtResource("9_qyrwr")])
+demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_r2hw0"), ExtResource("4_hv77k"), ExtResource("5_quhw6"), ExtResource("6_ncvoa"), ExtResource("7_sjqsf"), ExtResource("8_872se")])
 
 [node name="DemoSelector" type="OptionButton" parent="."]
 layout_mode = 1

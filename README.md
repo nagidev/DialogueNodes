@@ -1,3 +1,4 @@
+![DialogueNodes icon](icon.svg)
 # DialogueNodes
 ![DialogueNodes editor](.screenshots/DN0.png)
 <img src='.screenshots/DN1.png' width='51%'/>
@@ -61,3 +62,7 @@ If you find any bugs or issues, [report them in the issues page](https://github.
 ## C# Support
 The addon was built using GDscript and has not been tested for a proper C# support. However you can check out this repo:
 [DialogueNodesForCSharp](https://github.com/germanbv/DialogueNodesForCSharp)
+
+####
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y07T1AW)
+

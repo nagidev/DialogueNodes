@@ -34,7 +34,7 @@ nodes = {
 "text": "Blue pill"
 }
 },
-"size": Vector2(300, 349.5),
+"size": Vector2(300, 275),
 "speaker": "Morpheus"
 },
 "1_2": {
@@ -47,7 +47,7 @@ nodes = {
 "text": "Uh..."
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 242),
 "speaker": "Morpheus"
 },
 "1_3": {
@@ -60,7 +60,7 @@ nodes = {
 "text": "Oh..."
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 242),
 "speaker": "Morpheus"
 },
 "1_4": {
@@ -73,7 +73,7 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 242.948),
 "speaker": "Greg"
 },
 "1_5": {
@@ -91,22 +91,15 @@ nodes = {
 },
 "2_1": {
 "comment": "Create branching dialogues using different options.",
-"offset": Vector2(-20, 80),
-"size": {
-"x": 204.0,
-"y": 237.0
-}
+"offset": Vector2(-200, 80),
+"size": Vector2(392.562, 100)
 },
 "2_2": {
 "comment": "Create multiple dialogue trees in the same file.",
-"offset": Vector2(-20, 680),
-"size": {
-"x": 204.0,
-"y": 237.0
-}
+"offset": Vector2(-200, 680),
+"size": Vector2(392.562, 100)
 }
 }
 variables = {}
-comments = Array[String](["2_1", "2_2"])
-strays = Array[String]([])
+strays = Array[String](["2_1", "2_2"])
 characters = ""

@@ -47,7 +47,7 @@ Like: You have {{COINS}} coins!",
 "text": "Nothing"
 }
 },
-"size": Vector2(300, 307),
+"size": Vector2(300, 308),
 "speaker": "Greg"
 },
 "1_3": {
@@ -93,7 +93,7 @@ Current value: {{COINS}}
 "text": "Bye"
 }
 },
-"size": Vector2(300, 274),
+"size": Vector2(300, 275),
 "speaker": "Greg"
 },
 "1_6": {
@@ -150,7 +150,7 @@ Current value: {{COINS}}
 "text": "Bye"
 }
 },
-"size": Vector2(300, 274),
+"size": Vector2(300, 275),
 "speaker": "Greg"
 },
 "4_1": {
@@ -175,6 +175,5 @@ variables = {
 "value": 10.0
 }
 }
-comments = Array[String]([])
 strays = Array[String]([])
 characters = ""

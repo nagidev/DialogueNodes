@@ -57,6 +57,5 @@ Additionally you can pass a value with the signal and use it in your code.",
 }
 }
 variables = {}
-comments = Array[String]([])
 strays = Array[String]([])
 characters = ""

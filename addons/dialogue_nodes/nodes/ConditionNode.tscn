@@ -4,7 +4,7 @@
 
 [node name="ConditionNode" type="GraphNode"]
 offset_right = 300.0
-offset_bottom = 159.0
+offset_bottom = 110.0
 title = "ConditionNode"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -35,20 +35,22 @@ slot/2/right_icon = null
 slot/2/draw_stylebox = true
 script = ExtResource("1")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 2
 
-[node name="Value1" type="LineEdit" parent="HBoxContainer"]
+[node name="Value1" type="LineEdit" parent="BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "The property to set the value of."
 placeholder_text = "Value"
+metadata/last_value = ""
 
-[node name="Operator" type="OptionButton" parent="HBoxContainer"]
+[node name="Operator" type="OptionButton" parent="BoxContainer"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
 tooltip_text = "The type of the value to set."
 item_count = 6
+selected = 0
 popup/item_0/text = "=="
 popup/item_0/id = 0
 popup/item_1/text = "!="
@@ -62,12 +64,13 @@ popup/item_4/id = 4
 popup/item_5/text = "<="
 popup/item_5/id = 5
 
-[node name="Value2" type="LineEdit" parent="HBoxContainer"]
+[node name="Value2" type="LineEdit" parent="BoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "The value to set the property to.
 Eg: Bob, 12, 0.5, false, etc."
 placeholder_text = "Value"
+metadata/last_value = ""
 
 [node name="TrueLabel" type="ItemList" parent="."]
 layout_mode = 2
@@ -83,6 +86,16 @@ auto_height = true
 item_count = 1
 item_0/text = "False"
 
-[connection signal="text_changed" from="HBoxContainer/Value1" to="." method="set_value"]
-[connection signal="item_selected" from="HBoxContainer/Operator" to="." method="set_type"]
-[connection signal="text_changed" from="HBoxContainer/Value2" to="." method="set_value"]
+[node name="Value1Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="Value2Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="text_changed" from="BoxContainer/Value1" to="." method="_on_value1_changed"]
+[connection signal="item_selected" from="BoxContainer/Operator" to="." method="_on_operator_selected"]
+[connection signal="text_changed" from="BoxContainer/Value2" to="." method="_on_value2_changed"]
+[connection signal="timeout" from="Value1Timer" to="." method="_on_value1_timer_timeout"]
+[connection signal="timeout" from="Value2Timer" to="." method="_on_value2_timer_timeout"]
