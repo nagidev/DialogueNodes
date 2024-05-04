@@ -7,11 +7,13 @@ extends Control
 @onready var add_menu = $Main/ToolBar/AddMenu
 @onready var run_menu = $Main/ToolBar/RunMenu
 @onready var workspace = $Main/Workspace
-@onready var dialogue_background = $DialogueBackground
-@onready var dialogue_box = $DialogueBox
+@onready var side_panel = $Main/Workspace/SidePanel
 @onready var files = $Main/Workspace/SidePanel/Files
 @onready var characters = $Main/Workspace/SidePanel/Data/Characters
+@onready var panel_toggle = $Main/Statusbar/PanelToggle
 @onready var version_number = $Main/Statusbar/VersionNumber
+@onready var dialogue_background = $DialogueBackground
+@onready var dialogue_box = $DialogueBox
 
 var undo_redo : EditorUndoRedoManager
 var graph : GraphEdit
@@ -58,6 +60,28 @@ func _on_debug_menu_pressed(idx : int):
 			popup.set_item_checked(idx, _debug)
 
 
+func _on_run_menu_about_to_popup():
+	if not is_instance_valid(graph): return
+	
+	run_menu.get_popup().clear()
+	
+	if graph.starts.size() == 0:
+		run_menu.get_popup().add_item('Add a Start Node first!')
+		run_menu.get_popup().set_item_disabled(0, true)
+		return
+	
+	graph.starts.sort_custom(func (node_name1, node_name2):
+		var id1 = graph.get_node(NodePath(node_name1)).start_id
+		var id2 = graph.get_node(NodePath(node_name2)).start_id
+		return id1 < id2
+		)
+	
+	for start_node_name in graph.starts:
+		var start_id = graph.get_node(NodePath(start_node_name)).start_id
+		if start_id != '':
+			run_menu.get_popup().add_item(start_id)
+
+
 func _on_files_changed():
 	add_menu.visible = files.item_count > 0
 	run_menu.visible = add_menu.visible
@@ -83,29 +107,12 @@ func _on_files_changed():
 		_add_menu_initialized = true
 
 
+func _on_files_toggle_button_pressed():
+	side_panel.visible = panel_toggle.button_pressed
+
+
 func _on_version_number_pressed():
 	DisplayServer.clipboard_set('v'+version_number.text)
-
-
-func _on_run_menu_about_to_popup():
-	if not is_instance_valid(graph): return
-	
-	run_menu.get_popup().clear()
-	
-	if graph.starts.size() == 0:
-		run_menu.get_popup().add_item('Add a Start Node first!')
-		run_menu.get_popup().set_item_disabled(0, true)
-		return
-	
-	graph.starts.sort_custom(func (node_name1, node_name2):
-		var id1 = graph.get_node(NodePath(node_name1)).start_id
-		var id2 = graph.get_node(NodePath(node_name2)).start_id
-		return id1 < id2
-		)
-	
-	for start_node_name in graph.starts:
-		var start_id = graph.get_node(NodePath(start_node_name)).start_id
-		run_menu.get_popup().add_item(start_id)
 
 
 func _on_dialogue_background_input(event : InputEvent):

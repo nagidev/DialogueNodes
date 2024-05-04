@@ -274,5 +274,6 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), Sub
 [connection signal="text_changed" from="Main/Workspace/SidePanel/Data/Characters/HBoxContainer/FilePath" to="Main/Workspace/SidePanel/Data/Characters" method="_on_file_path_text_changed"]
 [connection signal="pressed" from="Main/Workspace/SidePanel/Data/Characters/HBoxContainer/LoadButton" to="Main/Workspace/SidePanel/Data/Characters" method="_on_load_button_pressed"]
 [connection signal="file_selected" from="Main/Workspace/SidePanel/Data/Characters/OpenDialog" to="Main/Workspace/SidePanel/Data/Characters" method="_on_file_selected"]
+[connection signal="pressed" from="Main/Statusbar/PanelToggle" to="." method="_on_files_toggle_button_pressed"]
 [connection signal="pressed" from="Main/Statusbar/VersionNumber" to="." method="_on_version_number_pressed"]
 [connection signal="gui_input" from="DialogueBackground" to="." method="_on_dialogue_background_input"]
