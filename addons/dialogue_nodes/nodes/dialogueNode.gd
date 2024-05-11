@@ -7,13 +7,13 @@ signal character_list_requested(dialogue_node : GraphNode)
 signal disconnection_from_request(from_node : String, from_port : int)
 signal connection_shift_request(from_node : String, old_port : int, new_port : int)
 
-@export var max_options = 4
+@export var max_options := 4
 @export var resize_timer : Timer
 @export var custom_speaker_timer : Timer
 @export var dialogue_timer : Timer
 
 @onready var speaker = %Speaker
-@onready var custom_speaker := %CustomSpeaker
+@onready var custom_speaker = %CustomSpeaker
 @onready var character_toggle = %CharacterToggle
 @onready var dialogue = %Dialogue
 @onready var dialogue_panel = %DialoguePanel
@@ -42,7 +42,7 @@ func _ready():
 	update_slots()
 
 
-func _to_dict(graph):
+func _to_dict(graph : GraphEdit):
 	var dict = {}
 	
 	if custom_speaker.visible:
@@ -58,7 +58,7 @@ func _to_dict(graph):
 	dict['size'] = size
 	
 	# get options connected to other nodes
-	var options_dict = {}
+	var options_dict := {}
 	for connection in graph.get_connections(name):
 		var idx : int = connection['from_port'] # this returns index starting from 0
 		
@@ -111,17 +111,17 @@ func _from_dict(dict : Dictionary):
 	
 	# add new options
 	for idx in dict['options']:
-		var condition = {}
+		var condition := {}
 		if dict['options'][idx].has('condition'):
 			condition = dict['options'][idx]['condition']
-		var new_option = OptionScene.instantiate()
+		var new_option := OptionScene.instantiate()
 		add_option(new_option, first_option_index + int(idx))
 		new_option.set_text(dict['options'][idx]['text'])
 		new_option.set_condition(condition)
 		next_nodes.append(dict['options'][idx]['link'])
-	# add empty option is any space left
+	# add empty option if any space left
 	if options.size() < max_options and options[-1].text != '':
-		var new_option = OptionScene.instantiate()
+		var new_option := OptionScene.instantiate()
 		add_option(new_option)
 	update_slots()
 	
@@ -138,18 +138,18 @@ func _from_dict(dict : Dictionary):
 	return next_nodes
 
 
-func set_custom_speaker(new_custom_speaker):
+func set_custom_speaker(new_custom_speaker : String):
 	if custom_speaker.text != new_custom_speaker:
 		custom_speaker.text = new_custom_speaker
 	last_custom_speaker = custom_speaker.text
 
 
-func toggle_speaker_input(use_speaker_list):
+func toggle_speaker_input(use_speaker_list : bool):
 	custom_speaker.visible = not use_speaker_list
 	speaker.visible = use_speaker_list
 
 
-func set_dialogue_text(new_text):
+func set_dialogue_text(new_text : String):
 	if dialogue.text != new_text:
 		dialogue.text = new_text
 	if dialogue_expanded.text != new_text:
@@ -172,7 +172,7 @@ func add_option(option : BoxContainer, to_idx := -1):
 		)
 	
 	# shift slot connections
-	var idx = options.find(option)
+	var idx := options.find(option)
 	for i in range(options.size() - 1, idx, -1):
 		if options[i].text != '':
 			connection_shift_request.emit(name, i - 1, i)
@@ -180,7 +180,7 @@ func add_option(option : BoxContainer, to_idx := -1):
 
 func remove_option(option : BoxContainer):
 	# shift slot connections
-	var idx = options.find(option)
+	var idx := options.find(option)
 	for i in range(idx, options.size() - 1):
 		if options[i + 1].text != '':
 			connection_shift_request.emit(name, i + 1, i)
@@ -198,7 +198,7 @@ func update_slots():
 		return
 	
 	for option in options:
-		var enabled = option.text != ''
+		var enabled : bool = option.text != ''
 		set_slot(option.get_index(), false, 0, base_color, enabled, 0, base_color)
 
 

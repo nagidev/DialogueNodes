@@ -7,10 +7,10 @@ signal modified
 @onready var var_container = $ScrollContainer/VBoxContainer
 
 var undo_redo : EditorUndoRedoManager
-var variable_item_scene = preload('res://addons/dialogue_nodes/editor/VariableItem.tscn')
+var variable_item_scene := preload('res://addons/dialogue_nodes/editor/VariableItem.tscn')
 
 
-func get_data() -> Dictionary:
+func get_data():
 	var dict := {}
 	
 	for child in var_container.get_children():
@@ -22,18 +22,18 @@ func get_data() -> Dictionary:
 	return dict
 
 
-func load_data(dict: Dictionary):
+func load_data(dict : Dictionary):
 	# remove old variables
 	clear()
 	
 	# add values
 	for var_name in dict:
-		add_variable(var_name, dict[var_name], -1, true)
+		add_variable(var_name, dict[var_name])
 
 
 ## add new variable item to the list
-func add_variable(new_name= '', data= {'type': TYPE_STRING, 'value': ''}, to_idx= -1, skip_signal= false):
-	var new_variable = variable_item_scene.instantiate()
+func add_variable(new_name:= '', data:= {'type': TYPE_STRING, 'value': ''}, to_idx:= -1):
+	var new_variable := variable_item_scene.instantiate()
 	var_container.add_child(new_variable, true)
 	
 	if to_idx > -1:
@@ -44,14 +44,11 @@ func add_variable(new_name= '', data= {'type': TYPE_STRING, 'value': ''}, to_idx
 	new_variable.modified.connect(_on_modified)
 	new_variable.delete_requested.connect(_on_delete_requested)
 	
-	if not skip_signal:
-		_on_modified()
-	
 	return new_variable
 
 
 ## remove the variable with at the given index (idx)
-func remove_variable(idx: int):
+func remove_variable(idx : int):
 	var variable = var_container.get_child(idx)
 	variable.queue_free()
 	_on_modified()
@@ -64,7 +61,7 @@ func clear():
 			child.queue_free()
 
 
-func get_variable(var_name):
+func get_variable(var_name : String):
 	for child in var_container.get_children():
 		if child is HBoxContainer and child.get_var_name() == var_name:
 			return child
@@ -73,14 +70,16 @@ func get_variable(var_name):
 	return null
 
 
-func get_value(var_name):
+func get_value(var_name : String):
 	return get_variable(var_name).get_value()
 
 
-func set_value(var_name, value):
+func set_value(var_name : String, value):
 	if var_name == '':
 		return
-	get_variable(var_name).set_value(value)
+	var variable = get_variable(var_name)
+	if not variable: return
+	variable.set_value(value)
 
 
 func _on_add_button_pressed():
@@ -90,16 +89,18 @@ func _on_add_button_pressed():
 	
 	undo_redo.create_action('Create variable')
 	undo_redo.add_do_method(self, 'add_variable')
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, 'remove_variable', -1)
 	undo_redo.commit_action()
 
 
-func _on_delete_requested(variable: HBoxContainer):
+func _on_delete_requested(variable : BoxContainer):
 	if not undo_redo:
 		variable.queue_free()
 		return
 	
-	var idx = variable.get_index()
+	var idx := variable.get_index()
 	undo_redo.create_action('Delete variable')
 	undo_redo.add_do_method(var_container, 'remove_child', variable)
 	undo_redo.add_do_method(self, '_on_modified')

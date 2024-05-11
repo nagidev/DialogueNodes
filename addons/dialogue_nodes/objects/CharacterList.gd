@@ -1,5 +1,5 @@
 @icon("res://addons/dialogue_nodes/icons/CharacterList.svg")
-extends Resource
-class_name CharacterList
+## An array containing multiple [param Character]s.
+class_name CharacterList extends Resource
 
 @export var characters : Array[Character]

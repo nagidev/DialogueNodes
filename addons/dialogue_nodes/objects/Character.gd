@@ -1,6 +1,6 @@
 @icon("res://addons/dialogue_nodes/icons/Character.svg")
-extends Resource
-class_name Character
+## The data for a speaker in a dialogue.
+class_name Character extends Resource
 
 @export var name : String = ''
 @export var image : Texture2D

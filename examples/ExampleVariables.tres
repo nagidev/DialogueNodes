@@ -172,7 +172,7 @@ Current value: {{COINS}}
 variables = {
 "COINS": {
 "type": 2,
-"value": 10.0
+"value": 10
 }
 }
 strays = Array[String]([])
