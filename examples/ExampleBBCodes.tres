@@ -28,7 +28,7 @@ nodes = {
 "text": "Nah"
 }
 },
-"size": Vector2(300, 349.5),
+"size": Vector2(300, 254),
 "speaker": "Greg"
 },
 "1_2": {
@@ -41,11 +41,11 @@ nodes = {
 "text": "..."
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
 "1_3": {
-"dialogue": "You can write special keywords between [ ] for different effects.",
+"dialogue": "You can write special keywords between [lb] & ] for different effects.",
 "offset": Vector2(560, 0),
 "options": {
 0: {
@@ -54,7 +54,7 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
 "1_4": {
@@ -67,12 +67,12 @@ nodes = {
 "text": ""
 }
 },
-"size": Vector2(300, 312.5),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
 "1_5": {
-"dialogue": "You can even combine two or more effects to create [rainbow][wave]EVEN MORE AWESOME EFFECTS![/wave][/rainbow]
-Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
+"dialogue": "You can even combine two or more effects to create [rainbow][wave]EVEN MORE AWESOME EFFECTS![/wave][/rainbow][br]
+Usage: [lb]effect1] [lb]effect2] text goes here [lb]/effect2] [lb]s/effect1]",
 "offset": Vector2(1240, 0),
 "options": {
 0: {
@@ -86,7 +86,7 @@ Usage: [effect1] [effect2] text goes here [/effect2] [/effect1]",
 "text": "Got it!"
 }
 },
-"size": Vector2(300, 349.5),
+"size": Vector2(300, 254),
 "speaker": "Greg"
 }
 }

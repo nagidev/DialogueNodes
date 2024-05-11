@@ -13,8 +13,8 @@ var undo_redo : EditorUndoRedoManager
 
 
 func _to_dict(graph : GraphEdit):
-	var dict = {}
-	var connections = graph.get_connections(name)
+	var dict := {}
+	var connections : Array = graph.get_connections(name)
 	
 	dict['start_id'] = start_id
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
@@ -30,7 +30,7 @@ func _from_dict(dict : Dictionary):
 
 ## convert graph/tree from this node to data
 func tree_to_data(graph : GraphEdit, data := DialogueData.new(), node : GraphNode = self):
-	var next_nodes = graph.get_connections(node.name)
+	var next_nodes : Array = graph.get_connections(node.name)
 	
 	# setup
 	if node == self:
@@ -58,7 +58,7 @@ func tree_to_data(graph : GraphEdit, data := DialogueData.new(), node : GraphNod
 
 ## create tree on this node from the given data
 func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
-	var next_nodes = []
+	var next_nodes := []
 	
 	# setup and end
 	if node_name == name:
@@ -70,9 +70,9 @@ func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
 		graph.request_port = -1
 		return
 	elif not graph.has_node(NodePath(node_name)):
-		var type = int(node_name.split('_')[0])
-		var offset = data.nodes[node_name]['offset']
-		var node = graph.add_node(type, node_name, offset)
+		var type := int(node_name.split('_')[0])
+		var offset : Vector2 = data.nodes[node_name]['offset']
+		var node : GraphNode = graph.add_node(type, node_name, offset)
 		next_nodes = node._from_dict(data.nodes[node_name])
 	elif graph.has_node(NodePath(node_name)) and graph.request_port > -1:
 		graph.connect_node(graph.request_node, graph.request_port, node_name, 0)

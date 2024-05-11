@@ -3,21 +3,21 @@ extends HBoxContainer
 
 
 signal modified
-signal delete_requested(node)
+signal delete_requested(node : BoxContainer)
 
-@onready var var_name : LineEdit = $Name
+@onready var var_name = $Name
 @onready var type = $Type
-@onready var string_value : LineEdit = $StringValue
-@onready var int_value : SpinBox = $IntValue
-@onready var float_value : SpinBox = $FloatValue
-@onready var bool_value : CheckBox = $BoolValue
+@onready var string_value = $StringValue
+@onready var int_value = $IntValue
+@onready var float_value = $FloatValue
+@onready var bool_value = $BoolValue
 
+const types := [TYPE_STRING, TYPE_INT, TYPE_FLOAT, TYPE_BOOL]
 var undo_redo : EditorUndoRedoManager
 var last_set_name : String
 var last_set_type : int
 var last_shown_input : Control
-var last_value = ['', 0, 0.0, false]
-var types = [TYPE_STRING, TYPE_INT, TYPE_FLOAT, TYPE_BOOL]
+var last_value := ['', 0, 0.0, false]
 
 
 func _ready():
@@ -43,13 +43,13 @@ func set_var_name(new_name : String):
 func get_value():
 	match types[type.selected]:
 		TYPE_STRING:
-			return string_value.text
+			return str(string_value.text)
 		TYPE_INT:
-			return int_value.value
+			return int(int_value.value)
 		TYPE_FLOAT:
-			return float_value.value
+			return float(float_value.value)
 		TYPE_BOOL:
-			return bool_value.button_pressed
+			return bool(bool_value.button_pressed)
 	return ''
 
 
@@ -95,9 +95,9 @@ func set_type(new_idx : int):
 
 
 func get_data():
-	var type = type.get_item_id(type.selected)
-	var value = get_value()
-	return {'type': type, 'value': value}
+	var data_type : int = type.get_item_id(type.selected)
+	var data_value = get_value()
+	return {'type': data_type, 'value': data_value}
 
 
 func load_data(new_name : String, data : Dictionary):
@@ -107,7 +107,7 @@ func load_data(new_name : String, data : Dictionary):
 	set_value(data['value'])
 
 
-func _on_name_changed(new_text):
+func _on_name_changed(new_text : String):
 	if not undo_redo:
 		return
 	
@@ -119,7 +119,7 @@ func _on_name_changed(new_text):
 	undo_redo.commit_action()
 
 
-func _on_type_changed(new_idx: int):
+func _on_type_changed(new_idx : int):
 	if not undo_redo:
 		set_type(new_idx)
 		return

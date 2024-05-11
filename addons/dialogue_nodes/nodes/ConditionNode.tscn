@@ -37,6 +37,7 @@ script = ExtResource("1")
 
 [node name="BoxContainer" type="BoxContainer" parent="."]
 layout_mode = 2
+vertical = true
 
 [node name="Value1" type="LineEdit" parent="BoxContainer"]
 layout_mode = 2
@@ -48,7 +49,7 @@ metadata/last_value = ""
 [node name="Operator" type="OptionButton" parent="BoxContainer"]
 custom_minimum_size = Vector2(48, 0)
 layout_mode = 2
-tooltip_text = "The type of the value to set."
+size_flags_horizontal = 4
 item_count = 6
 selected = 0
 popup/item_0/text = "=="

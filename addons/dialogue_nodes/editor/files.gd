@@ -5,9 +5,9 @@ extends ItemList
 signal file_list_changed
 signal file_switched
 
-@export var editor_path : NodePath
-@export var workspace_path : NodePath
-@export var data_path : NodePath
+@export var editor : Control
+@export var workspace : Control
+@export var data_container : Control
 
 @onready var popup_menu = $PopupMenu
 @onready var new_dialog = $NewDialog
@@ -18,19 +18,12 @@ signal file_switched
 const VariablesScene = preload("res://addons/dialogue_nodes/editor/Variables.tscn")
 const GraphScene = preload("res://addons/dialogue_nodes/editor/Graph.tscn")
 
-var editor
-var workspace
-var data_container
 var file_icon := preload('res://addons/dialogue_nodes/icons/Script.svg')
 var cur_idx := -1
 var deletion_queue := []
 
 
 func _ready():
-	editor = get_node(editor_path)
-	workspace = get_node(workspace_path)
-	data_container = get_node(data_path)
-	
 	confirm_dialog.get_ok_button().hide()
 	confirm_dialog.add_button('Save', true, 'save_file')
 	confirm_dialog.add_button('Discard', true, 'discard_file')
@@ -43,14 +36,14 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 	var new_idx : int = item_count
 	
 	# check if the file is already loaded
-	var already_loaded : = false
+	var already_loaded := false
 	for idx in range(item_count):
 		if get_item_metadata(idx)['path'] == path:
 			new_idx = idx
 			already_loaded = true
 	
 	if not already_loaded:
-		var metadata = {
+		var metadata := {
 			'display_name': file_name,
 			'path': path,
 			'characters': data.characters,
@@ -60,7 +53,7 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 			}
 		
 		# create graph node for this file
-		var graph = GraphScene.instantiate()
+		var graph := GraphScene.instantiate()
 		add_child(graph)
 		graph.undo_redo = editor.undo_redo
 		graph.modified.connect(_on_data_modified)
@@ -69,7 +62,7 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 		metadata['graph'] = graph
 		
 		# create variables node for this file
-		var variables = VariablesScene.instantiate()
+		var variables := VariablesScene.instantiate()
 		add_child(variables)
 		variables.undo_redo = editor.undo_redo
 		variables.modified.connect(_on_data_modified)
@@ -81,7 +74,7 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 		add_item(file_name, file_icon)
 		set_item_metadata(new_idx, metadata)
 	
-		# change if the file name is already in use
+		# change display name if the file name is already in use
 		for idx in range(item_count):
 			if idx != new_idx and get_item_text(idx) == file_name:
 				show_dir(idx)
@@ -96,9 +89,9 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 	file_list_changed.emit()
 
 
-func show_dir(idx: int):
-	var metadata = get_item_metadata(idx)
-	var parts = metadata['path'].split('/')
+func show_dir(idx : int):
+	var metadata := get_item_metadata(idx)
+	var parts : Array = metadata['path'].split('/')
 	if parts[-2] != '':
 		var display_name = parts[-2] + '/' + parts[-1]
 		metadata['display_name'] = display_name
@@ -106,9 +99,9 @@ func show_dir(idx: int):
 		set_item_metadata(idx, metadata)
 
 
-func new_file(path: String):
+func new_file(path : String):
 	var file_name : String = path.split('/')[-1]
-	var data = DialogueData.new()
+	var data := DialogueData.new()
 	
 	# create entry for file
 	create_entry(file_name, path, data)
@@ -120,9 +113,9 @@ func new_file(path: String):
 		print('File created: ', path)
 
 
-func open_file(path: String):
+func open_file(path : String):
 	var file_name : String = path.split('/')[-1]
-	var data = ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_IGNORE)
+	var data := ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_IGNORE)
 	if not data is DialogueData:
 		printerr('File is not supported!')
 		return
@@ -137,7 +130,7 @@ func open_file(path: String):
 func save_file(idx := cur_idx):
 	if idx < 0: return
 	
-	var metadata = get_item_metadata(idx)
+	var metadata := get_item_metadata(idx)
 	
 	var data : DialogueData = metadata['graph'].get_data()
 	if idx == cur_idx:
@@ -154,7 +147,7 @@ func save_file(idx := cur_idx):
 	set_modified(idx, false)
 	
 	# load new resource so Godot knows to replace it
-	var _data = ResourceLoader.load(metadata['path'], '', ResourceLoader.CACHE_MODE_REPLACE)
+	var _data := ResourceLoader.load(metadata['path'], '', ResourceLoader.CACHE_MODE_REPLACE)
 	
 	if editor._debug:
 		print('File saved: ', metadata['path'])
@@ -162,7 +155,7 @@ func save_file(idx := cur_idx):
 
 func save_as(path : String):
 	var file_name : String = path.split('/')[-1]
-	var metadata = get_item_metadata(cur_idx)
+	var metadata := get_item_metadata(cur_idx)
 	
 	var data : DialogueData = metadata['graph'].get_data()
 	data.characters = data_container.get_node('Characters').get_data()
@@ -187,7 +180,7 @@ func close_file(idx := cur_idx):
 	if item_count == 0: return
 	
 	idx = wrapi(idx, 0, item_count)
-	var metadata = get_item_metadata(idx)
+	var metadata := get_item_metadata(idx)
 
 	if metadata['modified'] and not idx in deletion_queue:
 		deletion_queue.append(idx)
@@ -240,7 +233,7 @@ func switch_file(idx : int, ensure_path := ''):
 		return
 	
 	idx = wrapi(idx, 0, item_count)
-	var new_metadata = get_item_metadata(idx)
+	var new_metadata := get_item_metadata(idx)
 	
 	# ensure the path is the same
 	if ensure_path != '' and new_metadata['path'] != ensure_path:
@@ -248,7 +241,7 @@ func switch_file(idx : int, ensure_path := ''):
 	
 	# remove previous nodes if any and update character metadata
 	if cur_idx > -1:
-		var cur_metadata = get_item_metadata(cur_idx)
+		var cur_metadata := get_item_metadata(cur_idx)
 		if workspace.has_node('Graph'):
 			editor.add_menu.get_popup().id_pressed.disconnect(cur_metadata['graph']._on_add_menu_pressed)
 			data_container.get_node('Characters').characters_updated.disconnect(cur_metadata['graph']._on_characters_updated)
@@ -275,10 +268,10 @@ func set_modified(idx : int, value : bool):
 	if cur_idx == -1:
 		return
 	
-	var metadata = get_item_metadata(idx)
+	var metadata := get_item_metadata(idx)
 	metadata['modified'] = value
 	set_item_metadata(idx, metadata)
-	var suffix = '(*)' if value else ''
+	var suffix := '(*)' if value else ''
 	set_item_text(idx, metadata['display_name'] + suffix)
 
 
@@ -290,7 +283,7 @@ func get_current_metadata():
 
 func _on_empty_clicked(at_pos : Vector2, mouse_button_index : int):
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		var pop_pos = at_pos + global_position + Vector2(get_window().position)
+		var pop_pos := at_pos + global_position + Vector2(get_window().position)
 		popup_menu.popup(Rect2(pop_pos, popup_menu.size))
 
 
@@ -344,8 +337,8 @@ func _on_file_selected(idx : int):
 		switch_file(idx)
 		return
 	
-	var cur_metadata = get_item_metadata(cur_idx)
-	var new_metadata = get_item_metadata(idx)
+	var cur_metadata := get_item_metadata(cur_idx)
+	var new_metadata := get_item_metadata(idx)
 	
 	editor.undo_redo.create_action('Switch file')
 	editor.undo_redo.add_do_method(self, 'switch_file', idx, new_metadata['path'])

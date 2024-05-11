@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene load_steps=20 format=3 uid="uid://bqscglixmr4bd"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1_3rdab"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="1_k6kh1"]
@@ -7,26 +7,30 @@
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="3_lyina"]
 [ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="5_x76rf"]
 [ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="6_onucw"]
-[ext_resource type="FontFile" uid="uid://dv4rnn0ml62q3" path="res://addons/dialogue_nodes/themes/Poppins-Bold.ttf" id="7_uim1c"]
-[ext_resource type="FontFile" uid="uid://bhtf12vvs2yjq" path="res://addons/dialogue_nodes/themes/Poppins-BoldItalic.ttf" id="8_5wtlr"]
-[ext_resource type="FontFile" uid="uid://bcg26eik2m2o8" path="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf" id="9_dh3fc"]
-[ext_resource type="FontFile" uid="uid://b1bq3eoec0j1b" path="res://addons/dialogue_nodes/themes/Poppins-Regular.ttf" id="10_w1rj0"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="11_ciaia"]
+[ext_resource type="FontFile" uid="uid://dv4rnn0ml62q3" path="res://addons/dialogue_nodes/themes/Poppins-Bold.ttf" id="8_bfbn1"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="8_njjsn"]
+[ext_resource type="FontFile" uid="uid://bhtf12vvs2yjq" path="res://addons/dialogue_nodes/themes/Poppins-BoldItalic.ttf" id="9_wsvtm"]
+[ext_resource type="FontFile" uid="uid://bcg26eik2m2o8" path="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf" id="10_ffgcm"]
+[ext_resource type="FontFile" uid="uid://b1bq3eoec0j1b" path="res://addons/dialogue_nodes/themes/Poppins-Regular.ttf" id="11_4inri"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="11_8juv3"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="12_c8yxi"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="13_debg3"]
 
-[sub_resource type="Theme" id="Theme_3a3k7"]
-default_font = ExtResource("10_w1rj0")
-RichTextLabel/fonts/bold_font = ExtResource("7_uim1c")
-RichTextLabel/fonts/bold_italics_font = ExtResource("8_5wtlr")
-RichTextLabel/fonts/italics_font = ExtResource("9_dh3fc")
-RichTextLabel/fonts/normal_font = ExtResource("10_w1rj0")
+[sub_resource type="Theme" id="Theme_iaxpe"]
+default_font = ExtResource("8_bfbn1")
+RichTextLabel/fonts/bold_font = ExtResource("8_bfbn1")
+RichTextLabel/fonts/bold_italics_font = ExtResource("9_wsvtm")
+RichTextLabel/fonts/italics_font = ExtResource("10_ffgcm")
+RichTextLabel/fonts/normal_font = ExtResource("11_4inri")
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_orqxx"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_ogokn"]
 script = ExtResource("12_c8yxi")
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_ynero"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_w8v0c"]
 script = ExtResource("13_debg3")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_vxsx5"]
+script = ExtResource("11_8juv3")
 
 [node name="Editor" type="Control"]
 custom_minimum_size = Vector2(0, 300)
@@ -122,15 +126,15 @@ clip_contents = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="Files" type="ItemList" parent="Main/Workspace/SidePanel"]
+[node name="Files" type="ItemList" parent="Main/Workspace/SidePanel" node_paths=PackedStringArray("editor", "workspace", "data_container")]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
 allow_rmb_select = true
 script = ExtResource("2_7c672")
-editor_path = NodePath("../../../..")
-workspace_path = NodePath("../..")
-data_path = NodePath("../Data")
+editor = NodePath("../../../..")
+workspace = NodePath("../..")
+data_container = NodePath("../Data")
 
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/SidePanel/Files"]
 item_count = 4
@@ -240,23 +244,21 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="DialogueBox" type="Panel" parent="."]
-visible = false
-custom_minimum_size = Vector2(256, 128)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
+offset_left = -400.0
 offset_top = -128.0
-offset_right = 320.0
+offset_right = 400.0
 offset_bottom = 128.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_3a3k7")
-script = ExtResource("11_ciaia")
-custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_orqxx"), SubResource("RichTextEffect_ynero")])
+theme = SubResource("Theme_iaxpe")
+script = ExtResource("8_njjsn")
+custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_ogokn"), SubResource("RichTextEffect_w8v0c"), SubResource("RichTextEffect_vxsx5")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_on_run_menu_about_to_popup"]
 [connection signal="empty_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_empty_clicked"]

@@ -40,7 +40,7 @@ nodes = {
 "speaker": 1
 },
 "1_3": {
-"dialogue": "[wait]Funny thing is, you don't have to do anything in the dialogue editor.[/wait]
+"dialogue": "[wait]Funny thing is, you don't have to do anything in the dialogue editor.[/wait][br]
 [wait time=1]Its just the signal connected in the scene's script[/wait]",
 "offset": Vector2(900, 0),
 "options": {

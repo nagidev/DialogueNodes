@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterList" load_steps=6 format=3 uid="uid://di21ijmfa2s22"]
+[gd_resource type="Resource" script_class="CharacterList" load_steps=7 format=3 uid="uid://di21ijmfa2s22"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/CharacterList.gd" id="1"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/Character.gd" id="2"]
@@ -15,6 +15,11 @@ name = "Clara"
 image = ExtResource("3")
 color = Color(1, 0.501961, 0.784314, 1)
 
+[sub_resource type="Resource" id="Resource_uc76g"]
+script = ExtResource("2")
+name = "Binkle Doodle"
+color = Color(1, 1, 0.52549, 1)
+
 [resource]
 script = ExtResource("1")
-characters = Array[ExtResource("2")]([SubResource("1"), SubResource("2")])
+characters = Array[ExtResource("2")]([SubResource("1"), SubResource("2"), SubResource("Resource_uc76g")])

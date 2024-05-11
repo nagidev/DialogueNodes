@@ -38,16 +38,16 @@ func _ready():
 	version_number.text = config.get_value('plugin', 'version')
 
 
-func run_tree(start_node_idx: int):
+func run_tree(start_node_idx : int):
 	if not is_instance_valid(graph): return
 	
-	var start_node = graph.get_node(NodePath(graph.starts[start_node_idx]))
+	var start_node := graph.get_node(NodePath(graph.starts[start_node_idx]))
 	var data := DialogueData.new()
 	data = start_node.tree_to_data(graph, data)
 	data.characters = characters.get_data()
 	data.variables = variables.get_data()
 	
-	dialogue_box.set_data(data)
+	dialogue_box.data = data
 	dialogue_box.start(start_node.start_id)
 	dialogue_background.show()
 
@@ -55,7 +55,7 @@ func run_tree(start_node_idx: int):
 func _on_debug_menu_pressed(idx : int):
 	match (idx):
 		0:
-			var popup = debug_menu.get_popup()
+			var popup : PopupMenu = debug_menu.get_popup()
 			_debug = !_debug
 			popup.set_item_checked(idx, _debug)
 
@@ -71,13 +71,13 @@ func _on_run_menu_about_to_popup():
 		return
 	
 	graph.starts.sort_custom(func (node_name1, node_name2):
-		var id1 = graph.get_node(NodePath(node_name1)).start_id
-		var id2 = graph.get_node(NodePath(node_name2)).start_id
+		var id1 : String = graph.get_node(NodePath(node_name1)).start_id
+		var id2 : String = graph.get_node(NodePath(node_name2)).start_id
 		return id1 < id2
 		)
 	
 	for start_node_name in graph.starts:
-		var start_id = graph.get_node(NodePath(start_node_name)).start_id
+		var start_id : String = graph.get_node(NodePath(start_node_name)).start_id
 		if start_id != '':
 			run_menu.get_popup().add_item(start_id)
 
@@ -91,7 +91,7 @@ func _on_files_changed():
 	
 	if files.item_count == 0: return
 	
-	var new_metadata = files.get_current_metadata()
+	var new_metadata : Dictionary = files.get_current_metadata()
 	
 	if new_metadata.is_empty():
 		graph = null
@@ -128,12 +128,12 @@ func _on_dialogue_started(id : String):
 		print_debug('Dialogue started: ', id)
 
 
-func _on_dialogue_option_selected(idx):
+func _on_dialogue_option_selected(idx : int):
 	if _debug:
-		print('Option selected. idx: ', idx, ', text: "', dialogue_box.options.get_child(idx).text, '"')
+		print('Option selected. idx: ', idx, ', text: "', dialogue_box.options_container.get_child(idx).text, '"')
 
 
-func _on_dialogue_variable_changed(var_name, value):
+func _on_dialogue_variable_changed(var_name : String, value):
 	variables.set_value(var_name, value)
 	files.set_modified(files.cur_idx, true)
 	
@@ -141,7 +141,7 @@ func _on_dialogue_variable_changed(var_name, value):
 		print('Variable changed:', var_name, ', value:', value)
 
 
-func _on_dialogue_signal(value):
+func _on_dialogue_signal(value : String):
 	if _debug:
 		print('Dialogue emitted signal with value:', value)
 

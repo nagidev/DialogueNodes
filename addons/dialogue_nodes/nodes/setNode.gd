@@ -17,8 +17,8 @@ var last_value : String
 
 
 func _to_dict(graph : GraphEdit):
-	var dict = {}
-	var connections = graph.get_connections(name)
+	var dict := {}
+	var connections : Array = graph.get_connections(name)
 	
 	dict['variable'] = variable.text
 	dict['type'] = type.selected
