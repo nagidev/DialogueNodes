@@ -12,8 +12,8 @@ var last_value := ''
 
 
 func _to_dict(graph : GraphEdit):
-	var dict = {}
-	var connections = graph.get_connections(name)
+	var dict := {}
+	var connections : Array = graph.get_connections(name)
 	
 	dict['signalValue'] = value.text
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'

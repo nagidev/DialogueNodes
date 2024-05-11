@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bwk7tjlhnu23j"]
+[gd_scene load_steps=18 format=3 uid="uid://bwk7tjlhnu23j"]
 
 [ext_resource type="Script" path="res://examples/demo.gd" id="2"]
 [ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_r2hw0"]
@@ -8,8 +8,10 @@
 [ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_ncvoa"]
 [ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_sjqsf"]
 [ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_872se"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/dialogueBox.gd" id="8_kplwy"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="9_4rd6n"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_chp3k"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="12_mrg0x"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="13_583e8"]
 
 [sub_resource type="Curve" id="1"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.67805, 0.0, 0, 0]
@@ -19,8 +21,14 @@ point_count = 2
 offsets = PackedFloat32Array(0, 0.332268, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1)
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_fpwbw"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_wmns8"]
 script = ExtResource("9_4rd6n")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_jqe1g"]
+script = ExtResource("12_mrg0x")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_j1cit"]
+script = ExtResource("13_583e8")
 
 [node name="Demo" type="Control"]
 texture_filter = 1
@@ -102,22 +110,21 @@ hue_variation_max = 1.0
 
 [node name="DialogueBox" type="Panel" parent="."]
 visible = false
-custom_minimum_size = Vector2(256, 128)
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -406.0
-offset_top = -296.0
-offset_right = 407.0
-offset_bottom = -32.0
+offset_left = -500.0
+offset_top = -272.0
+offset_right = 500.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("8_kplwy")
+script = ExtResource("9_chp3k")
 start_id = "START"
-custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_fpwbw")])
+custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_wmns8"), SubResource("RichTextEffect_jqe1g"), SubResource("RichTextEffect_j1cit")])
 
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
 [connection signal="pressed" from="StartButton" to="." method="_on_Button_pressed"]
