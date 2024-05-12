@@ -1,17 +1,17 @@
 [gd_scene load_steps=18 format=3 uid="uid://bwk7tjlhnu23j"]
 
-[ext_resource type="Script" path="res://examples/demo.gd" id="2"]
-[ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_r2hw0"]
-[ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="4"]
-[ext_resource type="Resource" uid="uid://btriowhsx04c2" path="res://examples/ExampleBBCodes.tres" id="4_hv77k"]
-[ext_resource type="Resource" uid="uid://bjme2drtas671" path="res://examples/ExampleBranching.tres" id="5_quhw6"]
-[ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_ncvoa"]
-[ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_sjqsf"]
-[ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_872se"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="9_4rd6n"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_chp3k"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="12_mrg0x"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="13_583e8"]
+[ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="1_qerq3"]
+[ext_resource type="Script" path="res://examples/demo.gd" id="2_5ddyy"]
+[ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_yex7d"]
+[ext_resource type="Resource" uid="uid://btriowhsx04c2" path="res://examples/ExampleBBCodes.tres" id="4_ay03t"]
+[ext_resource type="Resource" uid="uid://bjme2drtas671" path="res://examples/ExampleBranching.tres" id="5_ifbb7"]
+[ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_arg21"]
+[ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_18syg"]
+[ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_4fu3f"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_s4y1y"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="10_wwm1y"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="11_iuh66"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="12_cnev0"]
 
 [sub_resource type="Curve" id="1"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.67805, 0.0, 0, 0]
@@ -22,13 +22,13 @@ offsets = PackedFloat32Array(0, 0.332268, 1)
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1)
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_wmns8"]
-script = ExtResource("9_4rd6n")
+script = ExtResource("10_wwm1y")
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_jqe1g"]
-script = ExtResource("12_mrg0x")
+script = ExtResource("11_iuh66")
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_j1cit"]
-script = ExtResource("13_583e8")
+script = ExtResource("12_cnev0")
 
 [node name="Demo" type="Control"]
 texture_filter = 1
@@ -38,9 +38,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("4")
-script = ExtResource("2")
-demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_r2hw0"), ExtResource("4_hv77k"), ExtResource("5_quhw6"), ExtResource("6_ncvoa"), ExtResource("7_sjqsf"), ExtResource("8_872se")])
+theme = ExtResource("1_qerq3")
+script = ExtResource("2_5ddyy")
+demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_yex7d"), ExtResource("4_ay03t"), ExtResource("5_ifbb7"), ExtResource("6_arg21"), ExtResource("7_18syg"), ExtResource("8_4fu3f")])
 
 [node name="DemoSelector" type="OptionButton" parent="."]
 layout_mode = 1
@@ -122,7 +122,7 @@ offset_right = 500.0
 offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
-script = ExtResource("9_chp3k")
+script = ExtResource("9_s4y1y")
 start_id = "START"
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_wmns8"), SubResource("RichTextEffect_jqe1g"), SubResource("RichTextEffect_j1cit")])
 

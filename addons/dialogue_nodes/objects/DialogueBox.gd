@@ -1,6 +1,7 @@
 @tool
 ## A node for displaying branching dialogues, primarily created using the Dialogue Nodes editor.
-class_name DialogueBox extends Panel
+class_name DialogueBox
+extends Panel
  
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.

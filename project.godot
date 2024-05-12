@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="DialogueNodes"
-run/main_scene="res://examples/Demo.tscn"
+run/main_scene="res://examples/Demo1.tscn"
 config/features=PackedStringArray("4.2")
 config/icon="res://icon.svg"
 

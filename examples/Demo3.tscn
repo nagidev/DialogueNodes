@@ -1,0 +1,114 @@
+[gd_scene load_steps=23 format=3 uid="uid://dhwoh3ay4mp3c"]
+
+[ext_resource type="Script" path="res://examples/demo3.gd" id="1_2a8yf"]
+[ext_resource type="AudioStream" uid="uid://bin1ei6yesmjv" path="res://examples/voice.ogg" id="2_bjs48"]
+[ext_resource type="Theme" uid="uid://b4f152moh4ayu" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="3_xmmjy"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="4_tmfyu"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="5_vs72k"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="6_pkic0"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBubble.gd" id="7_wf6dy"]
+[ext_resource type="Resource" uid="uid://cwtdfv6yke8ri" path="res://examples/ExampleBubble.tres" id="8_qbppo"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xk202"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_7mdvo"]
+sky_material = SubResource("ProceduralSkyMaterial_xk202")
+
+[sub_resource type="Environment" id="Environment_80dc1"]
+background_mode = 2
+sky = SubResource("Sky_7mdvo")
+tonemap_mode = 3
+ssao_enabled = true
+sdfgi_enabled = true
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wc4o7"]
+albedo_color = Color(0.278431, 0.231373, 0.470588, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s62kf"]
+material = SubResource("StandardMaterial3D_wc4o7")
+size = Vector3(100, 1, 100)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wtg46"]
+albedo_color = Color(0.560784, 0.870588, 0.364706, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ck5hd"]
+material = SubResource("StandardMaterial3D_wtg46")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_42irw"]
+albedo_color = Color(1, 0.54902, 0.639216, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ruvw0"]
+material = SubResource("StandardMaterial3D_42irw")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_m8p2i"]
+albedo_color = Color(1, 1, 0.513726, 1)
+
+[sub_resource type="PrismMesh" id="PrismMesh_jeho0"]
+material = SubResource("StandardMaterial3D_m8p2i")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_akgkw"]
+script = ExtResource("4_tmfyu")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_el6u0"]
+script = ExtResource("5_vs72k")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_oo7i8"]
+script = ExtResource("6_pkic0")
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_2a8yf")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.970995, 0.126469, 0.202912, 0.148113, 0.984374, 0.0952352, -0.187697, 0.122527, -0.974555, 0, 0, 0)
+light_color = Color(1, 0.878551, 0.784915, 1)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_80dc1")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.06069, 0)
+mesh = SubResource("BoxMesh_s62kf")
+
+[node name="Greg" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.59386, 0, -2.1098)
+mesh = SubResource("SphereMesh_ck5hd")
+
+[node name="Clara" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3228, 1.21788, -1.67157)
+mesh = SubResource("SphereMesh_ruvw0")
+
+[node name="Binkle" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.958628, -0.264975, 0.104022, 0.180335, 0.848039, 0.498306, -0.220253, -0.458932, 0.860738, -0.716, -2, -4.783)
+mesh = SubResource("PrismMesh_jeho0")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.993087, 0.0320453, -0.112922, 0, 0.962013, 0.273002, 0.117381, -0.271115, 0.955363, 0.157186, 1.15744, 1.00156)
+
+[node name="FocusPoint" type="Node3D" parent="."]
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="FocusPoint"]
+stream = ExtResource("2_bjs48")
+panning_strength = 5.0
+
+[node name="DialogueBubble" type="RichTextLabel" parent="."]
+clip_contents = false
+offset_left = 493.0
+offset_top = 338.0
+offset_right = 633.0
+offset_bottom = 361.0
+theme = ExtResource("3_xmmjy")
+bbcode_enabled = true
+text = "Sample dialogue."
+fit_content = true
+autowrap_mode = 0
+custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffect_el6u0"), SubResource("RichTextEffect_oo7i8")]
+script = ExtResource("7_wf6dy")
+data = ExtResource("8_qbppo")
+dialogue_custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffect_el6u0"), SubResource("RichTextEffect_oo7i8")]
+
+[connection signal="dialogue_processed" from="DialogueBubble" to="." method="_on_dialogue_processed"]
+[connection signal="dialogue_signal" from="DialogueBubble" to="." method="_on_dialogue_signal"]
