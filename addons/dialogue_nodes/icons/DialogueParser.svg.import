@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5wgoe1rpbf31"
-path="res://.godot/imported/CharacterList.svg-83222511b7ebf193c7042c4f541d1914.ctex"
+uid="uid://dr0i7ng6lymhm"
+path="res://.godot/imported/DialogueParser.svg-d0149a02a1ec195e3bd77e339994df1d.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/icons/CharacterList.svg"
-dest_files=["res://.godot/imported/CharacterList.svg-83222511b7ebf193c7042c4f541d1914.ctex"]
+source_file="res://addons/dialogue_nodes/icons/DialogueParser.svg"
+dest_files=["res://.godot/imported/DialogueParser.svg-d0149a02a1ec195e3bd77e339994df1d.ctex"]
 
 [params]
 

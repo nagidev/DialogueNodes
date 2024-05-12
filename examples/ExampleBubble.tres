@@ -1,0 +1,224 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://cwtdfv6yke8ri"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_lj414"]
+
+[resource]
+script = ExtResource("1_lj414")
+starts = {
+"START": &"0_1"
+}
+nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(0, 200),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "Hey Clara!",
+"offset": Vector2(220, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_2",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 0
+},
+"1_10": {
+"dialogue": "[wait speed=5]Uhh...[/wait]",
+"offset": Vector2(3540, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_7",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 0
+},
+"1_11": {
+"dialogue": "What the f--",
+"offset": Vector2(4800, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_12",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 0
+},
+"1_12": {
+"dialogue": "...and it just went away like that.",
+"offset": Vector2(5140, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_13",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": 1
+},
+"1_13": {
+"dialogue": "So weird...",
+"offset": Vector2(5480, 200),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": 0
+},
+"1_14": {
+"dialogue": "[wait speed=5]Wha...[/wait]",
+"offset": Vector2(2860, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_9",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 0
+},
+"1_15": {
+"dialogue": "Yeah, I mea--",
+"offset": Vector2(2520, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_14",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 0
+},
+"1_2": {
+"dialogue": "Hey Greg.",
+"offset": Vector2(580, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_3",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 1
+},
+"1_3": {
+"dialogue": "What's up?",
+"offset": Vector2(920, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_4",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 1
+},
+"1_4": {
+"dialogue": "What a peaceful day, right?",
+"offset": Vector2(1260, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_5",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 0
+},
+"1_5": {
+"dialogue": "I know, right?!",
+"offset": Vector2(1600, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_6",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 1
+},
+"1_6": {
+"dialogue": "I sure hope nothing weird happens...",
+"offset": Vector2(1940, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"3_1",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 1
+},
+"1_7": {
+"dialogue": "[shake]What is that?![/shake]",
+"offset": Vector2(3880, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_8",
+"text": ""
+}
+},
+"size": Vector2(300, 240.001),
+"speaker": 1
+},
+"1_8": {
+"dialogue": "[wave]waponka dooby lum lum![/wave]",
+"offset": Vector2(4220, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"3_2",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 2
+},
+"1_9": {
+"dialogue": "bunga cowa!",
+"offset": Vector2(3200, 200),
+"options": {
+0: {
+"condition": {},
+"link": &"1_10",
+"text": ""
+}
+},
+"size": Vector2(300.001, 240.001),
+"speaker": 2
+},
+"3_1": {
+"link": &"1_15",
+"offset": Vector2(2280, 200),
+"signalValue": "doodle_in"
+},
+"3_2": {
+"link": &"1_11",
+"offset": Vector2(4560, 200),
+"signalValue": "doodle_out"
+}
+}
+variables = {}
+strays = Array[String]([])
+characters = "res://examples/Characters.tres"

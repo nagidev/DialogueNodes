@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b5wgoe1rpbf31"
-path="res://.godot/imported/CharacterList.svg-83222511b7ebf193c7042c4f541d1914.ctex"
+uid="uid://fqpf7kdjqa6m"
+path="res://.godot/imported/DialogueBubble.svg-459bd1b1f9c5c0fab5c392594cf078e0.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/icons/CharacterList.svg"
-dest_files=["res://.godot/imported/CharacterList.svg-83222511b7ebf193c7042c4f541d1914.ctex"]
+source_file="res://addons/dialogue_nodes/icons/DialogueBubble.svg"
+dest_files=["res://.godot/imported/DialogueBubble.svg-459bd1b1f9c5c0fab5c392594cf078e0.ctex"]
 
 [params]
 

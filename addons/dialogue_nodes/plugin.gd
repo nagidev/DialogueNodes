@@ -5,7 +5,8 @@ extends EditorPlugin
 const EditorScene = preload('res://addons/dialogue_nodes/Editor.tscn')
 const DialogueBoxScene = preload('res://addons/dialogue_nodes/objects/DialogueBox.gd')
 const DialogueBubbleScene = preload('res://addons/dialogue_nodes/objects/DialogueBubble.gd')
-const DialogueBoxIcon = preload('res://addons/dialogue_nodes/icons/Dialogue.svg')
+const DialogueBoxIcon = preload('res://addons/dialogue_nodes/icons/DialogueBox.svg')
+const DialogueBubbleIcon = preload('res://addons/dialogue_nodes/icons/DialogueBubble.svg')
 
 var editor
 
@@ -31,7 +32,7 @@ func _enter_tree():
 		'DialogueBubble',
 		'RichTextLabel',
 		DialogueBubbleScene,
-		DialogueBoxIcon
+		DialogueBubbleIcon
 	)
 	
 	print_debug('Plugin Enabled')
