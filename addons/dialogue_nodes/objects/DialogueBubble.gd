@@ -2,7 +2,8 @@
 ## A node for displaying branching dialogues, primarily created using the Dialogue Nodes editor.[br]
 ## NOTE: This node is not good at handling long paragraphs of text. It is recommended to use [DialogueBox] instead, or create your custom implementation using [DialogueParser].
 ## @experimental
-class_name DialogueBubble extends RichTextLabel
+class_name DialogueBubble
+extends RichTextLabel
 
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.

@@ -1,6 +1,7 @@
 ## Data for processing dialogue through a [param DialogueParser].
-@icon("res://addons/dialogue_nodes/icons/Dialogue.svg")
-class_name DialogueData extends Resource
+@icon('res://addons/dialogue_nodes/icons/Dialogue.svg')
+class_name DialogueData
+extends Resource
 
 ## Contains the start IDs as keys and their respective node name as values.
 ## Example: { "START": "0_1" }

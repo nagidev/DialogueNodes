@@ -1,6 +1,8 @@
 @tool
 ## A parser for reading and processing [param DialogueData] files
-class_name DialogueParser extends Node
+@icon('res://addons/dialogue_nodes/icons/DialogueParser.svg')
+class_name DialogueParser
+extends Node
 # TODO : Fix [wait] bbcode
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.
@@ -285,7 +287,7 @@ func _update_wait_tags(node : RichTextLabel, value : String):
 	# find the actual position of the last character sans bbcode
 	value = value.replace('\n', ' ').replace('[br]', '\n')
 	node.text = value
-	print('# parsed text: ', node.get_parsed_text()) #
+	
 	var text_length := node.get_parsed_text().length() - value.count('\n')
 	
 	# update [wait] with last attribute for showing options
