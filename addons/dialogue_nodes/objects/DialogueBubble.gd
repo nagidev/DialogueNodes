@@ -45,11 +45,11 @@ signal dialogue_ended
 			follow_node = value
 		else:
 			printerr('Follow node must be of the type Node2D, Node3D or any of their sub classes.')
-## Enable for smooth animation when changing follow_node.
-@export var smooth_follow := true
+## The speed at which the [DialogueBubble] moves towards the [member follow_node]'s location
+@export_range(1, 60) var smooth_follow := 10
 ## The distance at which the [DialogueBubble] would be positioned from the [member follow_node].[br]
 ## NOTE: The size of the [DialogueBubble] is also taken as a factor when calculating the distance.
-@export var bubble_offset := 128
+@export var bubble_offset := 72
 ## The color of the tail of the [DialogueBubble].
 @export var tail_color := Color('#222') :
 	set(value):
@@ -57,7 +57,7 @@ signal dialogue_ended
 		if tail:
 			tail.color = tail_color
 ## The distance between the origin point of the [member follow_node] and the end of the tail.
-@export var tail_offset := 64
+@export var tail_offset := 32
 ## The width of the base of the tail.
 @export var tail_base := 8
 
@@ -210,7 +210,7 @@ func _process(delta):
 	
 	if follow_node is Node2D:
 		camera = get_viewport().get_camera_2d()
-		screen_center = camera.global_position
+		screen_center = camera.global_position if camera else get_viewport_rect().size * 0.5
 		follow_pos = follow_node.global_position
 	elif follow_node is Node3D:
 		camera = get_viewport().get_camera_3d()
@@ -218,17 +218,17 @@ func _process(delta):
 		follow_pos = camera.unproject_position(follow_node.global_position)
 		_visible_on_screen_notifier.global_position = follow_node.global_position
 	
-	var angle := (position + size * 0.5).angle_to_point(follow_pos)
+	var angle := screen_center.angle_to_point(follow_pos)
 	var size_offset := Vector2(cos(angle) * size.x * 0.5, sin(angle) * size.y * 0.5)
 	target_pos = follow_pos + follow_pos.direction_to(screen_center) * (bubble_offset) - size_offset
 	if follow_pos == screen_center:
 		target_pos += Vector2(1, -1).normalized() * bubble_offset
 	
-	if follow_node is Node3D and target_pos.distance_to(position) > screen_center.distance_to(Vector2.ZERO):
+	if follow_node is Node3D and target_pos.distance_to(position) > screen_center.distance_to(Vector2.ZERO) * 1.8:
 		position = target_pos
 	
 	pivot_offset = follow_pos - position
-	position = lerp(position, target_pos - size * 0.5, 20 * delta) if smooth_follow else target_pos - size * 0.5
+	position = lerp(position, target_pos - size * 0.5, smooth_follow * delta)
 	
 	var dir : Vector2 = follow_pos.direction_to(position + size * 0.5)
 	var perp = dir.rotated(PI * 0.5)
