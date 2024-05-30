@@ -195,6 +195,9 @@ func _enter_tree():
 	_sub_container.add_child(options_container)
 	options_container.alignment = BoxContainer.ALIGNMENT_END
 	max_options_count = max_options_count
+	options_alignment = options_alignment
+	options_vertical = options_vertical
+	options_position = options_position
 	
 	_dialogue_parser = DialogueParser.new()
 	add_child(_dialogue_parser)
@@ -216,11 +219,6 @@ func _ready():
 			_wait_effect = effect
 			_wait_effect.wait_finished.connect(_on_wait_finished)
 			break
-	
-	if options_container:
-		options_alignment = options_alignment
-		options_vertical = options_vertical
-		options_position = options_position
 	
 	hide()
 
