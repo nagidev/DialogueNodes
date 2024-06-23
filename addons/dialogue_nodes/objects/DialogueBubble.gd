@@ -280,7 +280,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	# set speaker
 	speaker_label.text = ''
 	if speaker is Character:
-		speaker_label.text = speaker.name
+		speaker_label.text = speaker.translated_name
 		speaker_label.modulate = speaker.color
 	elif speaker is String:
 		speaker_label.text = speaker

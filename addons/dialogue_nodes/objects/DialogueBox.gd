@@ -281,7 +281,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	portrait.texture = null
 	portrait.visible = not hide_portrait
 	if speaker is Character:
-		speaker_label.text = speaker.name
+		speaker_label.text = speaker.translated_name
 		speaker_label.modulate = speaker.color
 		portrait.texture = speaker.image
 		if not speaker.image: portrait.hide()

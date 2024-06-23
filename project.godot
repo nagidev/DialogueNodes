@@ -42,6 +42,7 @@ ui_cancel={
 locale/translation_remaps={
 "res://examples/ExampleBasic.tres": PackedStringArray("res://examples/ExampleBasic_ja.tres:ja")
 }
+locale/translations=PackedStringArray("res://examples/translation.en.translation", "res://examples/translation.ja.translation")
 locale/locale_filter_mode=0
 
 [rendering]

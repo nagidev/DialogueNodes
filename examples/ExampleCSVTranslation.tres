@@ -1,0 +1,80 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://b6b25b7jb7wve"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_yxtnf"]
+
+[resource]
+script = ExtResource("1_yxtnf")
+starts = {
+"START": &"0_1"
+}
+nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(-100, 240),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "INTRODUCTION",
+"offset": Vector2(220, 320),
+"options": {
+0: {
+"condition": {},
+"link": &"1_2",
+"text": ""
+}
+},
+"size": Vector2(300, 242),
+"speaker": ""
+},
+"1_2": {
+"dialogue": "SPEAKER_NOTE",
+"offset": Vector2(540, 300),
+"options": {
+0: {
+"condition": {},
+"link": &"1_5",
+"text": "CONTINUE"
+}
+},
+"size": Vector2(300, 240),
+"speaker": "SPEAKER_A"
+},
+"1_4": {
+"dialogue": "VARIABLE_NOTE",
+"offset": Vector2(1180, 240),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": ""
+},
+"1_5": {
+"dialogue": "TEXT_WITH_A_VARIABLE",
+"offset": Vector2(860, 280),
+"options": {
+0: {
+"condition": {},
+"link": &"1_4",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": ""
+}
+}
+variables = {
+"TEST_STRING": {
+"type": 4,
+"value": "TEST_STRING"
+},
+"TEST_VAR": {
+"type": 2,
+"value": 4
+}
+}
+strays = Array[String]([])
+characters = ""
