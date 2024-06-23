@@ -2,8 +2,8 @@ keys,en,ja
 INTRODUCTION,This dialogue is localized using a .csv file.,I still don't speak japanese but you get the text that i specified in the .csv file for japanese.
 CONTINUE,Continue,Continue (but japanese)
 SPEAKER_A,Charlemagne,Karl der Große
-SPEAKER_NOTE,The names of the speaker as well as the options can also be translated.,Look at my name. Did you know that Charlemange is called "Karl der Große" in german? (literally Karl the great / big)
+SPEAKER_NOTE,The names of the speakers and also the options can be translated.,Look at my name. Did you know that Charlemange is called "Karl der Große" in german? (literally Karl the great / big)
 SPEAKER_B,Robert,Roberuto
-TEXT_WITH_A_VARIABLE,Variblaes in the translated text are replaced. Therefore i can access the TEST_VAR variable: {{TEST_VAR}}.,Even here i can access TEST_VAR: {{TEST_VAR}}.
-VARIABLE_NOTE,Even variables of the type string are translated. TEST_STRING: {{TEST_STRING}},Still no japanese but at least variables of the type string are translated. TEST_STRING: {{TEST_STRING}}
+TEXT_WITH_A_VARIABLE,Variables in the translated text are replaced. Therefore i can access the TEST_VAR variable: {{TEST_VAR}}.,Even here i can access TEST_VAR: {{TEST_VAR}}.
+VARIABLE_NOTE,Variables of the type string are also translated. TEST_STRING: {{TEST_STRING}},Still no japanese but at least variable gets translated. TEST_STRING: {{TEST_STRING}}
 TEST_STRING,This is the english text.,I wish i could speak japanese but sadly i can't.
