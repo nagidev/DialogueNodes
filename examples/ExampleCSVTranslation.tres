@@ -36,12 +36,12 @@ nodes = {
 "text": "CONTINUE"
 }
 },
-"size": Vector2(300, 240),
+"size": Vector2(300, 242),
 "speaker": "SPEAKER_A"
 },
 "1_4": {
 "dialogue": "VARIABLE_NOTE",
-"offset": Vector2(1180, 240),
+"offset": Vector2(1180, 260),
 "options": {
 0: {
 "condition": {},
@@ -63,7 +63,7 @@ nodes = {
 }
 },
 "size": Vector2(300, 240),
-"speaker": ""
+"speaker": 3
 }
 }
 variables = {
@@ -77,4 +77,4 @@ variables = {
 }
 }
 strays = Array[String]([])
-characters = ""
+characters = "res://examples/Characters.tres"

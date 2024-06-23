@@ -130,13 +130,15 @@ func _process_dialogue(dict : Dictionary):
 	elif dict.speaker is int and characters.size() > 0 and dict.speaker < characters.size():
 		speaker = characters[dict.speaker]
 	
-	var dialogue_text = _parse_variables(dict.dialogue)
+	# translating the the dialogue before replacing the variables
+	var dialogue_text = _parse_variables(tr(dict.dialogue))
 	
 	var option_texts : Array[String] = []
 	_option_links.clear()
 	for option in dict.options.values():
 		if option.condition.is_empty() or _check_condition(option.condition):
-			option_texts.append(_parse_variables(option.text))
+			# translating the option before replacing the variables
+			option_texts.append(_parse_variables(tr(option.text)))
 			_option_links.append(option.link)
 	
 	dialogue_processed.emit(speaker, dialogue_text, option_texts)
@@ -246,9 +248,6 @@ func _check_condition(dict : Dictionary):
 # Replaces all {{}} variables with their corresponding values in the value string.
 # If variable is not found in [member DialogueParse.variables], it is substituted with an empty string along with a console error.
 func _parse_variables(value : String):
-	# tranlsate value before parsing
-	value = tr(value)
-
 	# check for missing }}
 	if value.count('{{') != value.count('}}'):
 		printerr('Failed to parse variables. Missing {{ or }}.')
