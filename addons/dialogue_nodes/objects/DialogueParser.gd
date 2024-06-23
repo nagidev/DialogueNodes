@@ -126,7 +126,7 @@ func _process_dialogue(dict : Dictionary):
 	var speaker = ''
 	
 	if dict.speaker is String:
-		speaker = dict.speaker
+		speaker = tr(dict.speaker)
 	elif dict.speaker is int and characters.size() > 0 and dict.speaker < characters.size():
 		speaker = characters[dict.speaker]
 	
@@ -246,16 +246,21 @@ func _check_condition(dict : Dictionary):
 # Replaces all {{}} variables with their corresponding values in the value string.
 # If variable is not found in [member DialogueParse.variables], it is substituted with an empty string along with a console error.
 func _parse_variables(value : String):
+	# tranlsate value before parsing
+	value = tr(value)
+
 	# check for missing }}
 	if value.count('{{') != value.count('}}'):
 		printerr('Failed to parse variables. Missing {{ or }}.')
 		return value
 	
-	# format floats to display properly
+	# format floats to display properly and translate strings
 	var formatted_variables := {}
 	for key in variables.keys():
 		if variables[key] is float:
 			formatted_variables[key] = '%0.2f' % variables[key]
+		elif variables[key] is String:
+			formatted_variables[key] = tr(variables[key])
 		else:
 			formatted_variables[key] = variables[key]
 	

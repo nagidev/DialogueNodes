@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://bwk7tjlhnu23j"]
+[gd_scene load_steps=19 format=3 uid="uid://bwk7tjlhnu23j"]
 
 [ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="1_qerq3"]
 [ext_resource type="Script" path="res://examples/demo.gd" id="2_5ddyy"]
@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_arg21"]
 [ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_18syg"]
 [ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_4fu3f"]
+[ext_resource type="Resource" uid="uid://b6b25b7jb7wve" path="res://examples/ExampleCSVTranslation.tres" id="9_may22"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_s4y1y"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="10_wwm1y"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="11_iuh66"]
@@ -40,7 +41,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_qerq3")
 script = ExtResource("2_5ddyy")
-demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_yex7d"), ExtResource("4_ay03t"), ExtResource("5_ifbb7"), ExtResource("6_arg21"), ExtResource("7_18syg"), ExtResource("8_4fu3f")])
+demos = Array[Resource("res://addons/dialogue_nodes/objects/DialogueData.gd")]([ExtResource("3_yex7d"), ExtResource("4_ay03t"), ExtResource("5_ifbb7"), ExtResource("6_arg21"), ExtResource("7_18syg"), ExtResource("8_4fu3f"), ExtResource("9_may22")])
 
 [node name="DemoSelector" type="OptionButton" parent="."]
 layout_mode = 1
@@ -129,4 +130,3 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_wmns8"), Sub
 [connection signal="item_selected" from="DemoSelector" to="." method="_on_demo_selected"]
 [connection signal="pressed" from="StartButton" to="." method="_on_Button_pressed"]
 [connection signal="item_selected" from="Locale" to="." method="_on_locale_selected"]
-[connection signal="dialogue_signal" from="DialogueBox" to="." method="_on_dialogue_signal"]
