@@ -83,13 +83,15 @@ func _get_all_files(path: String, file_ext := "", files := []):
 
 
 func _load_translations():
+	var translation_files = _get_all_files("res://", "translation")
+	if (translation_files.size() == 0):
+		return
+
 	var current_locale = TranslationServer.get_locale()
-	
 	if not current_locale in TranslationServer.get_loaded_locales():
 		current_locale = "en"
 	
 	TranslationServer.clear()
-	var translation_files = _get_all_files("res://", "translation")
 	for translation_path in translation_files:
 		TranslationServer.add_translation(load(translation_path))
 	
@@ -140,6 +142,11 @@ func _on_locale_menu_about_to_popup():
 	for locale in TranslationServer.get_loaded_locales():
 		locales[locale] = true
 		
+	if locales.size() == 0:
+		locale_menu.get_popup().add_item('Add a translation file first!')
+		locale_menu.get_popup().set_item_disabled(0, true)
+		return
+	
 	for locale in locales:
 		locale_menu.get_popup().add_item(locale)
 
