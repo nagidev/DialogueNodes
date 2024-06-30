@@ -124,19 +124,32 @@ func _process_start(dict : Dictionary):
 # Processes the dialogue node data (dict).
 func _process_dialogue(dict : Dictionary):
 	var speaker = ''
+
+	var translate_function : Callable = tr
+	if Engine.is_editor_hint():
+		# Godots TranslationServer won't translate in the editor therefore it has to be done manually
+		var translation : Translation = TranslationServer.get_translation_object(TranslationServer.get_locale())
+		if translation:
+			translate_function = func(input):
+				var translated = translation.get_message(input)
+				return str(translated)
+		else:
+			translate_function = func(input): return input
 	
 	if dict.speaker is String:
-		speaker = dict.speaker
+		speaker = translate_function.call(dict.speaker)
 	elif dict.speaker is int and characters.size() > 0 and dict.speaker < characters.size():
 		speaker = characters[dict.speaker]
 	
-	var dialogue_text = _parse_variables(dict.dialogue)
+	# translating the the dialogue before replacing the variables
+	var dialogue_text = _parse_variables(translate_function.call(dict.dialogue))
 	
 	var option_texts : Array[String] = []
 	_option_links.clear()
 	for option in dict.options.values():
 		if option.condition.is_empty() or _check_condition(option.condition):
-			option_texts.append(_parse_variables(option.text))
+			# translating the option before replacing the variables
+			option_texts.append(_parse_variables(translate_function.call(option.text)))
 			_option_links.append(option.link)
 	
 	dialogue_processed.emit(speaker, dialogue_text, option_texts)
@@ -251,11 +264,13 @@ func _parse_variables(value : String):
 		printerr('Failed to parse variables. Missing {{ or }}.')
 		return value
 	
-	# format floats to display properly
+	# format floats to display properly and translate strings
 	var formatted_variables := {}
 	for key in variables.keys():
 		if variables[key] is float:
 			formatted_variables[key] = '%0.2f' % variables[key]
+		elif variables[key] is String:
+			formatted_variables[key] = tr(variables[key])
 		else:
 			formatted_variables[key] = variables[key]
 	
