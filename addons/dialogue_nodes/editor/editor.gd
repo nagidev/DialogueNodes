@@ -87,15 +87,17 @@ func _load_translations():
 	if (translation_files.size() == 0):
 		return
 
-	var current_locale = TranslationServer.get_locale()
-	if not current_locale in TranslationServer.get_loaded_locales():
-		current_locale = "en"
-	
 	TranslationServer.clear()
 	for translation_path in translation_files:
 		TranslationServer.add_translation(load(translation_path))
 	
-	TranslationServer.set_locale(current_locale)
+	var available_locales = TranslationServer.get_loaded_locales()
+	if available_locales.size() == 0:
+		return
+		
+	var current_locale = TranslationServer.get_locale()
+	if not current_locale in available_locales:
+		TranslationServer.set_locale(available_locales[0])
 
 
 func _on_locale_menu_pressed(locale_idx : int):
