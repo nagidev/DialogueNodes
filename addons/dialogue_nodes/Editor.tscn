@@ -106,6 +106,13 @@ keep_pressed_outside = true
 text = "Run"
 switch_on_hover = true
 
+[node name="LocaleMenu" type="MenuButton" parent="Main/ToolBar"]
+visible = false
+layout_mode = 2
+keep_pressed_outside = true
+text = "Locale"
+switch_on_hover = true
+
 [node name="DebugMenu" type="MenuButton" parent="Main/ToolBar"]
 layout_mode = 2
 focus_mode = 2
@@ -230,7 +237,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "1.1.0"
+text = "1.2.0"
 underline = 1
 
 [node name="DialogueBackground" type="Panel" parent="."]
@@ -262,6 +269,7 @@ script = ExtResource("8_njjsn")
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_ogokn"), SubResource("RichTextEffect_w8v0c"), SubResource("RichTextEffect_vxsx5")])
 
 [connection signal="about_to_popup" from="Main/ToolBar/RunMenu" to="." method="_on_run_menu_about_to_popup"]
+[connection signal="about_to_popup" from="Main/ToolBar/LocaleMenu" to="." method="_on_locale_menu_about_to_popup"]
 [connection signal="empty_clicked" from="Main/Workspace/SidePanel/Files" to="Main/Workspace/SidePanel/Files" method="_on_empty_clicked"]
 [connection signal="file_list_changed" from="Main/Workspace/SidePanel/Files" to="." method="_on_files_changed"]
 [connection signal="file_switched" from="Main/Workspace/SidePanel/Files" to="." method="_on_files_changed"]

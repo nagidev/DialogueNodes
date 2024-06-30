@@ -124,21 +124,29 @@ func _process_start(dict : Dictionary):
 # Processes the dialogue node data (dict).
 func _process_dialogue(dict : Dictionary):
 	var speaker = ''
+
+	var translate_function : Callable = tr
+	if Engine.is_editor_hint():
+		# Godots TranslationServer won't translate in the editor therefore it has to be done manually
+		var translation : Translation = TranslationServer.get_translation_object(TranslationServer.get_locale())
+		translate_function = func(input):
+			var translated = translation.get_message(input)
+			return str(translated)
 	
 	if dict.speaker is String:
-		speaker = tr(dict.speaker)
+		speaker = translate_function.call(dict.speaker)
 	elif dict.speaker is int and characters.size() > 0 and dict.speaker < characters.size():
 		speaker = characters[dict.speaker]
 	
 	# translating the the dialogue before replacing the variables
-	var dialogue_text = _parse_variables(tr(dict.dialogue))
+	var dialogue_text = _parse_variables(translate_function.call(dict.dialogue))
 	
 	var option_texts : Array[String] = []
 	_option_links.clear()
 	for option in dict.options.values():
 		if option.condition.is_empty() or _check_condition(option.condition):
 			# translating the option before replacing the variables
-			option_texts.append(_parse_variables(tr(option.text)))
+			option_texts.append(_parse_variables(translate_function.call(option.text)))
 			_option_links.append(option.link)
 	
 	dialogue_processed.emit(speaker, dialogue_text, option_texts)

@@ -6,6 +6,7 @@ extends Control
 @onready var debug_menu = $Main/ToolBar/DebugMenu
 @onready var add_menu = $Main/ToolBar/AddMenu
 @onready var run_menu = $Main/ToolBar/RunMenu
+@onready var locale_menu = $Main/ToolBar/LocaleMenu
 @onready var workspace = $Main/Workspace
 @onready var side_panel = $Main/Workspace/SidePanel
 @onready var files = $Main/Workspace/SidePanel/Files
@@ -25,6 +26,7 @@ var _add_menu_initialized := false
 func _ready():
 	file_menu.get_popup().id_pressed.connect(files._on_toolbar_menu_pressed)
 	run_menu.get_popup().id_pressed.connect(run_tree)
+	locale_menu.get_popup().id_pressed.connect(_on_locale_menu_pressed)
 	debug_menu.get_popup().id_pressed.connect(_on_debug_menu_pressed)
 	
 	dialogue_box.dialogue_started.connect(_on_dialogue_started)
@@ -41,6 +43,8 @@ func _ready():
 func run_tree(start_node_idx : int):
 	if not is_instance_valid(graph): return
 	
+	_load_translations()
+	
 	var start_node := graph.get_node(NodePath(graph.starts[start_node_idx]))
 	var data := DialogueData.new()
 	data = start_node.tree_to_data(graph, data)
@@ -50,6 +54,51 @@ func run_tree(start_node_idx : int):
 	dialogue_box.data = data
 	dialogue_box.start(start_node.start_id)
 	dialogue_background.show()
+
+
+# this function was taken from https://gist.github.com/hiulit/772b8784436898fd7f942750ad99e33e
+func _get_all_files(path: String, file_ext := "", files := []):
+	var dir = DirAccess.open(path)
+
+	if DirAccess.get_open_error() == OK:
+		dir.list_dir_begin()
+
+		var file_name = dir.get_next()
+
+		while file_name != "":
+			if dir.current_is_dir():
+				files = _get_all_files(dir.get_current_dir() +"/"+ file_name, file_ext, files)
+			else:
+				if file_ext and file_name.get_extension() != file_ext:
+					file_name = dir.get_next()
+					continue
+				
+				files.append(dir.get_current_dir() +"/"+ file_name)
+
+			file_name = dir.get_next()
+	else:
+		print("An error occurred when trying to access %s." % path)
+
+	return files
+
+
+func _load_translations():
+	var current_locale = TranslationServer.get_locale()
+	
+	if not current_locale in TranslationServer.get_loaded_locales():
+		current_locale = "en"
+	
+	TranslationServer.clear()
+	var translation_files = _get_all_files("res://", "translation")
+	for translation_path in translation_files:
+		TranslationServer.add_translation(load(translation_path))
+	
+	TranslationServer.set_locale(current_locale)
+
+
+func _on_locale_menu_pressed(locale_idx : int):
+	var locale = locale_menu.get_popup().get_item_text(locale_idx)
+	TranslationServer.set_locale(locale)
 
 
 func _on_debug_menu_pressed(idx : int):
@@ -82,9 +131,23 @@ func _on_run_menu_about_to_popup():
 			run_menu.get_popup().add_item(start_id)
 
 
+func _on_locale_menu_about_to_popup():
+	locale_menu.get_popup().clear()
+	
+	_load_translations()
+	
+	var locales := {}
+	for locale in TranslationServer.get_loaded_locales():
+		locales[locale] = true
+		
+	for locale in locales:
+		locale_menu.get_popup().add_item(locale)
+
+
 func _on_files_changed():
 	add_menu.visible = files.item_count > 0
 	run_menu.visible = add_menu.visible
+	locale_menu.visible = add_menu.visible
 	
 	if is_instance_valid(graph):
 		graph.run_requested.disconnect(run_tree)
