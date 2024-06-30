@@ -129,9 +129,12 @@ func _process_dialogue(dict : Dictionary):
 	if Engine.is_editor_hint():
 		# Godots TranslationServer won't translate in the editor therefore it has to be done manually
 		var translation : Translation = TranslationServer.get_translation_object(TranslationServer.get_locale())
-		translate_function = func(input):
-			var translated = translation.get_message(input)
-			return str(translated)
+		if translation:
+			translate_function = func(input):
+				var translated = translation.get_message(input)
+				return str(translated)
+		else:
+			translate_function = func(input): return input
 	
 	if dict.speaker is String:
 		speaker = translate_function.call(dict.speaker)
