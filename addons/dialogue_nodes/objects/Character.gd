@@ -8,5 +8,5 @@ extends Resource
 @export var color : Color = Color.WHITE
 
 var translated_name : String :
-    get:
-        return tr(name)
+	get:
+		return tr(name)
