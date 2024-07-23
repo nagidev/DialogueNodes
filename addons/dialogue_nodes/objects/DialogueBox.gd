@@ -281,13 +281,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	portrait.texture = null
 	portrait.visible = not hide_portrait
 	if speaker is Character:
-		if not Engine.is_editor_hint():
-			speaker_label.text = speaker.translated_name
-		else:
-			# Godots TranslationServer won't translate in the editor therefore it has to be done manually
-			var translation : Translation = TranslationServer.get_translation_object(TranslationServer.get_locale())
-			var translated_name = translation.get_message(speaker.name) if translation else speaker.name
-			speaker_label.text = str(translated_name)
+		speaker_label.text = speaker.translated_name
 		speaker_label.modulate = speaker.color
 		portrait.texture = speaker.image
 		if not speaker.image: portrait.hide()
