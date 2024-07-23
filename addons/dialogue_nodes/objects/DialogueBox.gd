@@ -174,6 +174,7 @@ func _enter_tree():
 	portrait.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT
 	portrait.texture = sample_portrait
+	portrait.visible = not hide_portrait
 	
 	_sub_container = BoxContainer.new()
 	_main_container.add_child(_sub_container)
@@ -239,9 +240,10 @@ func _process(delta):
 
 func _input(event):
 	if is_running() and Input.is_action_just_pressed(skip_input_action):
-		if _wait_effect:
+		if _wait_effect and not _wait_effect.skip:
 			_wait_effect.skip = true
-		_on_wait_finished()
+			await get_tree().process_frame
+			_on_wait_finished()
 
 
 ## Starts processing the dialogue [member data], starting with the Start Node with its ID set to [param start_id].

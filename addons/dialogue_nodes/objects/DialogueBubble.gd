@@ -115,7 +115,7 @@ var speaker_label : Label
 ## Contains all the option buttons. The currently displayed options are visible while the rest are hidden. This value is automatically set while running a dialogue tree.
 var options_container : BoxContainer
 
-# [param DialogueParser] used for parsing the dialogue [member data].
+# [param DialogueParser] used for parsing the dialogue [member data].[br]
 # NOTE: Using [param DialogueParser] as a child instead of extending from it, because [DialogueBox] needs to extend from Panel.
 var _dialogue_parser : DialogueParser
 var _visible_on_screen_notifier : VisibleOnScreenNotifier3D
@@ -239,9 +239,10 @@ func _process(delta):
 
 func _input(_event):
 	if is_running() and Input.is_action_just_pressed(skip_input_action):
-		if _wait_effect:
+		if _wait_effect and not _wait_effect.skip:
 			_wait_effect.skip = true
-		_on_wait_finished()
+			await get_tree().process_frame
+			_on_wait_finished()
 
 
 ## Starts processing the dialogue [member data], starting with the Start Node with its ID set to [param start_id].
