@@ -225,7 +225,7 @@ func _ready():
 
 
 func _process(delta):
-	if not is_running: return
+	if not is_running(): return
 	
 	# scrolling for longer dialogues
 	var scroll_amt := 0.0
