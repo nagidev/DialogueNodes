@@ -280,14 +280,15 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	# set speaker
 	speaker_label.text = ''
 	if speaker is Character:
-		speaker_label.text = speaker.translated_name
+		speaker_label.text = tr(speaker.name)
 		speaker_label.modulate = speaker.color
 	elif speaker is String:
-		speaker_label.text = speaker
+		speaker_label.text = tr(speaker)
 		speaker_label.modulate = Color.WHITE
 	speaker_label.size = Vector2.ZERO
 	
 	# set dialogue
+	dialogue = _dialogue_parser._parse_variables(tr(dialogue))
 	text = _dialogue_parser._update_wait_tags(self, dialogue)
 	size = Vector2.ZERO
 	_wait_effect.skip = false
@@ -298,7 +299,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 		if idx >= options.size():
 			option.hide()
 			continue
-		option.text = options[idx].replace('[br]', '\n')
+		option.text = _dialogue_parser._parse_variables(tr(options[idx].replace('[br]', '\n')))
 		option.show()
 	options_container.get_child(0).icon = next_icon if options.size() == 1 and options[0] == '' else null
 	options_container.hide()

@@ -126,19 +126,19 @@ func _process_dialogue(dict : Dictionary):
 	var speaker = ''
 
 	if dict.speaker is String:
-		speaker = tr(dict.speaker)
+		speaker = dict.speaker
 	elif dict.speaker is int and characters.size() > 0 and dict.speaker < characters.size():
 		speaker = characters[dict.speaker]
 	
 	# translating the the dialogue before replacing the variables
-	var dialogue_text = _parse_variables(tr(dict.dialogue))
+	var dialogue_text = dict.dialogue
 	
 	var option_texts : Array[String] = []
 	_option_links.clear()
 	for option in dict.options.values():
 		if option.condition.is_empty() or _check_condition(option.condition):
 			# translating the option before replacing the variables
-			option_texts.append(_parse_variables(tr(option.text)))
+			option_texts.append(option.text)
 			_option_links.append(option.link)
 	
 	dialogue_processed.emit(speaker, dialogue_text, option_texts)
