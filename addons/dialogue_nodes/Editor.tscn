@@ -61,17 +61,14 @@ text = "File"
 switch_on_hover = true
 item_count = 8
 popup/item_0/text = "New Tree"
-popup/item_0/id = 0
 popup/item_1/text = "Open..."
 popup/item_1/id = 1
-popup/item_2/text = ""
 popup/item_2/id = 6
 popup/item_2/separator = true
 popup/item_3/text = "Save"
 popup/item_3/id = 2
 popup/item_4/text = "Save As"
 popup/item_4/id = 3
-popup/item_5/text = ""
 popup/item_5/id = 7
 popup/item_5/separator = true
 popup/item_6/text = "Close"
@@ -87,7 +84,6 @@ text = "Add Node"
 switch_on_hover = true
 item_count = 6
 popup/item_0/text = "StartNode"
-popup/item_0/id = 0
 popup/item_1/text = "DialogueNode"
 popup/item_1/id = 1
 popup/item_2/text = "CommentNode"
@@ -112,10 +108,12 @@ focus_mode = 2
 keep_pressed_outside = true
 text = "Debug"
 switch_on_hover = true
-item_count = 1
+item_count = 2
 popup/item_0/text = "Print Debug Messages"
 popup/item_0/checkable = 1
-popup/item_0/id = 0
+popup/item_1/text = "Skip option condition checks"
+popup/item_1/checkable = 1
+popup/item_1/id = 1
 
 [node name="Workspace" type="HSplitContainer" parent="Main"]
 layout_mode = 2
@@ -139,7 +137,6 @@ data_container = NodePath("../Data")
 [node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/SidePanel/Files"]
 item_count = 4
 item_0/text = "Save"
-item_0/id = 0
 item_1/text = "Save As"
 item_1/id = 1
 item_2/text = "Close"
@@ -230,7 +227,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
-text = "1.1.0"
+text = "1.2.1"
 underline = 1
 
 [node name="DialogueBackground" type="Panel" parent="."]

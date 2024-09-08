@@ -53,11 +53,14 @@ func run_tree(start_node_idx : int):
 
 
 func _on_debug_menu_pressed(idx : int):
+	var popup : PopupMenu = debug_menu.get_popup()
 	match (idx):
 		0:
-			var popup : PopupMenu = debug_menu.get_popup()
 			_debug = !_debug
 			popup.set_item_checked(idx, _debug)
+		1:
+			dialogue_box.skip_options_condition_checks = !dialogue_box.skip_options_condition_checks
+			popup.set_item_checked(idx, dialogue_box.skip_options_condition_checks)
 
 
 func _on_run_menu_about_to_popup():
@@ -151,4 +154,3 @@ func _on_dialogue_ended():
 
 	if _debug:
 		print('Dialogue ended')
-

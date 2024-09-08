@@ -124,6 +124,12 @@ signal dialogue_ended
 			2:
 				# right
 				_main_container.add_child(options_container)
+## Skip condition checks when processing options in the current dialog.
+@export var skip_options_condition_checks := false :
+	set(value):
+		skip_options_condition_checks = value
+		if _dialogue_parser:
+			_dialogue_parser.skip_options_condition_checks = value
 
 @export_group('Misc')
 ## Hide dialogue box at the end of a dialogue
@@ -205,6 +211,7 @@ func _enter_tree():
 	_dialogue_parser.data = data
 	variables = _dialogue_parser.variables
 	characters = _dialogue_parser.characters
+	skip_options_condition_checks = skip_options_condition_checks
 	
 	_dialogue_parser.dialogue_started.connect(_on_dialogue_started)
 	_dialogue_parser.dialogue_processed.connect(_on_dialogue_processed)

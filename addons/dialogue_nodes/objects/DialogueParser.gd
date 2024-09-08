@@ -39,6 +39,8 @@ signal dialogue_ended
 		var character_list = ResourceLoader.load(data.characters, '', ResourceLoader.CACHE_MODE_IGNORE)
 		if not character_list is CharacterList: return
 		characters = character_list.characters
+## Skip condition checks when processing options in the current dialog.
+@export var skip_options_condition_checks := false
 
 ## Contains the variable data from the [param DialogueData] parsed in an easy to access dictionary.[br]
 ## Example: [code]{ "COINS": 10, "NAME": "Obama", "ALIVE": true }[/code]
@@ -135,7 +137,7 @@ func _process_dialogue(dict : Dictionary):
 	var option_texts : Array[String] = []
 	_option_links.clear()
 	for option in dict.options.values():
-		if option.condition.is_empty() or _check_condition(option.condition):
+		if option.condition.is_empty() or _check_condition(option.condition) or skip_options_condition_checks:
 			option_texts.append(_parse_variables(option.text))
 			_option_links.append(option.link)
 	
