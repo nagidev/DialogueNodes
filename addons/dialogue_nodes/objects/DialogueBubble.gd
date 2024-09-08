@@ -141,7 +141,7 @@ func _enter_tree():
 			if not custom_effects.has(effect):
 				custom_effects.append(effect)
 		if not theme:
-			theme = preload('res://addons/dialogue_nodes/themes/bubblyClean.theme')
+			theme = load('res://addons/dialogue_nodes/themes/bubblyClean.theme')
 	
 	tail = Polygon2D.new()
 	add_child(tail)
@@ -229,6 +229,11 @@ func _process(delta):
 	
 	pivot_offset = follow_pos - position
 	position = lerp(position, target_pos - size * 0.5, smooth_follow * delta)
+	var viewport_rect = get_viewport_rect()
+	var min_clamp = screen_center - viewport_rect.size * 0.45
+	var max_clamp = screen_center + viewport_rect.size * 0.45
+	position.x = clamp(position.x, min_clamp.x, max_clamp.x - size.x * 0.5)
+	position.y = clamp(position.y, min_clamp.y, max_clamp.y - size.y * 0.5)
 	
 	var dir : Vector2 = follow_pos.direction_to(position + size * 0.5)
 	var perp = dir.rotated(PI * 0.5)

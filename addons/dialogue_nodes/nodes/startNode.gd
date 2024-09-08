@@ -8,8 +8,10 @@ signal run_requested
 @onready var ID = $HBoxContainer/ID
 @onready var start_id : String = ID.text
 @onready var timer = $Timer
+@onready var resize_timer: Timer = $ResizeTimer
 
 var undo_redo : EditorUndoRedoManager
+var last_size := size
 
 
 func _to_dict(graph : GraphEdit):
@@ -116,3 +118,27 @@ func _on_run_pressed():
 
 func _on_modified():
 	modified.emit()
+
+
+func _on_resize(_new_size):
+	resize_timer.stop()
+	resize_timer.start()
+	
+	# FIXME : find a way to clamp node size along y axis without using _process()
+	size.y = 86
+
+
+func _on_resize_timer_timeout():
+	if not undo_redo:
+		print_rich('[shake][color="FF8866"]WOMP WOMP no undo_redo??[/color][/shake]')
+		return
+	
+	size.y = 86
+	undo_redo.create_action('Set node size')
+	undo_redo.add_do_method(self, 'set_size', size)
+	undo_redo.add_do_property(self, 'last_size', size)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_property(self, 'last_size', last_size)
+	undo_redo.add_undo_method(self, 'set_size', last_size)
+	undo_redo.commit_action()

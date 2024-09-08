@@ -4,8 +4,10 @@
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/startNode.gd" id="2"]
 
 [node name="StartNode" type="GraphNode"]
+custom_minimum_size = Vector2(0, 86)
 offset_right = 180.0
 offset_bottom = 60.0
+resizable = true
 title = "Start"
 slot/0/left_enabled = false
 slot/0/left_type = 0
@@ -41,6 +43,12 @@ The ID is used to identify each tree in a dialogue tree."
 wait_time = 0.5
 one_shot = true
 
+[node name="ResizeTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="pressed" from="HBoxContainer/RunButton" to="." method="_on_run_pressed"]
 [connection signal="text_changed" from="HBoxContainer/ID" to="." method="_on_ID_changed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]

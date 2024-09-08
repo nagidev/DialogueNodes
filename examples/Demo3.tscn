@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://examples/demo3.gd" id="1_2a8yf"]
 [ext_resource type="AudioStream" uid="uid://bin1ei6yesmjv" path="res://examples/voice.ogg" id="2_bjs48"]
-[ext_resource type="Theme" uid="uid://b4f152moh4ayu" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="3_xmmjy"]
+[ext_resource type="Theme" uid="uid://dq18l0hyb3bqt" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="3_201t6"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="4_tmfyu"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="5_vs72k"]
 [ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="6_pkic0"]
@@ -100,7 +100,7 @@ offset_left = 493.0
 offset_top = 338.0
 offset_right = 633.0
 offset_bottom = 361.0
-theme = ExtResource("3_xmmjy")
+theme = ExtResource("3_201t6")
 bbcode_enabled = true
 text = "Sample dialogue."
 fit_content = true
