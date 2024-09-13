@@ -12,7 +12,8 @@ signal run_requested(start_node_idx : int)
 	preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn"),
 	preload("res://addons/dialogue_nodes/nodes/SignalNode.tscn"),
 	preload("res://addons/dialogue_nodes/nodes/SetNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/ConditionNode.tscn")
+	preload("res://addons/dialogue_nodes/nodes/ConditionNode.tscn"),
+	preload("res://addons/dialogue_nodes/nodes/ForkNode.tscn")
 ]
 
 @onready var popup_menu = $PopupMenu
