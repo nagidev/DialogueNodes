@@ -142,12 +142,7 @@ func remove_option(option : BoxContainer):
 	if option.get_parent() == self: remove_child(option)
 
 	if size.y > orig_height:
-		undo_redo.create_action('Auto-Resize Fork by Options')
-		undo_redo.add_do_method(
-			self, 'set_size', Vector2(size.x, orig_height + min(0, option_height * options.size() - 2))
-		)
-		undo_redo.add_undo_method(self, 'set_size', size)
-		undo_redo.commit_action()
+		set_size(Vector2(size.x, orig_height + min(0, option_height * options.size() - 2)))
 
 
 func update_slots():
