@@ -22,6 +22,7 @@ var empty_option : BoxContainer
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 @onready var option_height: int = %ForkOption1.size.y
+
 @onready var first_option: BoxContainer = %ForkOption1
 @onready var default_option: BoxContainer = %DefaultOption
 
@@ -31,7 +32,7 @@ var empty_option : BoxContainer
 func _ready():
 	options.clear()
 	add_option(first_option)
-	update_slots()
+	await create_tween().tween_callback(update_slots).set_delay(0.1)
 
 
 func _to_dict(graph : GraphEdit):
@@ -75,7 +76,6 @@ func _from_dict(dict : Dictionary):
 	# remove any existing options (if any)
 	for option in options:
 		option.queue_free()
-		option.tree_exited
 	options.clear()
 	
 	# add new options
@@ -92,7 +92,7 @@ func _from_dict(dict : Dictionary):
 	if (max_options < 0 or options.size() < max_options) and options[-1].text != '':
 		var new_option := OptionScene.instantiate()
 		add_option(new_option)
-	update_slots()
+	await create_tween().tween_callback(update_slots).set_delay(0.1)
 	
 	# set size of node
 	if dict.has('size'):
@@ -108,8 +108,14 @@ func _from_dict(dict : Dictionary):
 
 
 func add_option(option : BoxContainer, to_idx := -1):
-	if option.get_parent() != self: add_child(option, true)
-	if to_idx > -1: move_child(option, to_idx)
+	if option.get_parent() != self:
+		if !options.is_empty():
+			options.back().add_sibling(option)
+		else:
+			add_child(option, true)
+			move_child(option, default_option.get_index() - 1)
+	if to_idx > -1:
+		move_child(option, to_idx)
 	
 	option.undo_redo = undo_redo
 	option.text_changed.connect(_on_option_text_changed.bind(option))
@@ -197,7 +203,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 		if idx != options.back().get_index():
 			empty_option = option
 			return
-		disconnection_from_request.emit(name, idx - first_option.get_index())
+		disconnection_from_request.emit(name, idx)
 	
 	# case 3 : text changed from something to something else (neither are '')
 	undo_redo.create_action('Set option text')
@@ -217,7 +223,7 @@ func _on_option_focus_exited(option : BoxContainer):
 	if option == empty_option:
 		var idx = option.get_index()
 		
-		disconnection_from_request.emit(name, idx - first_option.get_index())
+		disconnection_from_request.emit(name, idx)
 		
 		undo_redo.create_action('Remove option')
 		undo_redo.add_do_method(self, 'remove_option', option)
