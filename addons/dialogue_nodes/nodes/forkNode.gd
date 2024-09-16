@@ -11,7 +11,8 @@ signal disconnection_from_request(from_node : String, from_port : int)
 signal connection_shift_request(from_node : String, old_port : int, new_port : int)
 
 @export var max_options := -1
-@export var base_color : Color = Color.GREEN_YELLOW
+@export var color_option : Color = Color.GREEN_YELLOW
+@export var color_default : Color = Color.INDIAN_RED
 
 var undo_redo : EditorUndoRedoManager
 var last_size := size
@@ -152,7 +153,8 @@ func remove_option(option : BoxContainer):
 func update_slots():
 	for option in options:
 		var enabled : bool = option.text != ''
-		set_slot(option.get_index() - 1, false, 0, base_color, enabled, 0, base_color)
+		set_slot(option.get_index(), false, 0, color_option, enabled, 0, color_option)
+	set_slot(default_option.get_index(), false, 0, color_default, true, 0, color_default)
 
 
 func _on_resize(_new_size):
