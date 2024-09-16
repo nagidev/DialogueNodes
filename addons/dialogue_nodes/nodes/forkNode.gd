@@ -139,13 +139,9 @@ func remove_option(option : BoxContainer):
 
 
 func update_slots():
-	if options.size() == 1:
-		set_slot(options[0].get_index(), false, 0, base_color, true, 0, base_color)
-		return
-	
 	for option in options:
 		var enabled : bool = option.text != ''
-		set_slot(option.get_index(), false, 0, base_color, enabled, 0, base_color)
+		set_slot(option.get_index() - 1, false, 0, base_color, enabled, 0, base_color)
 
 
 func _on_resize(_new_size):
@@ -189,9 +185,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	
 	# case 1 : option changed from '' to 'something'
 	if option.text == '':
-		print("NOTHING TO SOMETHING")
 		if idx == (get_child_count() - 1) and (max_options < 0 or options.size() < max_options):
-			print("NEW OPTION")
 			var new_option = OptionScene.instantiate()
 			
 			undo_redo.create_action('Set option text')
