@@ -24,7 +24,7 @@ var empty_option : BoxContainer
 @onready var option_height: int = %ForkOption1.size.y
 @onready var first_option: BoxContainer = %ForkOption1
 @onready var default_option: BoxContainer = %DefaultOption
-@onready var resize_timer : Timer = %ResizeTimer
+
 @onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
 
 
@@ -150,24 +150,6 @@ func update_slots():
 		var enabled : bool = option.text != ''
 		set_slot(option.get_index(), false, 0, color_option, enabled, 0, color_option)
 	set_slot(default_option.get_index(), false, 0, color_default, true, 0, color_default)
-
-
-func _on_resize(_new_size):
-	resize_timer.stop()
-	resize_timer.start()
-
-
-func _on_resize_timer_timeout():
-	if not undo_redo: return
-	
-	undo_redo.create_action('Set node size')
-	undo_redo.add_do_method(self, 'set_size', size)
-	undo_redo.add_do_property(self, 'last_size', size)
-	undo_redo.add_do_method(self, '_on_modified')
-	undo_redo.add_undo_method(self, '_on_modified')
-	undo_redo.add_undo_property(self, 'last_size', last_size)
-	undo_redo.add_undo_method(self, 'set_size', last_size)
-	undo_redo.commit_action()
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
