@@ -20,6 +20,7 @@ var options: Array = []
 var empty_option : BoxContainer
 
 @onready var first_option: BoxContainer = %ForkOption1
+@onready var default_option: BoxContainer = %DefaultOption
 @onready var resize_timer : Timer = %ResizeTimer
 @onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
 
@@ -185,7 +186,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	
 	# case 1 : option changed from '' to 'something'
 	if option.text == '':
-		if idx == (get_child_count() - 1) and (max_options < 0 or options.size() < max_options):
+		if idx == options.back().get_index() and (max_options < 0 or options.size() < max_options):
 			var new_option = OptionScene.instantiate()
 			
 			undo_redo.create_action('Set option text')
@@ -204,7 +205,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	
 	# case 2 : option changed from 'something' to ''
 	elif new_text == '':
-		if idx != (get_child_count() - 1):
+		if idx != options.back().get_index():
 			empty_option = option
 			return
 		disconnection_from_request.emit(name, idx - first_option.get_index())
