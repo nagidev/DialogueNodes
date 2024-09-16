@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://nfp4t2r7wfhi" path="res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn" id="2_rmans"]
 
 [node name="ForkNode" type="GraphNode"]
+editor_description = "Add all Nodes that aren't Control at the bottom!"
 offset_right = 261.0
 offset_bottom = 127.0
 size_flags_horizontal = 4
@@ -29,11 +30,11 @@ slot/1/right_icon = null
 slot/1/draw_stylebox = true
 slot/2/left_enabled = false
 slot/2/left_type = 0
-slot/2/left_color = Color(0.678431, 1, 0.184314, 1)
+slot/2/left_color = Color(0.803922, 0.360784, 0.360784, 1)
 slot/2/left_icon = null
-slot/2/right_enabled = false
+slot/2/right_enabled = true
 slot/2/right_type = 0
-slot/2/right_color = Color(0.678431, 1, 0.184314, 1)
+slot/2/right_color = Color(0.803922, 0.360784, 0.360784, 1)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
 script = ExtResource("1_yngwo")
@@ -48,10 +49,9 @@ placeholder_text = "Fork Title"
 [node name="HSeparator" type="HSeparator" parent="LabelContainer"]
 layout_mode = 2
 
-[node name="ResizeTimer" type="Timer" parent="."]
+[node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
 unique_name_in_owner = true
-wait_time = 0.5
-one_shot = true
+layout_mode = 2
 
 [node name="DefaultOption" parent="." instance=ExtResource("2_rmans")]
 unique_name_in_owner = true
@@ -61,11 +61,6 @@ layout_mode = 2
 text = "Default Option"
 editable = false
 
-[node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
-unique_name_in_owner = true
-layout_mode = 2
-
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
-[connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
 
 [editable path="DefaultOption"]
