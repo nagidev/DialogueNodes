@@ -19,6 +19,8 @@ var last_size := size
 var options: Array = []
 var empty_option : BoxContainer
 
+@onready var orig_height: int = size.y  # Includes 2 options (starter + default)
+@onready var option_height: int = %ForkOption1.size.y
 @onready var first_option: BoxContainer = %ForkOption1
 @onready var default_option: BoxContainer = %DefaultOption
 @onready var resize_timer : Timer = %ResizeTimer
@@ -137,6 +139,14 @@ func remove_option(option : BoxContainer):
 	option.focus_exited.disconnect(_on_option_focus_exited.bind(option))
 	
 	if option.get_parent() == self: remove_child(option)
+
+	if size.y > orig_height:
+		undo_redo.create_action('Auto-Resize Fork by Options')
+		undo_redo.add_do_method(
+			self, 'set_size', Vector2(size.x, orig_height + min(0, option_height * options.size() - 2))
+		)
+		undo_redo.add_undo_method(self, 'set_size', size)
+		undo_redo.commit_action()
 
 
 func update_slots():
