@@ -25,11 +25,6 @@ var empty_option : BoxContainer
 
 @onready var first_option_idx: int = %ForkOption1.get_index()
 @onready var default_option: BoxContainer = %DefaultOption
-# This ensures that if there's non-Control nodes before Options, it doesn't mess up Graph Slots.
-@onready var option_slot_offset: int = (
-	get_children().slice(0, first_option_idx).filter(func(val): return val is not Control).size()
-)
-
 @onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
 
 
@@ -135,15 +130,14 @@ func add_option(option : BoxContainer, to_idx := -1):
 	var idx := options.find(option)
 	for i in range(options.size() - 1, idx, -1):
 		if options[i].text != '':
-			connection_shift_request.emit(name, i - 1  - option_slot_offset, i)
+			connection_shift_request.emit(name, i - 1, i)
 
 
 func remove_option(option : BoxContainer):
 	# shift slot connections
 	var idx := options.find(option)
 	for i in range(idx, options.size() - 1):
-		if options[i + 1].text != '':
-			connection_shift_request.emit(name, i + 1 - option_slot_offset, i)
+		connection_shift_request.emit(name, i + 1, i)
 	
 	options.erase(option)
 	option.text_changed.disconnect(_on_option_text_changed.bind(option))
@@ -158,8 +152,8 @@ func remove_option(option : BoxContainer):
 func update_slots():
 	for option in options:
 		var enabled : bool = option.text != ''
-		set_slot(option.get_index() - option_slot_offset, false, 0, color_option, enabled, 0, color_option)
-	set_slot(default_option.get_index() - option_slot_offset, false, 0, color_default, true, 0, color_default)
+		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
+	set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
@@ -185,7 +179,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	
 	# case 1 : option changed from '' to 'something'
 	if option.text == '':
-		if idx == options.back().get_index() and (max_options < 0 or options.size() < max_options):
+		if idx == options[-1].get_index() and (max_options < 0 or options.size() < max_options):
 			var new_option = OptionScene.instantiate()
 			
 			undo_redo.create_action('Set option text')
@@ -200,14 +194,15 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 			undo_redo.add_undo_method(self, 'update_slots')
 			undo_redo.add_undo_method(self, 'set_size', size)
 			undo_redo.commit_action()
+			
 			return
 	
 	# case 2 : option changed from 'something' to ''
 	elif new_text == '':
-		if idx != options.back().get_index():
+		if idx != options[-1].get_index():
 			empty_option = option
 			return
-		disconnection_from_request.emit(name, idx - option_slot_offset)
+		disconnection_from_request.emit(name, option.get_slot_index() - 1)
 	
 	# case 3 : text changed from something to something else (neither are '')
 	undo_redo.create_action('Set option text')
@@ -227,7 +222,7 @@ func _on_option_focus_exited(option : BoxContainer):
 	if option == empty_option:
 		var idx = option.get_index()
 		
-		disconnection_from_request.emit(name, idx - option_slot_offset)
+		disconnection_from_request.emit(name, option.get_slot_index() - 1)
 		
 		undo_redo.create_action('Remove option')
 		undo_redo.add_do_method(self, 'remove_option', option)

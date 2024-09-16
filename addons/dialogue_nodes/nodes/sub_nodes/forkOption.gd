@@ -25,6 +25,14 @@ func set_text(new_text : String):
 	text = new_text
 
 
+func get_slot_index():
+	var parent := get_parent_control()
+	if parent == null:
+		return null
+	var children := parent.get_children()
+	return children.filter(func(val): return val is Control).find(self)
+
+
 func get_condition():
 	var dict := {}
 	
