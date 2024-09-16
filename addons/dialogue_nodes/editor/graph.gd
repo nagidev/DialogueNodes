@@ -152,6 +152,9 @@ func connect_node_signals(node : GraphNode):
 			characters_updated.connect(node._on_characters_updated)
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
+		6: # fork node
+			node.disconnection_from_request.connect(_on_disconnection_from_request)
+			node.connection_shift_request.connect(_on_connection_shift_request)
 
 
 func disconnect_node_signals(node : GraphNode):
@@ -167,6 +170,9 @@ func disconnect_node_signals(node : GraphNode):
 			characters_updated.disconnect(node._on_characters_updated)
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
+		6: # fork node
+			node.disconnection_from_request.connect(_on_disconnection_from_request)
+			node.connection_shift_request.connect(_on_connection_shift_request)
 
 
 func show_add_menu(pos : Vector2):
