@@ -19,24 +19,30 @@ var last_size := size
 
 var options: Array = []
 var empty_option : BoxContainer
+var first_option_index := -1
+var option_height: int = 0
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
-@onready var option_height: int = %ForkOption1.size.y
 
-@onready var first_option_idx: int = %ForkOption1.get_index()
-@onready var default_option: BoxContainer = %DefaultOption
+#@onready var default_option: BoxContainer = %DefaultOption
 @onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
+@onready var DefaultOptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/DefaultForkOption.tscn")
 
 
 func _ready():
 	options.clear()
-	add_option(get_child(first_option_idx))
-	create_tween().tween_callback(update_slots).set_delay(0.1)
+	for idx in range(get_child_count() - 1, -1, -1):
+		var child = get_child(idx)
+		if child.is_in_group('fork_node_options'):
+			add_option(child)
+			first_option_index = child.get_index()
+			option_height = child.size.y
+			break
+	update_slots()
 
 
 func _to_dict(graph : GraphEdit):
 	var dict = {}
-	dict['size'] = size
 	
 	# get options connected to other nodes
 	var options_dict := {}
@@ -63,6 +69,8 @@ func _to_dict(graph : GraphEdit):
 		options_dict[0]['link'] = 'END'
 		options_dict[0]['condition'] = {}
 	
+	dict['size'] = size
+	
 	# store options info in dict
 	dict['options'] = options_dict
 	
@@ -71,7 +79,7 @@ func _to_dict(graph : GraphEdit):
 
 func _from_dict(dict : Dictionary):
 	var next_nodes = []
-	
+
 	# remove any existing options (if any)
 	for option in options:
 		option.queue_free()
@@ -83,15 +91,15 @@ func _from_dict(dict : Dictionary):
 		if dict['options'][idx].has('condition'):
 			condition = dict['options'][idx]['condition']
 		var new_option := OptionScene.instantiate()
-		add_option(new_option, first_option_idx + int(idx))
+		add_option(new_option, first_option_index + int(idx))
 		new_option.set_text(dict['options'][idx]['text'])
 		new_option.set_condition(condition)
 		next_nodes.append(dict['options'][idx]['link'])
 	# add empty option if any space left
-	if (max_options < 0 or options.size() < max_options) and options[-1].text != '':
+	if (max_options < 0 or options.size() < max_options) and options.back().text != '':
 		var new_option := OptionScene.instantiate()
 		add_option(new_option)
-	create_tween().tween_callback(update_slots).set_delay(0.1)
+	update_slots()
 	
 	# set size of node
 	if dict.has('size'):
@@ -108,13 +116,11 @@ func _from_dict(dict : Dictionary):
 
 func add_option(option : BoxContainer, to_idx := -1):
 	if option.get_parent() != self:
-		if !options.is_empty():
-			options.back().add_sibling(option)
-		else:
+		if options.is_empty():
 			add_child(option, true)
-			move_child(option, default_option.get_index() - 1)
-	if to_idx > -1:
-		move_child(option, to_idx)
+		else:
+			options.back().add_sibling(option, true)
+	if to_idx > -1: move_child(option, to_idx)
 	
 	option.undo_redo = undo_redo
 	option.text_changed.connect(_on_option_text_changed.bind(option))
@@ -137,7 +143,8 @@ func remove_option(option : BoxContainer):
 	# shift slot connections
 	var idx := options.find(option)
 	for i in range(idx, options.size() - 1):
-		connection_shift_request.emit(name, i + 1, i)
+		if options[i + 1].text != '':
+			connection_shift_request.emit(name, i + 1, i)
 	
 	options.erase(option)
 	option.text_changed.disconnect(_on_option_text_changed.bind(option))
@@ -153,7 +160,7 @@ func update_slots():
 	for option in options:
 		var enabled : bool = option.text != ''
 		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
-	set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
+	#set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
@@ -179,7 +186,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	
 	# case 1 : option changed from '' to 'something'
 	if option.text == '':
-		if idx == options[-1].get_index() and (max_options < 0 or options.size() < max_options):
+		if idx == options.back().get_index() and (max_options < 0 or options.size() < max_options):
 			var new_option = OptionScene.instantiate()
 			
 			undo_redo.create_action('Set option text')
@@ -194,15 +201,14 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 			undo_redo.add_undo_method(self, 'update_slots')
 			undo_redo.add_undo_method(self, 'set_size', size)
 			undo_redo.commit_action()
-			
 			return
 	
 	# case 2 : option changed from 'something' to ''
 	elif new_text == '':
-		if idx != options[-1].get_index():
+		if idx != options.back().get_index():
 			empty_option = option
 			return
-		disconnection_from_request.emit(name, option.get_slot_index() - 1)
+		disconnection_from_request.emit(name, idx - first_option_index)
 	
 	# case 3 : text changed from something to something else (neither are '')
 	undo_redo.create_action('Set option text')
@@ -222,12 +228,12 @@ func _on_option_focus_exited(option : BoxContainer):
 	if option == empty_option:
 		var idx = option.get_index()
 		
-		disconnection_from_request.emit(name, option.get_slot_index() - 1)
+		disconnection_from_request.emit(name, idx - first_option_index)
 		
 		undo_redo.create_action('Remove option')
 		undo_redo.add_do_method(self, 'remove_option', option)
 		# if the last option has some text, then create a new empty option
-		if options[-1].text != '':
+		if options.back().text != '':
 			var new_option = OptionScene.instantiate()
 			undo_redo.add_do_method(self, 'add_option', new_option)
 			undo_redo.add_do_reference(new_option)

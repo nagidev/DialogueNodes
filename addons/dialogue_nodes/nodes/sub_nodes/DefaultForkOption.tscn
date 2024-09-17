@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c0u5fek751c5f"]
+
+[ext_resource type="PackedScene" uid="uid://nfp4t2r7wfhi" path="res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn" id="1_lw2mo"]
+
+[node name="DefaultForkOption" instance=ExtResource("1_lw2mo")]
+
+[node name="LineEdit" parent="." index="1"]
+text = "Default Option"
+editable = false

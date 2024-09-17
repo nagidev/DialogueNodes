@@ -18,13 +18,6 @@ var cur_condition := {}
 var filter_popup_offset := 50
 
 
-func set_text(new_text : String):
-	if line_edit.text != new_text:
-		line_edit.text = new_text
-		filter_button.visible = new_text != ''
-	text = new_text
-
-
 func get_slot_index():
 	var parent := get_parent_control()
 	if parent == null:
@@ -42,6 +35,13 @@ func get_condition():
 		dict['value2'] = value2.text
 	
 	return dict
+
+
+func set_text(new_text : String):
+	if line_edit.text != new_text:
+		line_edit.text = new_text
+		filter_button.visible = new_text != ''
+	text = new_text
 
 
 func set_condition(new_condition : Dictionary):
@@ -65,6 +65,10 @@ func set_condition(new_condition : Dictionary):
 	
 	filter_button.text = '*'
 	reset_button.show()
+
+
+func is_empty():
+	return text == ''
 
 
 func _on_filter_button_pressed():

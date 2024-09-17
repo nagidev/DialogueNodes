@@ -28,15 +28,6 @@ slot/1/right_type = 0
 slot/1/right_color = Color(0.678431, 1, 0.184314, 1)
 slot/1/right_icon = null
 slot/1/draw_stylebox = true
-slot/2/left_enabled = false
-slot/2/left_type = 0
-slot/2/left_color = Color(0.803922, 0.360784, 0.360784, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = true
-slot/2/right_type = 0
-slot/2/right_color = Color(0.803922, 0.360784, 0.360784, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
 script = ExtResource("1_yngwo")
 
 [node name="LabelContainer" type="VBoxContainer" parent="."]
@@ -50,17 +41,6 @@ placeholder_text = "Fork Title"
 layout_mode = 2
 
 [node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
-unique_name_in_owner = true
 layout_mode = 2
-
-[node name="DefaultOption" parent="." instance=ExtResource("2_rmans")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="LineEdit" parent="DefaultOption" index="1"]
-text = "Default Option"
-editable = false
 
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
-
-[editable path="DefaultOption"]
