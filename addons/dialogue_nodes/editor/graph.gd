@@ -171,8 +171,8 @@ func disconnect_node_signals(node : GraphNode):
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
 		6: # fork node
-			node.disconnection_from_request.connect(_on_disconnection_from_request)
-			node.connection_shift_request.connect(_on_connection_shift_request)
+			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
+			node.connection_shift_request.disconnect(_on_connection_shift_request)
 
 
 func show_add_menu(pos : Vector2):
