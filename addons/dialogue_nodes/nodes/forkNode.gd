@@ -31,7 +31,7 @@ var empty_option : BoxContainer
 func _ready():
 	options.clear()
 	add_option(get_child(first_option_idx))
-	await create_tween().tween_callback(update_slots).set_delay(0.1)
+	create_tween().tween_callback(update_slots).set_delay(0.1)
 
 
 func _to_dict(graph : GraphEdit):
@@ -91,7 +91,7 @@ func _from_dict(dict : Dictionary):
 	if (max_options < 0 or options.size() < max_options) and options[-1].text != '':
 		var new_option := OptionScene.instantiate()
 		add_option(new_option)
-	await create_tween().tween_callback(update_slots).set_delay(0.1)
+	create_tween().tween_callback(update_slots).set_delay(0.1)
 	
 	# set size of node
 	if dict.has('size'):
