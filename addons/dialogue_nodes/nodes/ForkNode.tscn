@@ -41,6 +41,7 @@ placeholder_text = "Fork Title"
 layout_mode = 2
 
 [node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
+unique_name_in_owner = true
 layout_mode = 2
 
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
