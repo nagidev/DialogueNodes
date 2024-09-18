@@ -21,6 +21,7 @@ var options: Array = []
 var empty_option : BoxContainer
 var option_height: int = 0
 
+@onready var title_label: LineEdit = %Title
 @onready var first_option: BoxContainer = %ForkOption1
 #@onready var default_option: BoxContainer = %DefaultForkOption
 
@@ -39,6 +40,9 @@ func _ready():
 
 func _to_dict(graph : GraphEdit):
 	var dict = {}
+	
+	# get values
+	dict['title'] = title_label.text
 	
 	# get options connected to other nodes
 	var options_dict := {}
@@ -76,6 +80,9 @@ func _to_dict(graph : GraphEdit):
 func _from_dict(dict : Dictionary):
 	var next_nodes = []
 	
+	# set values
+	title_label.text = dict['title']
+
 	# record first option index (assume its last if no option exists)
 	var first_option_index := first_option.get_index()
 	
