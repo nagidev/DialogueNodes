@@ -22,8 +22,8 @@ var empty_option : BoxContainer
 var option_height: int = 0
 
 @onready var title_label: LineEdit = %Title
-@onready var first_option: BoxContainer = %ForkOption1
-#@onready var default_option: BoxContainer = %DefaultForkOption
+@onready var first_option_index: int = %ForkOption1.get_index()
+@onready var default_option: BoxContainer = %DefaultForkOption
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 
@@ -34,7 +34,7 @@ var option_height: int = 0
 
 func _ready():
 	options.clear()
-	add_option(first_option)
+	add_option(get_child(first_option_index))
 	update_slots()
 
 
@@ -83,9 +83,6 @@ func _from_dict(dict : Dictionary):
 	# set values
 	title_label.text = dict['title']
 
-	# record first option index (assume its last if no option exists)
-	var first_option_index := first_option.get_index()
-	
 	# remove any existing options (if any)
 	for option in options:
 		option.queue_free()
@@ -117,8 +114,6 @@ func _from_dict(dict : Dictionary):
 		size = new_size
 		last_size = size
 	
-	first_option = options.front()
-	
 	return next_nodes
 
 
@@ -128,7 +123,7 @@ func add_option(option : BoxContainer, to_idx := -1):
 			options.back().add_sibling(option, true)
 		else:
 			add_child(option, true)
-			#move_child(option, default_option.get_index() - 1)
+			move_child(option, default_option.get_index() - 1)
 	if to_idx > -1: move_child(option, to_idx)
 	
 	option.undo_redo = undo_redo
@@ -169,7 +164,7 @@ func update_slots():
 	for option in options:
 		var enabled : bool = option.text != ''
 		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
-	#set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
+	set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
@@ -217,7 +212,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 		if idx != options.back().get_index():
 			empty_option = option
 			return
-		disconnection_from_request.emit(name, idx - first_option.get_index())
+		disconnection_from_request.emit(name, idx - first_option_index)
 	
 	# case 3 : text changed from something to something else (neither are '')
 	undo_redo.create_action('Set option text')
@@ -237,7 +232,7 @@ func _on_option_focus_exited(option : BoxContainer):
 	if option == empty_option:
 		var idx = option.get_index()
 		
-		disconnection_from_request.emit(name, idx - first_option.get_index())
+		disconnection_from_request.emit(name, idx - first_option_index)
 		
 		undo_redo.create_action('Remove option')
 		undo_redo.add_do_method(self, 'remove_option', option)

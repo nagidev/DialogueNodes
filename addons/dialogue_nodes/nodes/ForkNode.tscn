@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://dj7rp7ql5qp08"]
+[gd_scene load_steps=4 format=3 uid="uid://dj7rp7ql5qp08"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/forkNode.gd" id="1_yngwo"]
 [ext_resource type="PackedScene" uid="uid://nfp4t2r7wfhi" path="res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn" id="2_rmans"]
+[ext_resource type="PackedScene" uid="uid://c0u5fek751c5f" path="res://addons/dialogue_nodes/nodes/sub_nodes/DefaultForkOption.tscn" id="3_qq74i"]
 
 [node name="ForkNode" type="GraphNode"]
 editor_description = "Add all Nodes that aren't Control at the bottom!"
@@ -28,6 +29,15 @@ slot/1/right_type = 0
 slot/1/right_color = Color(0.678431, 1, 0.184314, 1)
 slot/1/right_icon = null
 slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
 script = ExtResource("1_yngwo")
 
 [node name="LabelContainer" type="VBoxContainer" parent="."]
@@ -42,6 +52,10 @@ placeholder_text = "Fork Title"
 layout_mode = 2
 
 [node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="DefaultForkOption" parent="." instance=ExtResource("3_qq74i")]
 unique_name_in_owner = true
 layout_mode = 2
 
