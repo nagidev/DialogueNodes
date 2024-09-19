@@ -112,8 +112,8 @@ func _from_dict(dict : Dictionary):
 	next_nodes.append(dict['default_option']['link'])
 	update_slots()
 	
-	# set size of node
-	reset_size()
+	# set size of node (few frames are needed to let UI set up itself and deferred doesn't work)
+	create_tween().tween_callback(reset_size).set_delay(0.1)
 	
 	return next_nodes
 
