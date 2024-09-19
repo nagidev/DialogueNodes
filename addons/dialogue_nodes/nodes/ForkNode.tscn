@@ -6,8 +6,8 @@
 
 [node name="ForkNode" type="GraphNode"]
 editor_description = "Add all Nodes that aren't Control at the bottom!"
-offset_right = 261.0
-offset_bottom = 127.0
+offset_right = 160.0
+offset_bottom = 160.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 title = "Fork"
@@ -31,11 +31,11 @@ slot/1/right_icon = null
 slot/1/draw_stylebox = true
 slot/2/left_enabled = false
 slot/2/left_type = 0
-slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_color = Color(0.803922, 0.360784, 0.360784, 1)
 slot/2/left_icon = null
-slot/2/right_enabled = false
+slot/2/right_enabled = true
 slot/2/right_type = 0
-slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_color = Color(0.803922, 0.360784, 0.360784, 1)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
 script = ExtResource("1_yngwo")
@@ -47,6 +47,7 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 placeholder_text = "Fork Title"
+expand_to_text_length = true
 
 [node name="HSeparator" type="HSeparator" parent="LabelContainer"]
 layout_mode = 2
@@ -58,5 +59,8 @@ layout_mode = 2
 [node name="DefaultForkOption" parent="." instance=ExtResource("3_qq74i")]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
 
 [connection signal="resize_request" from="." to="." method="_on_resize_request"]
+[connection signal="focus_exited" from="LabelContainer/Title" to="." method="_on_title_focus_exited"]

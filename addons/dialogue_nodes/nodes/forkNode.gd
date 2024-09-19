@@ -3,7 +3,7 @@ extends GraphNode
 ##
 ## Fork Node
 ##
-## Groups a list of output options, each with a set of conditions. The first condition (top to
+## Groups a list of output options, each with a condition. The first condition (top to
 ## bottom) to be valid is used to exit, with a default option with no conditions always last.
 
 signal modified
@@ -27,15 +27,14 @@ var option_height: int = 0
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 
-#@onready var default_option: BoxContainer = %DefaultOption
 @onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
-@onready var DefaultOptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/DefaultForkOption.tscn")
 
 
 func _ready():
 	options.clear()
 	add_option(get_child(first_option_index))
 	update_slots()
+	reset_size()
 
 
 func _to_dict(graph : GraphEdit):
@@ -44,32 +43,37 @@ func _to_dict(graph : GraphEdit):
 	# get values
 	dict['title'] = title_label.text
 	
-	# get options connected to other nodes
+	# get options connected to other nodes (including separate default option)
 	var options_dict := {}
 	for connection in graph.get_connections(name):
 		var idx : int = connection['from_port'] # this returns index starting from 0
 		
-		options_dict[idx] = {}
-		options_dict[idx]['text'] = options[idx].text
-		options_dict[idx]['link'] = connection['to_node']
-		options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else {}
+		if idx < options.size():
+			options_dict[idx] = {}
+			options_dict[idx]['text'] = options[idx].text
+			options_dict[idx]['link'] = connection['to_node']
+			options_dict[idx]['condition'] = (
+				options[idx].get_condition() if options[idx].text != '' else {}
+			)
+		else:
+			dict['default_option'] = { 'link': connection['to_node'] }
 	
-	# get options not connected
-	for i in range(options.size()):
+	# get options not connected (including separate default option)
+	for i in options.size():
 		if not options_dict.has(i) and options[i].text != '':
 			options_dict[i] = {}
 			options_dict[i]['text'] = options[i].text
 			options_dict[i]['link'] = 'END'
 			options_dict[i]['condition'] = options[i].get_condition()
+	if !dict.has('default_option'):
+		dict['default_option'] = { 'link': 'END' }
 	
-	# single empty disconnected option
+	# if no options where registered (aside from default), record a single empty option
 	if options_dict.is_empty():
 		options_dict[0] = {}
 		options_dict[0]['text'] = ''
 		options_dict[0]['link'] = 'END'
 		options_dict[0]['condition'] = {}
-	
-	dict['size'] = size
 	
 	# store options info in dict
 	dict['options'] = options_dict
@@ -98,21 +102,18 @@ func _from_dict(dict : Dictionary):
 		new_option.set_text(dict['options'][idx]['text'])
 		new_option.set_condition(condition)
 		next_nodes.append(dict['options'][idx]['link'])
+	
 	# add empty option if any space left
 	if (max_options < 0 or options.size() < max_options) and options.back().text != '':
 		var new_option := OptionScene.instantiate()
 		add_option(new_option)
+	
+	# add default option link
+	next_nodes.append(dict['default_option']['link'])
 	update_slots()
 	
 	# set size of node
-	if dict.has('size'):
-		var new_size: Vector2
-		if dict['size'] is Vector2:
-			new_size = dict['size']
-		else: # for dialogue files created before v1.0.2
-			new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
-		size = new_size
-		last_size = size
+	reset_size()
 	
 	return next_nodes
 
@@ -123,7 +124,7 @@ func add_option(option : BoxContainer, to_idx := -1):
 			options.back().add_sibling(option, true)
 		else:
 			add_child(option, true)
-			move_child(option, default_option.get_index() - 1)
+			move_child(option, default_option.get_index())
 	if to_idx > -1: move_child(option, to_idx)
 	
 	option.undo_redo = undo_redo
@@ -132,23 +133,31 @@ func add_option(option : BoxContainer, to_idx := -1):
 	options.append(option)
 	
 	# sort options in the array
-	options.sort_custom(func (op1, op2):
-		return op1.get_index() < op2.get_index()
-		)
+	options.sort_custom(func (op1, op2): return op1.get_index() < op2.get_index())
 	
 	# shift slot connections
+	var options_count := options.size()
 	var idx := options.find(option)
-	for i in range(options.size() - 1, idx, -1):
+	for i in range(options_count - 1, idx, -1):
 		if options[i].text != '':
 			connection_shift_request.emit(name, i - 1, i)
+	
+	# if more than the empty option exists, shift the default option also
+	if options_count > 1:
+		connection_shift_request.emit(name, options_count - 2, options_count - 1)
 
 
 func remove_option(option : BoxContainer):
 	# shift slot connections
+	var options_count := options.size()
 	var idx := options.find(option)
-	for i in range(idx, options.size() - 1):
+	for i in range(idx, options_count - 1):
 		if options[i + 1].text != '':
 			connection_shift_request.emit(name, i + 1, i)
+	
+	# if more than the empty option exists, shift the default option also
+	if options_count > 1:
+		connection_shift_request.emit(name, options_count - 1, options_count - 2)
 	
 	options.erase(option)
 	option.text_changed.disconnect(_on_option_text_changed.bind(option))
@@ -156,15 +165,18 @@ func remove_option(option : BoxContainer):
 	
 	if option.get_parent() == self: remove_child(option)
 	
-	if size.y > orig_height:
-		set_size(Vector2(size.x, orig_height + min(0, option.size.y * options.size() - 2)))
+	reset_size()
 
 
 func update_slots():
 	for option in options:
 		var enabled : bool = option.text != ''
 		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
-	set_slot(default_option.get_slot_index(), false, 0, color_default, true, 0, color_default)
+	set_slot(options.back().get_index() + 1, false, 0, color_default, true, 0, color_default)
+
+
+func _on_title_focus_exited():
+	reset_size()
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
@@ -250,6 +262,8 @@ func _on_option_focus_exited(option : BoxContainer):
 		undo_redo.add_undo_method(self, 'update_slots')
 		undo_redo.commit_action()
 		empty_option = null
+
+	reset_size()
 
 
 func _on_modified():
