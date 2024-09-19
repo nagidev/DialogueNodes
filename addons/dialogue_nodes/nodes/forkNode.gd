@@ -97,7 +97,7 @@ func _from_dict(dict : Dictionary):
 		var condition := {}
 		if dict['options'][idx].has('condition'):
 			condition = dict['options'][idx]['condition']
-		var new_option := OptionScene.instantiate()
+		var new_option := instantiate_option()
 		add_option(new_option, first_option_index + int(idx))
 		new_option.set_text(dict['options'][idx]['text'])
 		new_option.set_condition(condition)
@@ -105,7 +105,7 @@ func _from_dict(dict : Dictionary):
 	
 	# add empty option if any space left
 	if (max_options < 0 or options.size() < max_options) and options.back().text != '':
-		var new_option := OptionScene.instantiate()
+		var new_option := instantiate_option()
 		add_option(new_option)
 	
 	# add default option link
@@ -116,6 +116,16 @@ func _from_dict(dict : Dictionary):
 	reset_size()
 	
 	return next_nodes
+
+
+func instantiate_option() -> BoxContainer:
+	var option : BoxContainer = null
+	if OptionScene.can_instantiate():
+		option = OptionScene.instantiate()
+		option.toggle_expand_to_text(true)
+	else:
+		printerr("Cannot instantiate OptionScene!")
+	return option
 
 
 func add_option(option : BoxContainer, to_idx := -1):
@@ -203,7 +213,7 @@ func _on_option_text_changed(new_text : String, option : BoxContainer):
 	# case 1 : option changed from '' to 'something'
 	if option.text == '':
 		if idx == options.back().get_index() and (max_options < 0 or options.size() < max_options):
-			var new_option = OptionScene.instantiate()
+			var new_option := instantiate_option()
 			
 			undo_redo.create_action('Set option text')
 			undo_redo.add_do_method(option, 'set_text', new_text)
@@ -250,7 +260,7 @@ func _on_option_focus_exited(option : BoxContainer):
 		undo_redo.add_do_method(self, 'remove_option', option)
 		# if the last option has some text, then create a new empty option
 		if options.back().text != '':
-			var new_option = OptionScene.instantiate()
+			var new_option := instantiate_option()
 			undo_redo.add_do_method(self, 'add_option', new_option)
 			undo_redo.add_do_reference(new_option)
 			undo_redo.add_undo_method(self, 'remove_option', new_option)

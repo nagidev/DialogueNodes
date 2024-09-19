@@ -37,6 +37,13 @@ func get_condition():
 	return dict
 
 
+# Godot defaults the var to false even if the PackedScene export says otherwise, so this is needed.
+func toggle_expand_to_text(toggled_on : bool):
+	if !is_node_ready():
+		await ready
+	line_edit.expand_to_text_length = toggled_on
+
+
 func set_text(new_text : String):
 	if line_edit.text != new_text:
 		line_edit.text = new_text
