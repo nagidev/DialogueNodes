@@ -22,6 +22,8 @@ var empty_option : BoxContainer
 var option_height: int = 0
 
 @onready var title_label: LineEdit = %Title
+@onready var prev_title_text := title_label.text
+
 @onready var first_option_index: int = %ForkOption1.get_index()
 @onready var default_option: BoxContainer = %DefaultForkOption
 
@@ -40,7 +42,7 @@ func _ready():
 func _to_dict(graph : GraphEdit):
 	var dict = {}
 	
-	# get values
+	# get title
 	dict['title'] = title_label.text
 	
 	# get options connected to other nodes (including separate default option)
@@ -84,8 +86,9 @@ func _to_dict(graph : GraphEdit):
 func _from_dict(dict : Dictionary):
 	var next_nodes = []
 	
-	# set values
+	# set title
 	title_label.text = dict['title']
+	prev_title_text = title_label.text
 
 	# remove any existing options (if any)
 	for option in options:
@@ -185,7 +188,18 @@ func update_slots():
 	set_slot(options.back().get_index() + 1, false, 0, color_default, true, 0, color_default)
 
 
+func _on_title_focus_entered():
+	prev_title_text = title_label.text
+
+
 func _on_title_focus_exited():
+	if title_label.text != prev_title_text:
+		undo_redo.create_action('Set title text')
+		undo_redo.add_do_method(title_label, 'set_text', title_label.text)
+		undo_redo.add_undo_method(title_label, 'set_text', prev_title_text)
+		undo_redo.commit_action()
+
+	prev_title_text = title_label.text
 	reset_size()
 
 
