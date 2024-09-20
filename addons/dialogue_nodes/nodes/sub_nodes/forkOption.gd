@@ -18,6 +18,10 @@ var cur_condition := {}
 var filter_popup_offset := 50
 
 
+func _ready():
+	text = line_edit.text
+
+
 func get_slot_index():
 	var parent := get_parent_control()
 	if parent == null:

@@ -50,14 +50,19 @@ func _to_dict(graph : GraphEdit):
 	for connection in graph.get_connections(name):
 		var idx : int = connection['from_port'] # this returns index starting from 0
 		
-		if idx < options.size():
+		if idx < options.size() - 1:  # Save options except for the last empty one
 			options_dict[idx] = {}
 			options_dict[idx]['text'] = options[idx].text
 			options_dict[idx]['link'] = connection['to_node']
 			options_dict[idx]['condition'] = (
 				options[idx].get_condition() if options[idx].text != '' else {}
 			)
-		else:
+			if options_dict[idx]['condition'] == {}:
+				push_warning(
+					"Option #%d <%s> in Fork <%s> has no conditions. Options below it will never be reached!"
+					% [idx + 1, options[idx].text, name]
+				)
+		else:  # We assume that a connection of idx >= to options.size() is the default option
 			dict['default_option'] = { 'link': connection['to_node'] }
 	
 	# get options not connected (including separate default option)
