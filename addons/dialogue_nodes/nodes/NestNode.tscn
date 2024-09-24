@@ -1,0 +1,91 @@
+[gd_scene load_steps=3 format=3 uid="uid://qhs1fcypr3p8"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/nestNode.gd" id="1_qag2c"]
+[ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="1_qkdnt"]
+
+[node name="NestNode" type="GraphNode"]
+offset_right = 254.0
+offset_bottom = 169.0
+title = "NestNode"
+slot/0/left_enabled = true
+slot/0/left_type = 0
+slot/0/left_color = Color(1, 1, 1, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = false
+slot/3/right_type = 0
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
+script = ExtResource("1_qag2c")
+
+[node name="FileLabel" type="Label" parent="."]
+layout_mode = 2
+text = "DialogueData"
+
+[node name="BoxContainer" type="BoxContainer" parent="."]
+layout_mode = 2
+
+[node name="FilePath" type="LineEdit" parent="BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BrowseButton" type="Button" parent="BoxContainer"]
+layout_mode = 2
+icon = ExtResource("1_qkdnt")
+
+[node name="IDLabel" type="Label" parent="."]
+layout_mode = 2
+text = "ID"
+
+[node name="ID" type="LineEdit" parent="."]
+layout_mode = 2
+
+[node name="OpenDialog" type="FileDialog" parent="."]
+title = "Open a DialogueData Resource"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+mode_overrides_title = false
+file_mode = 0
+filters = PackedStringArray("*.tres; DialogueData resource")
+
+[node name="PathTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="IDTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="text_changed" from="BoxContainer/FilePath" to="." method="_on_file_path_changed"]
+[connection signal="pressed" from="BoxContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="text_changed" from="ID" to="." method="_on_ID_changed"]
+[connection signal="file_selected" from="OpenDialog" to="." method="_on_file_selected"]
+[connection signal="timeout" from="PathTimer" to="." method="_on_path_timer_timeout"]
+[connection signal="timeout" from="IDTimer" to="." method="_on_id_timer_timeout"]
