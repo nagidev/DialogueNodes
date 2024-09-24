@@ -31,7 +31,7 @@ signal dialogue_ended
 	set(value):
 		data = value
 		if _dialogue_parser:
-			_dialogue_parser.data = value
+			_dialogue_parser.set_data(data)
 			variables = _dialogue_parser.variables
 			characters = _dialogue_parser.characters
 ## The default start ID to begin dialogue from. This is the value you set in the Dialogue Nodes editor.
@@ -340,4 +340,5 @@ func _on_dialogue_ended():
 
 func _on_wait_finished():
 	options_container.show()
+	options_container.get_child(0).show()
 	options_container.get_child(0).grab_focus()
