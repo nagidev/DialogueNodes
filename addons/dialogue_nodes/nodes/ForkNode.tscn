@@ -63,7 +63,6 @@ layout_mode = 2
 text = "Default Option"
 editable = false
 
-[connection signal="resize_request" from="." to="." method="_on_resize_request"]
 [connection signal="focus_entered" from="LabelContainer/Title" to="." method="_on_title_focus_entered"]
 [connection signal="focus_exited" from="LabelContainer/Title" to="." method="_on_title_focus_exited"]
 
