@@ -102,9 +102,14 @@ nodes = {
 "speaker": "Morpheus"
 },
 "2_1": {
-"comment": "A Fork allows you to process",
+"comment": "A Fork allows you to guide the flow of dialogue to
+a bunch of different options, given a condition for
+each one. Options are evaluated in order and one
+is taken if its condition is true. There is always
+a condition-less option at the bottom of the Fork,
+as a fallback in case no other option is valid.",
 "offset": Vector2(-440, 40),
-"size": Vector2(392.562, 100)
+"size": Vector2(380, 200)
 },
 "4_1": {
 "link": &"6_1",
