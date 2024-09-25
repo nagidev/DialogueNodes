@@ -210,7 +210,12 @@ func _process_condition(dict : Dictionary):
 
 # Process the fork node data (dict).
 func _process_fork(dict : Dictionary):
-	var result = _check_fork(dict)
+	var result = dict.default_option.link
+	var options = dict.options
+	for i in range(0, options.size()):  # Index traversal to ensure they're checked in order.
+		if options[i].condition.is_empty() or _check_condition(options[i].condition):
+			result = options[i].link
+			break
 	_proceed(result)
 
 
