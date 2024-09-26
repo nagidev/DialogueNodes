@@ -154,6 +154,9 @@ func _process_dialogue(dict: Dictionary):
 		if option.condition.is_empty() or _check_condition(option.condition) or skip_options_condition_checks:
 			option_texts.append(_parse_variables(option.text))
 			_option_links.append(option.link)
+	if option_texts.size() == 0:
+		option_texts.append('')
+		_option_links.append('END')
 	
 	dialogue_processed.emit(speaker, dialogue_text, option_texts)
 
