@@ -5,7 +5,7 @@
 
 [node name="ForkNode" type="GraphNode"]
 editor_description = "Add all Nodes that aren't Control at the bottom!"
-offset_right = 183.0
+offset_right = 206.0
 offset_bottom = 160.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -61,7 +61,7 @@ layout_mode = 2
 conditionable = false
 
 [node name="LineEdit" parent="DefaultForkOption" index="1"]
-placeholder_text = "Default Exit Title"
+placeholder_text = "Fork Default Exit"
 
 [connection signal="focus_entered" from="LabelContainer/Title" to="." method="_on_title_focus_entered"]
 [connection signal="focus_exited" from="LabelContainer/Title" to="." method="_on_title_focus_exited"]
