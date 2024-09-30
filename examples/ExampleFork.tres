@@ -29,7 +29,7 @@ nodes = {
 },
 2: {
 "condition": {},
-"link": &"6_1",
+"link": &"7_1",
 "text": "No thanks, I'll pass"
 }
 },
@@ -112,20 +112,20 @@ as a fallback in case no other option is valid.",
 "size": Vector2(380, 200)
 },
 "4_1": {
-"link": &"6_1",
+"link": &"7_1",
 "offset": Vector2(820, 0),
 "type": 0,
 "value": "true",
 "variable": "red_pill"
 },
 "4_2": {
-"link": &"6_1",
+"link": &"7_1",
 "offset": Vector2(860, 420),
 "type": 0,
 "value": "true",
 "variable": "blue_pill"
 },
-"6_1": {
+"7_1": {
 "default_option": {
 "link": &"1_8"
 },

@@ -29,6 +29,8 @@ func _from_dict(dict : Dictionary):
 	
 	text_edit.text = dict['comment']
 	last_text = text_edit.text
+	
+	return []
 
 
 func set_text(new_text : String):

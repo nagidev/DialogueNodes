@@ -125,7 +125,7 @@ func _proceed(node_name: String):
 		_process_set,
 		_process_condition,
 		_process_nest,
-    _process_fork
+		_process_fork
 	]
 	
 	var id := int(node_name.split('_')[0])

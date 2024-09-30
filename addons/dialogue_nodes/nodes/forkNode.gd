@@ -130,7 +130,6 @@ func _from_dict(dict : Dictionary):
 	
 	auto_resize = size.is_equal_approx(get_combined_minimum_size())
 	if auto_resize:
-		print("I WAS HERE")
 		create_tween().tween_callback(reset_size).set_delay(0.1)
 	
 	return next_nodes
