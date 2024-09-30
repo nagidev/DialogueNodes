@@ -20,7 +20,7 @@ icon = ExtResource("2_4xusw")
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Option Text"
+placeholder_text = "Optional Exit Title"
 expand_to_text_length = true
 
 [node name="FilterPanel" type="PopupPanel" parent="."]

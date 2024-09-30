@@ -4,6 +4,8 @@ extends HBoxContainer
 signal modified
 signal text_changed(new_text : String)
 
+@export var conditionable: bool = true
+
 @onready var line_edit = $LineEdit
 @onready var filter_button = $FilterButton
 @onready var filter_panel = $FilterPanel
@@ -51,11 +53,14 @@ func toggle_expand_to_text(toggled_on : bool):
 func set_text(new_text : String):
 	if line_edit.text != new_text:
 		line_edit.text = new_text
-		filter_button.visible = new_text != ''
+		filter_button.visible = conditionable and new_text != ''
 	text = new_text
 
 
 func set_condition(new_condition : Dictionary):
+	if !conditionable:
+		push_warning('Cannot set condition on a ForkOption with <conditionable> to FALSE!')
+		return
 	if new_condition.is_empty():
 		value1.text = ''
 		operator.selected = -1
@@ -88,7 +93,7 @@ func _on_filter_button_pressed():
 
 
 func _on_text_changed(new_text : String):
-	filter_button.visible = new_text != ''
+	filter_button.visible = conditionable and new_text != ''
 	text_changed.emit(new_text)
 
 
