@@ -99,10 +99,6 @@ func _from_dict(dict : Dictionary):
 	title_label.text = dict['title']
 	prev_title_text = title_label.text
 	
-	# set size
-	size = dict['size']
-	last_size = size
-	
 	# remove any existing options (if any)
 	for option in options:
 		option.queue_free()
@@ -128,9 +124,13 @@ func _from_dict(dict : Dictionary):
 	next_nodes.append(dict['default_option']['link'])
 	update_slots()
 	
-	# if size is equal to minimum size, toggle auto-resize ON
+	# set size, and if size is equal to minimum size, toggle auto-resize ON
+	size = dict['size']
+	last_size = size
+	
 	auto_resize = size.is_equal_approx(get_combined_minimum_size())
 	if auto_resize:
+		print("I WAS HERE")
 		create_tween().tween_callback(reset_size).set_delay(0.1)
 	
 	return next_nodes
