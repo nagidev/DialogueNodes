@@ -7,21 +7,22 @@ signal characters_updated(character_list : Array[Character])
 signal run_requested(start_node_idx : int)
 
 @export var NodeScenes: Array[PackedScene] = [
-	preload("res://addons/dialogue_nodes/nodes/StartNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/DialogueNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/CommentNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/SignalNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/SetNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/ConditionNode.tscn"),
-	preload("res://addons/dialogue_nodes/nodes/ForkNode.tscn")
+	preload('res://addons/dialogue_nodes/nodes/StartNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/DialogueNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/CommentNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/SignalNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/SetNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/ConditionNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn'),
+  preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn')
 ]
 
 @onready var popup_menu = $PopupMenu
 
 const _duplicate_offset := Vector2(20, 20)
 
-var undo_redo : EditorUndoRedoManager
-var starts := []
+var undo_redo: EditorUndoRedoManager
+var starts: Array[String] = []
 var cursor_pos := Vector2.ZERO
 var selected_nodes := []
 var request_node := ''
@@ -82,11 +83,9 @@ func load_data(data : DialogueData):
 		request_port = -1
 	
 	# add strays
+	var _start_node = get_node(starts[0])
 	for node_name in data.strays:
-		var id := int(node_name.split('_')[0])
-		var offset : Vector2 = data.nodes[node_name]['offset']
-		var new_node : GraphNode = add_node(id, node_name, offset)
-		new_node._from_dict(data.nodes[node_name])
+		_start_node.data_to_tree(self, data, node_name)
 	request_node = ''
 	request_port = -1
 	
