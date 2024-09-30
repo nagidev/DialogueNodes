@@ -150,6 +150,7 @@ as a fallback in case no other option is valid.",
 "text": "blue_pill"
 }
 },
+"size": Vector2(180, 227),
 "title": "Pills Fork"
 }
 }

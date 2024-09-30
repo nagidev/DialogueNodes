@@ -16,6 +16,7 @@ signal connection_shift_request(from_node : String, old_port : int, new_port : i
 
 var undo_redo : EditorUndoRedoManager
 var last_size := size
+var auto_resize: bool = false
 
 var options: Array = []
 var empty_option : BoxContainer
@@ -26,6 +27,7 @@ var option_height: int = 0
 
 @onready var first_option_index: int = %ForkOption1.get_index()
 @onready var default_option: BoxContainer = %DefaultForkOption
+@onready var resize_timer: Timer = %ResizeTimer
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 
@@ -37,13 +39,15 @@ func _ready():
 	add_option(get_child(first_option_index))
 	update_slots()
 	reset_size()
+	auto_resize = true
 
 
 func _to_dict(graph : GraphEdit):
 	var dict = {}
 	
-	# get title
+	# get data
 	dict['title'] = title_label.text
+	dict['size'] = size
 	
 	# get options connected to other nodes (including separate default option)
 	var options_dict := {}
@@ -94,7 +98,11 @@ func _from_dict(dict : Dictionary):
 	# set title
 	title_label.text = dict['title']
 	prev_title_text = title_label.text
-
+	
+	# set size
+	size = dict['size']
+	last_size = size
+	
 	# remove any existing options (if any)
 	for option in options:
 		option.queue_free()
@@ -120,8 +128,10 @@ func _from_dict(dict : Dictionary):
 	next_nodes.append(dict['default_option']['link'])
 	update_slots()
 	
-	# set size of node (few frames are needed to let UI set up itself and deferred doesn't work)
-	create_tween().tween_callback(reset_size).set_delay(0.1)
+	# if size is equal to minimum size, toggle auto-resize ON
+	auto_resize = size.is_equal_approx(get_combined_minimum_size())
+	if auto_resize:
+		create_tween().tween_callback(reset_size).set_delay(0.1)
 	
 	return next_nodes
 
@@ -182,8 +192,7 @@ func remove_option(option : BoxContainer):
 	option.focus_exited.disconnect(_on_option_focus_exited.bind(option))
 	
 	if option.get_parent() == self: remove_child(option)
-	
-	reset_size()
+	if auto_resize: reset_size()
 
 
 func update_slots():
@@ -191,6 +200,27 @@ func update_slots():
 		var enabled : bool = option.text != ''
 		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
 	set_slot(options.back().get_index() + 1, false, 0, color_default, true, 0, color_default)
+
+
+func _on_resize(_new_size):
+	resize_timer.stop()
+	resize_timer.start()
+
+
+func _on_resize_timer_timeout():
+	if not undo_redo: return
+	
+	undo_redo.create_action('Set node size')
+	undo_redo.add_do_method(self, 'set_size', size)
+	undo_redo.add_do_property(self, 'last_size', size)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_property(self, 'last_size', last_size)
+	undo_redo.add_undo_method(self, 'set_size', last_size)
+	undo_redo.commit_action()
+
+	# if size is equal to minimum size, toggle auto-resize ON
+	auto_resize = size.is_equal_approx(get_combined_minimum_size())
 
 
 func _on_title_focus_entered():
@@ -205,7 +235,7 @@ func _on_title_focus_exited():
 		undo_redo.commit_action()
 
 	prev_title_text = title_label.text
-	reset_size()
+	if auto_resize: reset_size()
 
 
 func _on_option_text_changed(new_text : String, option : BoxContainer):
@@ -292,7 +322,7 @@ func _on_option_focus_exited(option : BoxContainer):
 		undo_redo.commit_action()
 		empty_option = null
 
-	reset_size()
+	if auto_resize: reset_size()
 
 
 func _on_modified():
