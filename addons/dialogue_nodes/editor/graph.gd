@@ -13,7 +13,8 @@ signal run_requested(start_node_idx : int)
 	preload('res://addons/dialogue_nodes/nodes/SignalNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/SetNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/ConditionNode.tscn'),
-	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn')
+	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn'),
+  preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn')
 ]
 
 @onready var popup_menu = $PopupMenu
@@ -150,6 +151,9 @@ func connect_node_signals(node : GraphNode):
 			characters_updated.connect(node._on_characters_updated)
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
+		6: # fork node
+			node.disconnection_from_request.connect(_on_disconnection_from_request)
+			node.connection_shift_request.connect(_on_connection_shift_request)
 
 
 func disconnect_node_signals(node : GraphNode):
@@ -163,6 +167,9 @@ func disconnect_node_signals(node : GraphNode):
 			node.run_requested.disconnect(_on_run_requested.bind(node))
 		1: # dialogue node
 			characters_updated.disconnect(node._on_characters_updated)
+			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
+			node.connection_shift_request.disconnect(_on_connection_shift_request)
+		6: # fork node
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
 

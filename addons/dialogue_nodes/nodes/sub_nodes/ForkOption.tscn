@@ -1,0 +1,74 @@
+[gd_scene load_steps=4 format=3 uid="uid://nfp4t2r7wfhi"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.gd" id="1_bqi8r"]
+[ext_resource type="Texture2D" uid="uid://b10pucyepsb2s" path="res://addons/dialogue_nodes/icons/Filter.svg" id="2_4xusw"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="3_pf2k3"]
+
+[node name="ForkOption1" type="HBoxContainer"]
+offset_right = 150.0
+offset_bottom = 32.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("1_bqi8r")
+
+[node name="FilterButton" type="Button" parent="."]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+icon = ExtResource("2_4xusw")
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Fork Conditional Exit"
+expand_to_text_length = true
+
+[node name="FilterPanel" type="PopupPanel" parent="."]
+position = Vector2i(0, 50)
+size = Vector2i(204, 54)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="FilterPanel"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 200.0
+offset_bottom = 50.0
+
+[node name="Value1" type="LineEdit" parent="FilterPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Value"
+
+[node name="Operator" type="OptionButton" parent="FilterPanel/HBoxContainer"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+item_count = 6
+popup/item_0/text = "=="
+popup/item_1/text = "!="
+popup/item_1/id = 1
+popup/item_2/text = ">"
+popup/item_2/id = 2
+popup/item_3/text = "<"
+popup/item_3/id = 3
+popup/item_4/text = ">="
+popup/item_4/id = 4
+popup/item_5/text = "<="
+popup/item_5/id = 5
+
+[node name="Value2" type="LineEdit" parent="FilterPanel/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Value"
+
+[node name="ResetButton" type="Button" parent="FilterPanel/HBoxContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("3_pf2k3")
+flat = true
+
+[connection signal="pressed" from="FilterButton" to="." method="_on_filter_button_pressed"]
+[connection signal="focus_exited" from="LineEdit" to="." method="_on_text_focus_exited"]
+[connection signal="text_changed" from="LineEdit" to="." method="_on_text_changed"]
+[connection signal="text_changed" from="FilterPanel/HBoxContainer/Value1" to="." method="_on_condition_changed"]
+[connection signal="item_selected" from="FilterPanel/HBoxContainer/Operator" to="." method="_on_condition_changed"]
+[connection signal="text_changed" from="FilterPanel/HBoxContainer/Value2" to="." method="_on_condition_changed"]
+[connection signal="pressed" from="FilterPanel/HBoxContainer/ResetButton" to="." method="_on_condition_reset"]

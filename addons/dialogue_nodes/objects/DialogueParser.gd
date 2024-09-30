@@ -124,7 +124,8 @@ func _proceed(node_name: String):
 		_process_signal,
 		_process_set,
 		_process_condition,
-		_process_nest
+		_process_nest,
+    _process_fork
 	]
 	
 	var id := int(node_name.split('_')[0])
@@ -222,6 +223,17 @@ func _process_set(dict: Dictionary):
 func _process_condition(dict: Dictionary):
 	var result = _check_condition(dict)
 	_proceed(dict[str(result).to_lower()])
+
+
+# Process the fork node data (dict).
+func _process_fork(dict : Dictionary):
+	var result = dict.default_option.link
+	var options = dict.options
+	for i in range(0, options.size()):  # Index traversal to ensure they're checked in order.
+		if options[i].condition.is_empty() or _check_condition(options[i].condition):
+			result = options[i].link
+			break
+	_proceed(result)
 
 
 # Checks the condition based on dict.value1, dict.value2 and dict.operator

@@ -1,0 +1,168 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://b6bki2h32l6i3"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_lqpsg"]
+
+[resource]
+script = ExtResource("1_lqpsg")
+starts = {
+"START": &"0_1"
+}
+nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(-220, -140),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "Which pill will you take?",
+"offset": Vector2(60, -140),
+"options": {
+0: {
+"condition": {},
+"link": &"1_2",
+"text": "Red pill"
+},
+1: {
+"condition": {},
+"link": &"1_3",
+"text": "Blue pill"
+},
+2: {
+"condition": {},
+"link": &"6_1",
+"text": "No thanks, I'll pass"
+}
+},
+"size": Vector2(320, 360),
+"speaker": "Morpheus"
+},
+"1_2": {
+"dialogue": "Do you have the doctor's prescription for the pill?",
+"offset": Vector2(460, -200),
+"options": {
+0: {
+"condition": {},
+"link": &"4_1",
+"text": "Uh..."
+}
+},
+"size": Vector2(300, 256),
+"speaker": "Morpheus"
+},
+"1_3": {
+"dialogue": "You shouldn't take pills from strangers, you know!",
+"offset": Vector2(460, 240),
+"options": {
+0: {
+"condition": {},
+"link": &"4_2",
+"text": "Oh..."
+}
+},
+"size": Vector2(300, 256),
+"speaker": "Morpheus"
+},
+"1_6": {
+"dialogue": "So. Do you feel like a little guy in a blue world? All day and all night and everything you'll see will be blue, like you, inside and outside.",
+"offset": Vector2(1460, 220),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 260),
+"speaker": "Morpheus"
+},
+"1_7": {
+"dialogue": "Without prescription I can't let you take the pill, sorry.",
+"offset": Vector2(1460, -100),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Morpheus"
+},
+"1_8": {
+"dialogue": "So, do you need anything else or are you going to keep wasting my time?",
+"offset": Vector2(1460, 580),
+"options": {
+0: {
+"condition": {},
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Morpheus"
+},
+"2_1": {
+"comment": "A Fork allows you to guide the flow of dialogue to
+a bunch of different options, given a condition for
+each one. Options are evaluated in order and one
+is taken if its condition is true. There is always
+a condition-less option at the bottom of the Fork,
+as a fallback in case no other option is valid.",
+"offset": Vector2(-440, 40),
+"size": Vector2(380, 200)
+},
+"4_1": {
+"link": &"6_1",
+"offset": Vector2(820, 0),
+"type": 0,
+"value": "true",
+"variable": "red_pill"
+},
+"4_2": {
+"link": &"6_1",
+"offset": Vector2(860, 420),
+"type": 0,
+"value": "true",
+"variable": "blue_pill"
+},
+"6_1": {
+"default_option": {
+"link": &"1_8"
+},
+"offset": Vector2(1180, 140),
+"options": {
+0: {
+"condition": {
+"operator": 0,
+"value1": "{{red_pill}}",
+"value2": "true"
+},
+"link": &"1_7",
+"text": "red_pill"
+},
+1: {
+"condition": {
+"operator": 0,
+"value1": "{{blue_pill}}",
+"value2": "true"
+},
+"link": &"1_6",
+"text": "blue_pill"
+}
+},
+"size": Vector2(180, 197),
+"title": "Pills Fork"
+}
+}
+variables = {
+"blue_pill": {
+"type": 1,
+"value": false
+},
+"red_pill": {
+"type": 1,
+"value": false
+}
+}
+strays = Array[String](["2_1"])
+characters = ""
