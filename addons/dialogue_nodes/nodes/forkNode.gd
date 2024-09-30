@@ -29,7 +29,7 @@ var option_height: int = 0
 
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 
-@onready var OptionScene := preload("res://addons/dialogue_nodes/nodes/sub_nodes/forkOption.tscn")
+@onready var OptionScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn')
 
 
 func _ready():
@@ -59,7 +59,7 @@ func _to_dict(graph : GraphEdit):
 			)
 			if options_dict[idx]['condition'] == {}:
 				push_warning(
-					"Option #%d <%s> in Fork <%s> has no conditions. Options below it will never be reached!"
+					'Option #%d <%s> in Fork <%s> has no conditions. Options below it will never be reached!'
 					% [idx + 1, options[idx].text, name]
 				)
 		else:  # We assume that a connection of idx >= to options.size() is the default option
@@ -132,7 +132,7 @@ func instantiate_option() -> BoxContainer:
 		option = OptionScene.instantiate()
 		option.toggle_expand_to_text(true)
 	else:
-		printerr("Cannot instantiate OptionScene!")
+		printerr('Cannot instantiate OptionScene!')
 	return option
 
 
