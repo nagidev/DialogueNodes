@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Character.svg" id="2_n0qww"]
 [ext_resource type="Texture2D" uid="uid://dps8mwnnuc5nm" path="res://addons/dialogue_nodes/icons/DistractionFree.svg" id="4_tpc70"]
-[ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
+[ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/sub_nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
 
 [sub_resource type="CodeHighlighter" id="CodeHighlighter_btpy8"]
 number_color = Color(1, 1, 1, 1)
@@ -65,7 +65,7 @@ slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
 slot/4/draw_stylebox = true
 script = ExtResource("1")
-resize_timer = NodePath("DialogueContainer/ResizeTimer")
+resize_timer = NodePath("ResizeTimer")
 custom_speaker_timer = NodePath("SpeakerContainer/CustomSpeakerTimer")
 dialogue_timer = NodePath("DialogueContainer/DialogueTimer")
 
@@ -130,8 +130,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = 796.0
+offset_bottom = 596.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -152,16 +152,16 @@ layout_mode = 2
 layout_mode = 2
 text = "Close"
 
-[node name="ResizeTimer" type="Timer" parent="DialogueContainer"]
-wait_time = 0.5
-one_shot = true
-
 [node name="DialogueTimer" type="Timer" parent="DialogueContainer"]
 wait_time = 0.5
 one_shot = true
 
 [node name="Option1" parent="." instance=ExtResource("4_y6bt4")]
 layout_mode = 2
+
+[node name="ResizeTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="text_changed" from="SpeakerContainer/CustomSpeaker" to="." method="_on_custom_speaker_changed"]
@@ -172,5 +172,5 @@ layout_mode = 2
 [connection signal="pressed" from="DialogueContainer/ExpandButton" to="." method="_on_expand_button_pressed"]
 [connection signal="text_changed" from="DialogueContainer/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_text_changed"]
 [connection signal="pressed" from="DialogueContainer/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_close_button_pressed"]
-[connection signal="timeout" from="DialogueContainer/ResizeTimer" to="." method="_on_resize_timer_timeout"]
 [connection signal="timeout" from="DialogueContainer/DialogueTimer" to="." method="_on_dialogue_timer_timeout"]
+[connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]

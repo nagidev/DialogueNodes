@@ -14,14 +14,6 @@ signal connection_shift_request(from_node : String, old_port : int, new_port : i
 @export var color_option : Color = Color.GREEN_YELLOW
 @export var color_default : Color = Color.INDIAN_RED
 
-var undo_redo : EditorUndoRedoManager
-var last_size := size
-var auto_resize: bool = false
-
-var options: Array = []
-var empty_option : BoxContainer
-var option_height: int = 0
-
 @onready var title_label: LineEdit = %Title
 @onready var prev_title_text := title_label.text
 
@@ -32,6 +24,14 @@ var option_height: int = 0
 @onready var orig_height: int = size.y  # Includes 2 options (starter + default)
 
 @onready var OptionScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn')
+
+var undo_redo : EditorUndoRedoManager
+var last_size := size
+var auto_resize: bool = false
+
+var options: Array = []
+var empty_option : BoxContainer
+var option_height: int = 0
 
 
 func _ready():
@@ -58,10 +58,8 @@ func _to_dict(graph : GraphEdit):
 			options_dict[idx] = {}
 			options_dict[idx]['text'] = options[idx].text
 			options_dict[idx]['link'] = connection['to_node']
-			options_dict[idx]['condition'] = (
-				options[idx].get_condition() if options[idx].text != '' else {}
-			)
-			if options_dict[idx]['condition'] == {}:
+			options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else []
+			if options_dict[idx]['condition'].is_empty():
 				push_warning(
 					'Option #%d <%s> in Fork <%s> has no conditions. Options below it will never be reached!'
 					% [idx + 1, options[idx].text, name]
@@ -84,7 +82,7 @@ func _to_dict(graph : GraphEdit):
 		options_dict[0] = {}
 		options_dict[0]['text'] = ''
 		options_dict[0]['link'] = 'END'
-		options_dict[0]['condition'] = {}
+		options_dict[0]['condition'] = []
 	
 	# store options info in dict
 	dict['options'] = options_dict
@@ -106,9 +104,14 @@ func _from_dict(dict : Dictionary):
 	
 	# add new options
 	for idx in dict['options']:
-		var condition := {}
+		var condition := []
 		if dict['options'][idx].has('condition'):
-			condition = dict['options'][idx]['condition']
+			var cur_condition = dict['options'][idx]['condition']
+			# For pre v1.3
+			if cur_condition is Dictionary:
+				condition = [cur_condition]
+			else:
+				condition = cur_condition
 		var new_option := instantiate_option()
 		add_option(new_option, first_option_index + int(idx))
 		new_option.set_text(dict['options'][idx]['text'])
@@ -155,6 +158,7 @@ func add_option(option : BoxContainer, to_idx := -1):
 	if to_idx > -1: move_child(option, to_idx)
 	
 	option.undo_redo = undo_redo
+	option.modified.connect(_on_modified)
 	option.text_changed.connect(_on_option_text_changed.bind(option))
 	option.focus_exited.connect(_on_option_focus_exited.bind(option))
 	options.append(option)
@@ -187,6 +191,7 @@ func remove_option(option : BoxContainer):
 		connection_shift_request.emit(name, options_count - 1, options_count - 2)
 	
 	options.erase(option)
+	option.modified.disconnect(_on_modified)
 	option.text_changed.disconnect(_on_option_text_changed.bind(option))
 	option.focus_exited.disconnect(_on_option_focus_exited.bind(option))
 	

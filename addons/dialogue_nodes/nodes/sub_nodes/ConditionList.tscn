@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2m5p53k8qhhp"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/conditionList.gd" id="1_bfxq3"]
+[ext_resource type="Texture2D" uid="uid://cj0m8q8hgm0ed" path="res://addons/dialogue_nodes/icons/Add.svg" id="2_t4u1f"]
+
+[node name="ConditionList" type="BoxContainer"]
+offset_right = 200.0
+offset_bottom = 24.0
+vertical = true
+script = ExtResource("1_bfxq3")
+
+[node name="AddButton" type="Button" parent="."]
+layout_mode = 2
+icon = ExtResource("2_t4u1f")
+icon_alignment = 1
+
+[connection signal="pressed" from="AddButton" to="." method="_on_add_button_pressed"]

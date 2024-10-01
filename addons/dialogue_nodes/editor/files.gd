@@ -15,8 +15,8 @@ signal file_switched
 @onready var open_dialog = $OpenDialog
 @onready var confirm_dialog = $ConfirmationDialog
 
-const VariablesScene = preload("res://addons/dialogue_nodes/editor/Variables.tscn")
-const GraphScene = preload("res://addons/dialogue_nodes/editor/Graph.tscn")
+const VariablesScene = preload('res://addons/dialogue_nodes/editor/Variables.tscn')
+const GraphScene = preload('res://addons/dialogue_nodes/editor/Graph.tscn')
 
 var file_icon := preload('res://addons/dialogue_nodes/icons/Script.svg')
 var cur_idx := -1

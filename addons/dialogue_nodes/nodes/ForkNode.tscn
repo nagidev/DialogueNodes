@@ -11,7 +11,7 @@ offset_bottom = 160.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 resizable = true
-title = "Fork"
+title = "Fork (Experimental)"
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -60,7 +60,7 @@ layout_mode = 2
 [node name="DefaultForkOption" parent="." instance=ExtResource("2_rmans")]
 unique_name_in_owner = true
 layout_mode = 2
-conditionable = false
+show_filter_button = false
 
 [node name="LineEdit" parent="DefaultForkOption" index="1"]
 placeholder_text = "Fork Default Exit"

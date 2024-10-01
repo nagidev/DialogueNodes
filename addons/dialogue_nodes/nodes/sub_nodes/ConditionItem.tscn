@@ -1,0 +1,90 @@
+[gd_scene load_steps=4 format=3 uid="uid://bf83fu6tw7p1e"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/conditionItem.gd" id="1_ycxn0"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="3_miu01"]
+[ext_resource type="Texture2D" uid="uid://b8o81rn8q8a43" path="res://addons/dialogue_nodes/icons/Remove.svg" id="4_ve0so"]
+
+[node name="ConditionItem" type="BoxContainer"]
+offset_right = 268.0
+offset_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+script = ExtResource("1_ycxn0")
+
+[node name="MainContainer" type="BoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Value1" type="LineEdit" parent="MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "The property to set the value of."
+placeholder_text = "Value"
+metadata/last_value = ""
+
+[node name="Operator" type="OptionButton" parent="MainContainer"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+selected = 0
+item_count = 6
+popup/item_0/text = "=="
+popup/item_1/text = "!="
+popup/item_1/id = 1
+popup/item_2/text = ">"
+popup/item_2/id = 2
+popup/item_3/text = "<"
+popup/item_3/id = 3
+popup/item_4/text = ">="
+popup/item_4/id = 4
+popup/item_5/text = "<="
+popup/item_5/id = 5
+
+[node name="Value2" type="LineEdit" parent="MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "The value to set the property to.
+Eg: Bob, 12, 0.5, false, etc."
+placeholder_text = "Value"
+metadata/last_value = ""
+
+[node name="SideContainer" type="BoxContainer" parent="."]
+layout_mode = 2
+alignment = 2
+
+[node name="Combiner" type="OptionButton" parent="SideContainer"]
+layout_mode = 2
+size_flags_horizontal = 2
+selected = 0
+item_count = 2
+popup/item_0/text = "OR"
+popup/item_1/text = "AND"
+popup/item_1/id = 1
+
+[node name="ResetButton" type="Button" parent="SideContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("3_miu01")
+flat = true
+
+[node name="DeleteButton" type="Button" parent="SideContainer"]
+visible = false
+layout_mode = 2
+icon = ExtResource("4_ve0so")
+flat = true
+
+[node name="HSeparator" type="HSeparator" parent="."]
+layout_mode = 2
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="text_changed" from="MainContainer/Value1" to="." method="_on_condition_changing"]
+[connection signal="item_selected" from="MainContainer/Operator" to="." method="_on_condition_changing"]
+[connection signal="text_changed" from="MainContainer/Value2" to="." method="_on_condition_changing"]
+[connection signal="item_selected" from="SideContainer/Combiner" to="." method="_on_condition_changing"]
+[connection signal="pressed" from="SideContainer/ResetButton" to="." method="_on_condition_reset"]
+[connection signal="pressed" from="SideContainer/DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_condition_changed"]

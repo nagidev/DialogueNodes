@@ -237,9 +237,9 @@ func _process(delta):
 	# scrolling for longer dialogues
 	var scroll_amt := 0.0
 	if options_vertical:
-		scroll_amt = Input.get_axis("ui_left", "ui_right")
+		scroll_amt = Input.get_axis('ui_left', 'ui_right')
 	else:
-		scroll_amt = Input.get_axis("ui_up", "ui_down")
+		scroll_amt = Input.get_axis('ui_up', 'ui_down')
 	
 	if scroll_amt:
 		dialogue_label.get_v_scroll_bar().value += int(scroll_amt * scroll_speed)
@@ -340,5 +340,5 @@ func _on_dialogue_ended():
 
 func _on_wait_finished():
 	options_container.show()
-	options_container.get_child(0).show()
+	if Engine.is_editor_hint(): return
 	options_container.get_child(0).grab_focus()

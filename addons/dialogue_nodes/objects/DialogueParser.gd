@@ -221,7 +221,7 @@ func _process_set(dict: Dictionary):
 
 # Processes the condition node data (dict).
 func _process_condition(dict: Dictionary):
-	var result = _check_condition(dict)
+	var result = _check_condition(dict['condition'])
 	_proceed(dict[str(result).to_lower()])
 
 
@@ -237,41 +237,57 @@ func _process_fork(dict : Dictionary):
 
 
 # Checks the condition based on dict.value1, dict.value2 and dict.operator
-func _check_condition(dict: Dictionary):
-	var value1 = dict.value1
-	var value2 = dict.value2
+func _check_condition(conditions: Array):
+	var result := true
+	var combiner := 1
 	
-	# get variables if needed
-	if value1.count('{{') > 0:
-		value1 = _parse_variables(value1)
-	if value2.count('{{') > 0:
-		value2 = _parse_variables(value2)
-	
-	# evaluate values if neither values contain any alphabets (otherwise treat them as strings)
-	var regex := RegEx.new()
-	regex.compile("[a-zA-Z]+")
-	if not regex.search(value1) and not regex.search(value2):
-		var expression = Expression.new()
+	for dict: Dictionary in conditions:
+		if dict.is_empty(): continue
 		
-		if expression.parse(value1) != OK:
-			printerr(expression.get_error_text(), ' ', value1)
-			return false
-		value1 = expression.execute()
+		var value1 = dict.value1
+		var value2 = dict.value2
 		
-		if expression.parse(value2) != OK:
-			printerr(expression.get_error_text(), ' ', value2)
-			return false
-		value2 = expression.execute()
+		# get variables if needed
+		if value1.count('{{') > 0:
+			value1 = _parse_variables(value1)
+		if value2.count('{{') > 0:
+			value2 = _parse_variables(value2)
+		
+		# evaluate values if neither values contain any alphabets (otherwise treat them as strings)
+		var regex := RegEx.new()
+		regex.compile('[a-zA-Z]+')
+		if not regex.search(value1) and not regex.search(value2):
+			var expression := Expression.new()
+			
+			if expression.parse(value1) != OK:
+				printerr(expression.get_error_text(), ' ', value1)
+				return false
+			value1 = expression.execute()
+			
+			if expression.parse(value2) != OK:
+				printerr(expression.get_error_text(), ' ', value2)
+				return false
+			value2 = expression.execute()
+		
+		# perform operation
+		var cur_result : bool
+		match dict.operator:
+			0: cur_result = value1 == value2
+			1: cur_result = value1 != value2
+			2: cur_result = value1 > value2
+			3: cur_result = value1 < value2
+			4: cur_result = value1 >= value2
+			5: cur_result = value1 <= value2
+			_: cur_result = false
+		
+		# combine results using AND/OR
+		match combiner:
+			0: result = result or cur_result
+			1: result = result and cur_result
+		if dict.has('combiner'):
+			combiner = dict.combiner
 	
-	# perform operation
-	match dict.operator:
-		0: return value1 == value2
-		1: return value1 != value2
-		2: return value1 > value2
-		3: return value1 < value2
-		4: return value1 >= value2
-		5: return value1 <= value2
-		_: return false
+	return result
 
 
 # Processes the nest node data (dict).
@@ -332,7 +348,7 @@ func _parse_variables(value: String):
 # Returns a list of all the variables in a string denoted in {{}}.
 func _parse_variable_names(value: String):
 	var regex := RegEx.new()
-	regex.compile("{{([^{}]+)}}")
+	regex.compile('{{([^{}]+)}}')
 	var results = regex.search_all(value)
 	results = results.map(func(val): return val.get_string(1))
 	return results
