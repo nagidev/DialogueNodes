@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://dxsw2tult1r6t"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/forkItem.gd" id="1_24moj"]
+[ext_resource type="Texture2D" uid="uid://b10pucyepsb2s" path="res://addons/dialogue_nodes/icons/Filter.svg" id="1_glum7"]
+[ext_resource type="Texture2D" uid="uid://b8o81rn8q8a43" path="res://addons/dialogue_nodes/icons/Remove.svg" id="2_jse8g"]
+[ext_resource type="PackedScene" uid="uid://d2m5p53k8qhhp" path="res://addons/dialogue_nodes/nodes/sub_nodes/ConditionList.tscn" id="4_4k7bb"]
+
+[node name="ForkItem" type="BoxContainer"]
+offset_right = 158.0
+offset_bottom = 32.0
+script = ExtResource("1_24moj")
+
+[node name="ConditionButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Set condition"
+icon = ExtResource("1_glum7")
+text_overrun_behavior = 3
+clip_text = true
+
+[node name="DeleteButton" type="Button" parent="."]
+layout_mode = 2
+icon = ExtResource("2_jse8g")
+flat = true
+
+[node name="ConditionPanel" type="PopupPanel" parent="."]
+position = Vector2i(0, 50)
+size = Vector2i(300, 32)
+min_size = Vector2i(300, 0)
+
+[node name="ConditionList" parent="ConditionPanel" instance=ExtResource("4_4k7bb")]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 296.0
+offset_bottom = 28.0
+
+[connection signal="pressed" from="ConditionButton" to="." method="_on_condition_button_pressed"]
+[connection signal="pressed" from="DeleteButton" to="." method="_on_delete_button_pressed"]
+[connection signal="popup_hide" from="ConditionPanel" to="." method="_on_condition_panel_hide"]
+[connection signal="modified" from="ConditionPanel/ConditionList" to="." method="_on_modified"]

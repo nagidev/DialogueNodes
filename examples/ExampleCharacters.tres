@@ -19,7 +19,7 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": ""
 }
@@ -32,7 +32,7 @@ nodes = {
 "offset": Vector2(560, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": ""
 }
@@ -45,7 +45,7 @@ nodes = {
 "offset": Vector2(900, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": ""
 }

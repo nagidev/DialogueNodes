@@ -19,12 +19,12 @@ Additionally you can pass a value with the signal and use it in your code.",
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"3_1",
 "text": "Try it!"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Got it, bye!"
 }
@@ -37,12 +37,12 @@ Additionally you can pass a value with the signal and use it in your code.",
 "offset": Vector2(800, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"3_1",
 "text": "Do it again!"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Got it!"
 }

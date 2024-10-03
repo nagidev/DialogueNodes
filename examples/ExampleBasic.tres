@@ -18,7 +18,7 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": ""
 }

@@ -45,6 +45,7 @@ func _ready():
 
 func _to_dict(graph: GraphEdit):
 	var dict = {}
+	var empty_condition: Array[Dictionary] = []
 	
 	if custom_speaker.visible:
 		custom_speaker.text = custom_speaker.text.replace('{', '').replace('}', '')
@@ -61,12 +62,13 @@ func _to_dict(graph: GraphEdit):
 	# get options connected to other nodes
 	var options_dict := {}
 	for connection in graph.get_connections(name):
-		var idx: int = connection['from_port'] # this returns index starting from 0
+		# this returns index starting from 0
+		var idx: int = connection['from_port']
 		
 		options_dict[idx] = {}
 		options_dict[idx]['text'] = options[idx].text
 		options_dict[idx]['link'] = connection['to_node']
-		options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else []
+		options_dict[idx]['condition'] = options[idx].get_condition()
 	
 	# get options not connected
 	for i in range(options.size()):
@@ -81,7 +83,7 @@ func _to_dict(graph: GraphEdit):
 		options_dict[0] = {}
 		options_dict[0]['text'] = ''
 		options_dict[0]['link'] = 'END'
-		options_dict[0]['condition'] = []
+		options_dict[0]['condition'] = empty_condition
 	
 	# store options info in dict
 	dict['options'] = options_dict
@@ -111,7 +113,7 @@ func _from_dict(dict: Dictionary):
 	
 	# add new options
 	for idx in dict['options']:
-		var condition := []
+		var condition: Array[Dictionary] = []
 		if dict['options'][idx].has('condition'):
 			var cur_condition = dict['options'][idx]['condition']
 			# For pre v1.3

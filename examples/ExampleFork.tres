@@ -18,17 +18,17 @@ nodes = {
 "offset": Vector2(60, -140),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": "Red pill"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": "Blue pill"
 },
 2: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"7_1",
 "text": "No thanks, I'll pass"
 }
@@ -41,7 +41,7 @@ nodes = {
 "offset": Vector2(460, -200),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"4_1",
 "text": "Uh..."
 }
@@ -54,7 +54,7 @@ nodes = {
 "offset": Vector2(460, 240),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"4_2",
 "text": "Oh..."
 }
@@ -64,10 +64,10 @@ nodes = {
 },
 "1_6": {
 "dialogue": "So. Do you feel like a little guy in a blue world? All day and all night and everything you'll see will be blue, like you, inside and outside.",
-"offset": Vector2(1460, 220),
+"offset": Vector2(1520, 220),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": ""
 }
@@ -77,10 +77,10 @@ nodes = {
 },
 "1_7": {
 "dialogue": "Without prescription I can't let you take the pill, sorry.",
-"offset": Vector2(1460, -100),
+"offset": Vector2(1520, -100),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": ""
 }
@@ -90,10 +90,10 @@ nodes = {
 },
 "1_8": {
 "dialogue": "So, do you need anything else or are you going to keep wasting my time?",
-"offset": Vector2(1460, 580),
+"offset": Vector2(1520, 580),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": ""
 }
@@ -126,32 +126,27 @@ as a fallback in case no other option is valid.",
 "variable": "blue_pill"
 },
 "7_1": {
-"default_option": {
-"link": &"1_8"
-},
-"offset": Vector2(1180, 140),
-"options": {
+"default": &"1_8",
+"fork_title": "Pills Fork",
+"forks": {
 0: {
-"condition": {
+"condition": Array[Dictionary]([{
 "operator": 0,
 "value1": "{{red_pill}}",
 "value2": "true"
-},
-"link": &"1_7",
-"text": "red_pill"
+}]),
+"link": &"1_7"
 },
 1: {
-"condition": {
+"condition": Array[Dictionary]([{
 "operator": 0,
 "value1": "{{blue_pill}}",
 "value2": "true"
-},
-"link": &"1_6",
-"text": "blue_pill"
+}]),
+"link": &"1_6"
 }
 },
-"size": Vector2(180, 197),
-"title": "Pills Fork"
+"offset": Vector2(1180, 140)
 }
 }
 variables = {

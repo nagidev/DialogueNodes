@@ -19,7 +19,7 @@ Like: You have {{COINS}} coins!",
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": ""
 }
@@ -32,17 +32,17 @@ Like: You have {{COINS}} coins!",
 "offset": Vector2(700, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": "Set value"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_6",
 "text": "Check condition"
 },
 2: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Nothing"
 }
@@ -57,7 +57,7 @@ Current value: {{COINS}}
 "offset": Vector2(1040, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"4_1",
 "text": ""
 }
@@ -70,7 +70,7 @@ Current value: {{COINS}}
 "offset": Vector2(1700, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_5",
 "text": ""
 }
@@ -83,12 +83,12 @@ Current value: {{COINS}}
 "offset": Vector2(2040, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": "Got it!"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Bye"
 }
@@ -101,7 +101,7 @@ Current value: {{COINS}}
 "offset": Vector2(1040, 280),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"5_1",
 "text": ""
 }
@@ -114,7 +114,7 @@ Current value: {{COINS}}
 "offset": Vector2(1720, 380),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_9",
 "text": ""
 }
@@ -127,7 +127,7 @@ Current value: {{COINS}}
 "offset": Vector2(1720, 640),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_9",
 "text": ""
 }
@@ -140,12 +140,12 @@ Current value: {{COINS}}
 "offset": Vector2(2080, 520),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": "Got it!"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Bye"
 }
@@ -161,12 +161,14 @@ Current value: {{COINS}}
 "variable": "COINS"
 },
 "5_1": {
-"false": &"1_8",
-"offset": Vector2(1360, 380),
+"condition": Array[Dictionary]([{
 "operator": 2,
-"true": &"1_7",
 "value1": "{{COINS}}",
 "value2": "5"
+}]),
+"false": &"1_8",
+"offset": Vector2(1360, 380),
+"true": &"1_7"
 }
 }
 variables = {

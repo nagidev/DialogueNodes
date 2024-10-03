@@ -149,7 +149,7 @@ var dialogue_label : RichTextLabel
 ## Contains all the option buttons. The currently displayed options are visible while the rest are hidden. This value is automatically set while running a dialogue tree.
 var options_container : BoxContainer
 
-# [param DialogueParser] used for parsing the dialogue [member data].
+# [param DialogueParser] used for parsing the dialogue [member data].[br]
 # NOTE: Using [param DialogueParser] as a child instead of extending from it, because [DialogueBox] needs to extend from [Panel].
 var _dialogue_parser : DialogueParser
 var _main_container : BoxContainer

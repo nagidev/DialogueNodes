@@ -1,17 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://dj7rp7ql5qp08"]
+[gd_scene load_steps=3 format=3 uid="uid://bsv8k2uht3jij"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/forkNode.gd" id="1_yngwo"]
-[ext_resource type="PackedScene" uid="uid://nfp4t2r7wfhi" path="res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn" id="2_rmans"]
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/forkNode.gd" id="1_8xybu"]
+[ext_resource type="Texture2D" uid="uid://cj0m8q8hgm0ed" path="res://addons/dialogue_nodes/icons/Add.svg" id="2_3eo50"]
 
 [node name="ForkNode" type="GraphNode"]
-editor_description = "Add all Nodes that aren't Control at the bottom!"
-custom_minimum_size = Vector2(180, 140)
-offset_right = 206.0
-offset_bottom = 160.0
-size_flags_horizontal = 4
-size_flags_vertical = 4
-resizable = true
-title = "Fork (Experimental)"
+custom_minimum_size = Vector2(300, 0)
+offset_right = 300.0
+offset_bottom = 137.0
+title = "Fork"
 slot/0/left_enabled = true
 slot/0/left_type = 0
 slot/0/left_color = Color(1, 1, 1, 1)
@@ -23,56 +19,36 @@ slot/0/right_icon = null
 slot/0/draw_stylebox = true
 slot/1/left_enabled = false
 slot/1/left_type = 0
-slot/1/left_color = Color(0.678431, 1, 0.184314, 1)
+slot/1/left_color = Color(1, 1, 1, 1)
 slot/1/left_icon = null
 slot/1/right_enabled = false
 slot/1/right_type = 0
-slot/1/right_color = Color(0.678431, 1, 0.184314, 1)
+slot/1/right_color = Color(1, 1, 1, 1)
 slot/1/right_icon = null
 slot/1/draw_stylebox = true
 slot/2/left_enabled = false
 slot/2/left_type = 0
-slot/2/left_color = Color(0.803922, 0.360784, 0.360784, 1)
+slot/2/left_color = Color(1, 1, 1, 1)
 slot/2/left_icon = null
 slot/2/right_enabled = true
 slot/2/right_type = 0
-slot/2/right_color = Color(0.803922, 0.360784, 0.360784, 1)
+slot/2/right_color = Color(1, 1, 1, 1)
 slot/2/right_icon = null
 slot/2/draw_stylebox = true
-script = ExtResource("1_yngwo")
+script = ExtResource("1_8xybu")
 
-[node name="LabelContainer" type="VBoxContainer" parent="."]
+[node name="ForkTitle" type="LineEdit" parent="."]
 layout_mode = 2
+placeholder_text = "Title"
 
-[node name="Title" type="LineEdit" parent="LabelContainer"]
-unique_name_in_owner = true
+[node name="AddButton" type="Button" parent="."]
 layout_mode = 2
-placeholder_text = "Fork Title"
-expand_to_text_length = true
+icon = ExtResource("2_3eo50")
+icon_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="LabelContainer"]
+[node name="DefaultLabel" type="Label" parent="."]
 layout_mode = 2
+text = "Default exit"
+horizontal_alignment = 2
 
-[node name="ForkOption1" parent="." instance=ExtResource("2_rmans")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="DefaultForkOption" parent="." instance=ExtResource("2_rmans")]
-unique_name_in_owner = true
-layout_mode = 2
-show_filter_button = false
-
-[node name="LineEdit" parent="DefaultForkOption" index="1"]
-placeholder_text = "Fork Default Exit"
-
-[node name="ResizeTimer" type="Timer" parent="."]
-unique_name_in_owner = true
-wait_time = 0.5
-one_shot = true
-
-[connection signal="resize_request" from="." to="." method="_on_resize"]
-[connection signal="focus_entered" from="LabelContainer/Title" to="." method="_on_title_focus_entered"]
-[connection signal="focus_exited" from="LabelContainer/Title" to="." method="_on_title_focus_exited"]
-[connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
-
-[editable path="DefaultForkOption"]
+[connection signal="pressed" from="AddButton" to="." method="_on_add_button_pressed"]

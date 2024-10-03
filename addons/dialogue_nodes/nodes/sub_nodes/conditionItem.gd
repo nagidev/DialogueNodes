@@ -30,7 +30,7 @@ var cur_condition := {}
 
 func _to_dict() -> Dictionary:
 	if is_empty():
-		push_warning('Condition is empty.')
+		print_rich('[color=yellow]Condition is empty![/color]')
 		return {}
 	
 	var dict:= {

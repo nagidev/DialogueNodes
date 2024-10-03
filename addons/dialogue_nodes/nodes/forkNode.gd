@@ -6,328 +6,157 @@ extends GraphNode
 ## Groups a list of output options, each with a condition. The first condition (top to
 ## bottom) to be valid is used to exit, with a default option with no conditions always last.
 
+
 signal modified
-signal disconnection_from_request(from_node : String, from_port : int)
-signal connection_shift_request(from_node : String, old_port : int, new_port : int)
+signal disconnection_from_request(from_node: String, from_port: int)
+signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 
-@export var max_options := -1
-@export var color_option : Color = Color.GREEN_YELLOW
-@export var color_default : Color = Color.INDIAN_RED
+@onready var fork_title: LineEdit = $ForkTitle
+@onready var add_button: Button = $AddButton
 
-@onready var title_label: LineEdit = %Title
-@onready var prev_title_text := title_label.text
+const ForkItemScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkItem.tscn')
 
-@onready var first_option_index: int = %ForkOption1.get_index()
-@onready var default_option: BoxContainer = %DefaultForkOption
-@onready var resize_timer: Timer = %ResizeTimer
-
-@onready var orig_height: int = size.y  # Includes 2 options (starter + default)
-
-@onready var OptionScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkOption.tscn')
-
-var undo_redo : EditorUndoRedoManager
-var last_size := size
-var auto_resize: bool = false
-
-var options: Array = []
-var empty_option : BoxContainer
-var option_height: int = 0
+var undo_redo: EditorUndoRedoManager
+var forks: Array[Control] = []
+var base_color: Color = Color.WHITE
 
 
-func _ready():
-	options.clear()
-	add_option(get_child(first_option_index))
-	update_slots()
-	reset_size()
-	auto_resize = true
-
-
-func _to_dict(graph : GraphEdit):
-	var dict = {}
+func _to_dict(graph: GraphEdit) -> Dictionary:
+	var dict := {}
 	
-	# get data
-	dict['title'] = title_label.text
-	dict['size'] = size
+	dict['fork_title'] = fork_title.text
 	
-	# get options connected to other nodes (including separate default option)
-	var options_dict := {}
+	# get forks connected to other nodes
+	var forks_dict := {}
 	for connection in graph.get_connections(name):
-		var idx : int = connection['from_port'] # this returns index starting from 0
+		var idx: int = connection['from_port'] # this returns index starting from 0
 		
-		if idx < options.size() - 1:  # Save options except for the last empty one
-			options_dict[idx] = {}
-			options_dict[idx]['text'] = options[idx].text
-			options_dict[idx]['link'] = connection['to_node']
-			options_dict[idx]['condition'] = options[idx].get_condition() if options[idx].text != '' else []
-			if options_dict[idx]['condition'].is_empty():
-				push_warning(
-					'Option #%d <%s> in Fork <%s> has no conditions. Options below it will never be reached!'
-					% [idx + 1, options[idx].text, name]
-				)
-		else:  # We assume that a connection of idx >= to options.size() is the default option
-			dict['default_option'] = { 'link': connection['to_node'] }
+		if idx == forks.size():
+			dict['default'] = connection['to_node']
+			continue
+		
+		forks_dict[idx] = {}
+		forks_dict[idx]['condition'] = forks[idx].get_condition()
+		forks_dict[idx]['link'] = connection['to_node']
 	
-	# get options not connected (including separate default option)
-	for i in options.size():
-		if not options_dict.has(i) and options[i].text != '':
-			options_dict[i] = {}
-			options_dict[i]['text'] = options[i].text
-			options_dict[i]['link'] = 'END'
-			options_dict[i]['condition'] = options[i].get_condition()
-	if !dict.has('default_option'):
-		dict['default_option'] = { 'link': 'END' }
+	# get forks not connected to any nodes
+	for idx in range(forks.size()):
+		if forks_dict.has(idx): continue
+		
+		forks_dict[idx] = {}
+		forks_dict[idx]['condition'] = forks[idx].get_condition()
+		forks_dict[idx]['link'] = 'END'
+	if not dict.has('default'): dict['default'] = 'END'
 	
-	# if no options where registered (aside from default), record a single empty option
-	if options_dict.is_empty():
-		options_dict[0] = {}
-		options_dict[0]['text'] = ''
-		options_dict[0]['link'] = 'END'
-		options_dict[0]['condition'] = []
-	
-	# store options info in dict
-	dict['options'] = options_dict
+	# store fork info in dict
+	dict['forks'] = forks_dict
 	
 	return dict
 
 
-func _from_dict(dict : Dictionary):
-	var next_nodes = []
+func _from_dict(dict: Dictionary) -> Array[String]:
+	# The sequence of links is very important
+	var next_nodes: Array[String] = []
 	
-	# set title
-	title_label.text = dict['title']
-	prev_title_text = title_label.text
+	fork_title.text = dict['fork_title']
 	
-	# remove any existing options (if any)
-	for option in options:
-		option.queue_free()
-	options.clear()
-	
-	# add new options
-	for idx in dict['options']:
-		var condition := []
-		if dict['options'][idx].has('condition'):
-			var cur_condition = dict['options'][idx]['condition']
-			# For pre v1.3
-			if cur_condition is Dictionary:
-				condition = [cur_condition]
-			else:
-				condition = cur_condition
-		var new_option := instantiate_option()
-		add_option(new_option, first_option_index + int(idx))
-		new_option.set_text(dict['options'][idx]['text'])
-		new_option.set_condition(condition)
-		next_nodes.append(dict['options'][idx]['link'])
-	
-	# add empty option if any space left
-	if (max_options < 0 or options.size() < max_options) and options.back().text != '':
-		var new_option := instantiate_option()
-		add_option(new_option)
-	
-	# add default option link
-	next_nodes.append(dict['default_option']['link'])
-	update_slots()
-	
-	# set size, and if size is equal to minimum size, toggle auto-resize ON
-	size = dict['size']
-	last_size = size
-	
-	auto_resize = size.is_equal_approx(get_combined_minimum_size())
-	if auto_resize:
-		create_tween().tween_callback(reset_size).set_delay(0.1)
+	for idx in dict['forks']:
+		var new_item := ForkItemScene.instantiate()
+		add_item(new_item, idx + 1)
+		new_item.set_condition(dict['forks'][idx]['condition'])
+		var link: String = dict['forks'][idx]['link']
+		next_nodes.append(dict['forks'][idx]['link'])
+	next_nodes.append(dict['default'])
 	
 	return next_nodes
 
 
-func instantiate_option() -> BoxContainer:
-	var option : BoxContainer = null
-	if OptionScene.can_instantiate():
-		option = OptionScene.instantiate()
-		option.toggle_expand_to_text(true)
-	else:
-		printerr('Cannot instantiate OptionScene!')
-	return option
+func update_slots() -> void:
+	for item in forks:
+		set_slot(item.get_index(), false, 0, base_color, true, 0, base_color)
+	
+	set_slot(add_button.get_index(), false, 0, base_color, false, 0, base_color)
+	set_slot(add_button.get_index() + 1, false, 0, base_color, true, 0, base_color)
 
 
-func add_option(option : BoxContainer, to_idx := -1):
-	if option.get_parent() != self:
-		if !options.is_empty():
-			options.back().add_sibling(option, true)
-		else:
-			add_child(option, true)
-			move_child(option, default_option.get_index())
-	if to_idx > -1: move_child(option, to_idx)
+func add_item(new_item: BoxContainer, to_idx := -1) -> void:
+	if new_item.get_parent() != self: add_child(new_item, true)
+	move_child(new_item, to_idx)
 	
-	option.undo_redo = undo_redo
-	option.modified.connect(_on_modified)
-	option.text_changed.connect(_on_option_text_changed.bind(option))
-	option.focus_exited.connect(_on_option_focus_exited.bind(option))
-	options.append(option)
+	new_item.undo_redo = undo_redo
 	
-	# sort options in the array
-	options.sort_custom(func (op1, op2): return op1.get_index() < op2.get_index())
+	new_item.modified.connect(_on_modified)
+	new_item.delete_requested.connect(_on_item_deleted.bind(new_item))
+	forks.append(new_item)
+	
+	# sort forks in the array
+	forks.sort_custom(func (op1, op2):
+		return op1.get_index() < op2.get_index()
+		)
 	
 	# shift slot connections
-	var options_count := options.size()
-	var idx := options.find(option)
-	for i in range(options_count - 1, idx, -1):
-		if options[i].text != '':
-			connection_shift_request.emit(name, i - 1, i)
+	var index := forks.find(new_item)
+	for i in range(forks.size() - 1, index, -1):
+		connection_shift_request.emit(name, i - 1, i)
 	
-	# if more than the empty option exists, shift the default option also
-	if options_count > 1:
-		connection_shift_request.emit(name, options_count - 2, options_count - 1)
+	# shift default slot connection
+	var old_default_slot := add_button.get_index()
+	set_slot(old_default_slot + 1, false, 0, base_color, true, 0, base_color)
+	connection_shift_request.emit(name, forks.size() - 1, forks.size())
+	update_slots()
 
 
-func remove_option(option : BoxContainer):
+func remove_item(item: BoxContainer) -> void:
 	# shift slot connections
-	var options_count := options.size()
-	var idx := options.find(option)
-	for i in range(idx, options_count - 1):
-		if options[i + 1].text != '':
-			connection_shift_request.emit(name, i + 1, i)
+	var index := forks.find(item)
+	for i in range(index, forks.size() - 1):
+		connection_shift_request.emit(name, i + 1, i)
 	
-	# if more than the empty option exists, shift the default option also
-	if options_count > 1:
-		connection_shift_request.emit(name, options_count - 1, options_count - 2)
+	# shift default slot connection
+	var new_default_slot := add_button.get_index()
+	call_deferred('set_slot', new_default_slot, false, 0, base_color, true, 0, base_color)
+	connection_shift_request.emit(name, forks.size(), forks.size() - 1)
 	
-	options.erase(option)
-	option.modified.disconnect(_on_modified)
-	option.text_changed.disconnect(_on_option_text_changed.bind(option))
-	option.focus_exited.disconnect(_on_option_focus_exited.bind(option))
+	forks.erase(item)
+	item.modified.disconnect(_on_modified)
+	item.delete_requested.disconnect(_on_item_deleted)
 	
-	if option.get_parent() == self: remove_child(option)
-	if auto_resize: reset_size()
+	if item.get_parent() == self: remove_child(item)
+	update_slots()
 
 
-func update_slots():
-	for option in options:
-		var enabled : bool = option.text != ''
-		set_slot(option.get_slot_index(), false, 0, color_option, enabled, 0, color_option)
-	set_slot(options.back().get_index() + 1, false, 0, color_default, true, 0, color_default)
-
-
-func _on_resize(_new_size):
-	resize_timer.stop()
-	resize_timer.start()
-
-
-func _on_resize_timer_timeout():
-	if not undo_redo: return
+func _on_add_button_pressed() -> void:
+	var new_item := ForkItemScene.instantiate()
 	
-	undo_redo.create_action('Set node size')
-	undo_redo.add_do_method(self, 'set_size', size)
-	undo_redo.add_do_property(self, 'last_size', size)
-	undo_redo.add_do_method(self, '_on_modified')
-	undo_redo.add_undo_method(self, '_on_modified')
-	undo_redo.add_undo_property(self, 'last_size', last_size)
-	undo_redo.add_undo_method(self, 'set_size', last_size)
-	undo_redo.commit_action()
-
-	# if size is equal to minimum size, toggle auto-resize ON
-	auto_resize = size.is_equal_approx(get_combined_minimum_size())
-
-
-func _on_title_focus_entered():
-	prev_title_text = title_label.text
-
-
-func _on_title_focus_exited():
-	if title_label.text != prev_title_text:
-		undo_redo.create_action('Set title text')
-		undo_redo.add_do_method(title_label, 'set_text', title_label.text)
-		undo_redo.add_undo_method(title_label, 'set_text', prev_title_text)
-		undo_redo.commit_action()
-
-	prev_title_text = title_label.text
-	if auto_resize: reset_size()
-
-
-func _on_option_text_changed(new_text : String, option : BoxContainer):
-	if not undo_redo: return
-	
-	var idx = option.get_index()
-	
-	# case 0 : option was queued for deletion but changed from '' to 'something'
-	if option == empty_option:
-		if new_text == '': return
-		undo_redo.create_action('Set option text')
-		undo_redo.add_do_method(option, 'set_text', new_text)
-		undo_redo.add_do_method(self, 'update_slots')
-		undo_redo.add_do_method(self, '_on_modified')
-		undo_redo.add_undo_method(self, '_on_modified')
-		undo_redo.add_undo_method(option, 'set_text', option.text)
-		undo_redo.add_undo_method(self, 'update_slots')
-		undo_redo.commit_action()
-		empty_option = null
+	if not undo_redo:
+		add_item(new_item, -3)
 		return
 	
-	if new_text == option.text: return
-	
-	# case 1 : option changed from '' to 'something'
-	if option.text == '':
-		if idx == options.back().get_index() and (max_options < 0 or options.size() < max_options):
-			var new_option := instantiate_option()
-			
-			undo_redo.create_action('Set option text')
-			undo_redo.add_do_method(option, 'set_text', new_text)
-			undo_redo.add_do_method(self, 'add_option', new_option)
-			undo_redo.add_do_method(self, 'update_slots')
-			undo_redo.add_do_reference(new_option)
-			undo_redo.add_do_method(self, '_on_modified')
-			undo_redo.add_undo_method(self, '_on_modified')
-			undo_redo.add_undo_method(option, 'set_text', option.text)
-			undo_redo.add_undo_method(self, 'remove_option', new_option)
-			undo_redo.add_undo_method(self, 'update_slots')
-			undo_redo.add_undo_method(self, 'set_size', size)
-			undo_redo.commit_action()
-			return
-	
-	# case 2 : option changed from 'something' to ''
-	elif new_text == '':
-		if idx != options.back().get_index():
-			empty_option = option
-			return
-		disconnection_from_request.emit(name, idx - first_option_index)
-	
-	# case 3 : text changed from something to something else (neither are '')
-	undo_redo.create_action('Set option text')
-	undo_redo.add_do_method(option, 'set_text', new_text)
-	undo_redo.add_do_method(self, 'update_slots')
+	undo_redo.create_action('Add fork item')
+	undo_redo.add_do_method(self, 'add_item', new_item, -3)
 	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_do_reference(new_item)
+	undo_redo.add_undo_method(self, 'remove_item', new_item)
 	undo_redo.add_undo_method(self, '_on_modified')
-	undo_redo.add_undo_method(option, 'set_text', option.text)
-	undo_redo.add_undo_method(self, 'update_slots')
 	undo_redo.commit_action()
 
 
-func _on_option_focus_exited(option : BoxContainer):
-	if not undo_redo: return
+func _on_item_deleted(item: BoxContainer) -> void:
+	if not undo_redo:
+		remove_item(item)
+		return
 	
-	# case 2 : remove option when focus exits
-	if option == empty_option:
-		var idx = option.get_index()
-		
-		disconnection_from_request.emit(name, idx - first_option_index)
-		
-		undo_redo.create_action('Remove option')
-		undo_redo.add_do_method(self, 'remove_option', option)
-		# if the last option has some text, then create a new empty option
-		if options.back().text != '':
-			var new_option := instantiate_option()
-			undo_redo.add_do_method(self, 'add_option', new_option)
-			undo_redo.add_do_reference(new_option)
-			undo_redo.add_undo_method(self, 'remove_option', new_option)
-		undo_redo.add_do_method(self, 'update_slots')
-		undo_redo.add_do_method(self, '_on_modified')
-		undo_redo.add_undo_method(self, '_on_modified')
-		undo_redo.add_undo_method(self, 'add_option', option, idx)
-		undo_redo.add_undo_method(option, 'set_text', option.text)
-		undo_redo.add_undo_method(self, 'update_slots')
-		undo_redo.commit_action()
-		empty_option = null
-
-	if auto_resize: reset_size()
+	var idx = item.get_index()
+	disconnection_from_request.emit(name, forks.find(item))
+	
+	undo_redo.create_action('Remove fork item')
+	undo_redo.add_do_method(self, 'remove_item', item)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, 'add_item', item, idx)
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
+	reset_size()
 	modified.emit()

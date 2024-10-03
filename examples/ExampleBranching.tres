@@ -24,12 +24,12 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": "Red pill"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": "Blue pill"
 }
@@ -42,7 +42,7 @@ nodes = {
 "offset": Vector2(560, -80),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Uh..."
 }
@@ -55,7 +55,7 @@ nodes = {
 "offset": Vector2(560, 260),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Oh..."
 }
@@ -68,7 +68,7 @@ nodes = {
 "offset": Vector2(220, 600),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_5",
 "text": ""
 }
@@ -81,7 +81,7 @@ nodes = {
 "offset": Vector2(560, 600),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Cool!"
 }
@@ -91,12 +91,12 @@ nodes = {
 },
 "2_1": {
 "comment": "Create branching dialogues using different options.",
-"offset": Vector2(-200, 80),
+"offset": Vector2(-200, 100),
 "size": Vector2(392.562, 100)
 },
 "2_2": {
 "comment": "Create multiple dialogue trees in the same file.",
-"offset": Vector2(-200, 680),
+"offset": Vector2(-200, 700),
 "size": Vector2(392.562, 100)
 }
 }

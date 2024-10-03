@@ -18,7 +18,7 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "こんにちは。"
 }
@@ -28,7 +28,7 @@ nodes = {
 },
 "2_1": {
 "comment": "A basic example",
-"offset": Vector2(-20, 80),
+"offset": Vector2(-20, 100),
 "size": Vector2(200, 100)
 }
 }

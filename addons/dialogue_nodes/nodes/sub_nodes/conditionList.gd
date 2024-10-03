@@ -11,8 +11,8 @@ const ConditionItemScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes
 var undo_redo: EditorUndoRedoManager
 
 
-func _to_dict() -> Array:
-	var dict := []
+func _to_dict() -> Array[Dictionary]:
+	var dict: Array[Dictionary] = []
 	
 	for child in get_children():
 		if child is Button: continue
@@ -21,7 +21,7 @@ func _to_dict() -> Array:
 	return dict
 
 
-func _from_dict(dict: Array) -> void:
+func _from_dict(dict: Array[Dictionary]) -> void:
 	for idx in range(dict.size()):
 		var new_item = ConditionItemScene.instantiate()
 		add_item(new_item, idx)

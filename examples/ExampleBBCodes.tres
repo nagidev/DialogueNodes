@@ -18,17 +18,17 @@ nodes = {
 "offset": Vector2(220, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": "Yeah!"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_2",
 "text": "Nah"
 }
 },
-"size": Vector2(300, 254),
+"size": Vector2(300, 273),
 "speaker": "Greg"
 },
 "1_2": {
@@ -36,7 +36,7 @@ nodes = {
 "offset": Vector2(560, 300),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "..."
 }
@@ -49,7 +49,7 @@ nodes = {
 "offset": Vector2(560, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_4",
 "text": ""
 }
@@ -62,7 +62,7 @@ nodes = {
 "offset": Vector2(900, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_5",
 "text": ""
 }
@@ -76,17 +76,17 @@ Usage: [lb]effect1] [lb]effect2] text goes here [lb]/effect2] [lb]s/effect1]",
 "offset": Vector2(1240, 0),
 "options": {
 0: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": &"1_3",
 "text": "One more time?"
 },
 1: {
-"condition": {},
+"condition": Array[Dictionary]([]),
 "link": "END",
 "text": "Got it!"
 }
 },
-"size": Vector2(300, 254),
+"size": Vector2(300, 273),
 "speaker": "Greg"
 }
 }
