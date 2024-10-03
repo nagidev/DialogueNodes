@@ -69,8 +69,8 @@ func _on_add_button_pressed() -> void:
 	
 	undo_redo.create_action('Add condition item')
 	undo_redo.add_do_method(self, 'add_item', new_item, -2)
-	undo_redo.add_do_reference(new_item)
 	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_do_reference(new_item)
 	undo_redo.add_undo_method(self, 'remove_item', new_item)
 	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.commit_action()

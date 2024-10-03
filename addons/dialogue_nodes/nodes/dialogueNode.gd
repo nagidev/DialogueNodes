@@ -178,16 +178,16 @@ func add_option(option: BoxContainer, to_idx := -1):
 		)
 	
 	# shift slot connections
-	var idx := options.find(option)
-	for i in range(options.size() - 1, idx, -1):
+	var index := options.find(option)
+	for i in range(options.size() - 1, index, -1):
 		if options[i].text != '':
 			connection_shift_request.emit(name, i - 1, i)
 
 
 func remove_option(option: BoxContainer):
 	# shift slot connections
-	var idx := options.find(option)
-	for i in range(idx, options.size() - 1):
+	var index := options.find(option)
+	for i in range(index, options.size() - 1):
 		if options[i + 1].text != '':
 			connection_shift_request.emit(name, i + 1, i)
 	

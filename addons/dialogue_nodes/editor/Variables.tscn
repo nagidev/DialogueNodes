@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://b3i6c8iuh7ii"]
+[gd_scene load_steps=3 format=3 uid="uid://b3i6c8iuh7ii"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/editor/variables.gd" id="1_0ltmm"]
+[ext_resource type="Texture2D" uid="uid://cj0m8q8hgm0ed" path="res://addons/dialogue_nodes/icons/Add.svg" id="2_vukkj"]
 
 [node name="Variables" type="VBoxContainer"]
 offset_right = 200.0
@@ -16,7 +17,8 @@ text = "Variables"
 [node name="AddButton" type="Button" parent="."]
 layout_mode = 2
 tooltip_text = "Add a new variable."
-text = "+"
+icon = ExtResource("2_vukkj")
+icon_alignment = 1
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 2

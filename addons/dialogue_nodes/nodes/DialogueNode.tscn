@@ -16,6 +16,8 @@ color_regions = {
 
 [node name="DialogueNode" type="GraphNode" node_paths=PackedStringArray("resize_timer", "custom_speaker_timer", "dialogue_timer")]
 custom_minimum_size = Vector2(300, 240)
+offset_right = 300.0
+offset_bottom = 240.0
 theme_override_constants/separation = 4
 resizable = true
 title = "Dialogue"
@@ -65,7 +67,7 @@ slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
 slot/4/draw_stylebox = true
 script = ExtResource("1")
-resize_timer = NodePath("ResizeTimer")
+resize_timer = NodePath("DialogueContainer/ResizeTimer")
 custom_speaker_timer = NodePath("SpeakerContainer/CustomSpeakerTimer")
 dialogue_timer = NodePath("DialogueContainer/DialogueTimer")
 
@@ -130,8 +132,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = 796.0
-offset_bottom = 596.0
+offset_right = -4.0
+offset_bottom = -4.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -156,12 +158,12 @@ text = "Close"
 wait_time = 0.5
 one_shot = true
 
-[node name="Option1" parent="." instance=ExtResource("4_y6bt4")]
-layout_mode = 2
-
-[node name="ResizeTimer" type="Timer" parent="."]
+[node name="ResizeTimer" type="Timer" parent="DialogueContainer"]
 wait_time = 0.5
 one_shot = true
+
+[node name="Option1" parent="." instance=ExtResource("4_y6bt4")]
+layout_mode = 2
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]
 [connection signal="text_changed" from="SpeakerContainer/CustomSpeaker" to="." method="_on_custom_speaker_changed"]
@@ -173,4 +175,4 @@ one_shot = true
 [connection signal="text_changed" from="DialogueContainer/DialoguePanel/VBoxContainer/DialogueExpanded" to="." method="_on_dialogue_text_changed"]
 [connection signal="pressed" from="DialogueContainer/DialoguePanel/VBoxContainer/CenterContainer/CloseButton" to="." method="_on_close_button_pressed"]
 [connection signal="timeout" from="DialogueContainer/DialogueTimer" to="." method="_on_dialogue_timer_timeout"]
-[connection signal="timeout" from="ResizeTimer" to="." method="_on_resize_timer_timeout"]
+[connection signal="timeout" from="DialogueContainer/ResizeTimer" to="." method="_on_resize_timer_timeout"]
