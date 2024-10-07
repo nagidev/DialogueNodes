@@ -68,11 +68,10 @@ icon = ExtResource("2_w7ejb")
 [node name="MethodSelection" type="OptionButton" parent="MethodSetup"]
 unique_name_in_owner = true
 layout_mode = 2
-selected = 1
-item_count = 2
-popup/item_0/text = "method_a"
-popup/item_1/text = "method_b"
-popup/item_1/id = 1
+selected = 0
+allow_reselect = true
+item_count = 1
+popup/item_0/text = "sample_method"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MethodSetup"]
 layout_mode = 2

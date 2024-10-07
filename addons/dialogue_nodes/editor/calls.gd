@@ -1,7 +1,7 @@
 @tool
 extends Script
 ##
-## Default Function Database for CallNodes
+## Default Method Database for CallNodes
 ##
 ## Method database for all function calls made from DialogueCalls.
 ## This script is expected to be expanded by the user, customized to their needs.
