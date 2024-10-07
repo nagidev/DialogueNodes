@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bskh1vm7i45nw"]
+
+[node name="CallNodeParameter" type="HBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 4
+
+[node name="ParameterLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Parameter"
+
+[node name="ParameterInput" type="LineEdit" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+placeholder_text = "Type"
