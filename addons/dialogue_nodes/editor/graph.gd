@@ -3,8 +3,8 @@ extends GraphEdit
 
 
 signal modified
-signal characters_updated(character_list : Array[Character])
-signal run_requested(start_node_idx : int)
+signal characters_updated(character_list: Array[Character])
+signal run_requested(start_node_idx: int)
 
 @export var NodeScenes: Array[PackedScene] = [
 	preload('res://addons/dialogue_nodes/nodes/StartNode.tscn'),
@@ -17,7 +17,7 @@ signal run_requested(start_node_idx : int)
 	preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn')
 ]
 
-@onready var popup_menu = $PopupMenu
+@onready var popup_menu := $PopupMenu
 
 const _duplicate_offset := Vector2(20, 20)
 
@@ -27,12 +27,12 @@ var cursor_pos := Vector2.ZERO
 var selected_nodes := []
 var request_node := ''
 var request_port := -1
-var last_character_list : Array[Character] = []
+var last_character_list: Array[Character] = []
 
-var editor_settings : EditorSettings
-var base_color : Color
+var editor_settings: EditorSettings
+var base_color: Color
 
-func _ready():
+func _ready() -> void:
 	init_add_menu(popup_menu)
 	
 	if not Engine.is_editor_hint(): return
@@ -40,13 +40,13 @@ func _ready():
 	editor_settings.settings_changed.connect(update_slots_color)
 
 
-func _input(_event):
+func _input(_event) -> void:
 	if (not popup_menu.visible) and request_port > -1:
 		request_node = ''
 		request_port = -1
 
 
-func get_data():
+func get_data() -> DialogueData:
 	var data := DialogueData.new()
 	
 	# get start nodes and their trees
@@ -65,7 +65,7 @@ func get_data():
 	return data
 
 
-func load_data(data : DialogueData):
+func load_data(data: DialogueData) -> void:
 	# clear graph
 	clear_connections()
 	for node in get_children():
@@ -76,8 +76,8 @@ func load_data(data : DialogueData):
 	
 	# add start nodes and their trees
 	for node_name in data.starts.values():
-		var offset : Vector2 = data.nodes[node_name]['offset']
-		var start_node : GraphNode = add_node(0, node_name, offset)
+		var offset: Vector2 = data.nodes[node_name]['offset']
+		var start_node: GraphNode = add_node(0, node_name, offset)
 		start_node.data_to_tree(self, data)
 		request_node = ''
 		request_port = -1
@@ -92,7 +92,7 @@ func load_data(data : DialogueData):
 	update_slots_color()
 
 
-func init_add_menu(add_menu : PopupMenu):
+func init_add_menu(add_menu: PopupMenu) -> void:
 	# clear if already existing items
 	add_menu.clear()
 	
@@ -104,7 +104,7 @@ func init_add_menu(add_menu : PopupMenu):
 		add_menu.add_item(scene_name, i)
 
 
-func add_node(id : int, node_name := '', offset := cursor_pos):
+func add_node(id: int, node_name := '', offset := cursor_pos) -> GraphNode:
 	deselect_all_nodes()
 	
 	# create new node
@@ -132,13 +132,14 @@ func add_node(id : int, node_name := '', offset := cursor_pos):
 	match id:
 		0: # start node
 			add_to_starts(new_node.name)
+			new_node.set_ID('START' + new_node.name.split('_')[1])
 		1: # dialogue node
 			new_node._on_characters_updated(last_character_list)
 	
 	return new_node
 
 
-func connect_node_signals(node : GraphNode):
+func connect_node_signals(node: GraphNode) -> void:
 	var id := int(node.name.split('_')[0])
 	
 	node.dragged.connect(_on_node_dragged.bind(node))
@@ -156,7 +157,7 @@ func connect_node_signals(node : GraphNode):
 			node.connection_shift_request.connect(_on_connection_shift_request)
 
 
-func disconnect_node_signals(node : GraphNode):
+func disconnect_node_signals(node: GraphNode) -> void:
 	var id := int(node.name.split('_')[0])
 	
 	node.dragged.disconnect(_on_node_dragged.bind(node))
@@ -174,19 +175,19 @@ func disconnect_node_signals(node : GraphNode):
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
 
 
-func show_add_menu(pos : Vector2):
+func show_add_menu(pos: Vector2) -> void:
 	var pop_pos := pos + global_position + Vector2(get_window().position)
 	popup_menu.popup(Rect2(pop_pos.x, pop_pos.y, popup_menu.size.x, popup_menu.size.y))
 	cursor_pos = (pos + scroll_offset) / zoom
 
 
-func deselect_all_nodes():
+func deselect_all_nodes() -> void:
 	for node in selected_nodes:
 		node.selected = false
 	selected_nodes.clear()
 
 
-func get_connections(from_node : String, from_port := -1) -> Array:
+func get_connections(from_node: String, from_port := -1) -> Array:
 	var found_connections := []
 	for connection in get_connection_list():
 		if connection['from_node'] == from_node:
@@ -198,17 +199,17 @@ func get_connections(from_node : String, from_port := -1) -> Array:
 	return found_connections
 
 
-func add_to_starts(node_name : String):
+func add_to_starts(node_name: String) -> void:
 	if not starts.has(node_name):
 		starts.append(node_name)
 
 
-func remove_from_starts(node_name : String):
+func remove_from_starts(node_name: String) -> void:
 	if starts.has(node_name):
 		starts.erase(node_name)
 
 
-func update_slots_color(nodes : Array = get_children()):
+func update_slots_color(nodes: Array = get_children()) -> void:
 	if not editor_settings: return
 	
 	const light_color := Color.WHITE
@@ -220,18 +221,18 @@ func update_slots_color(nodes : Array = get_children()):
 		if not node is GraphNode: continue
 		
 		for i in range(node.get_child_count()):
-			var enabled_left : bool = node.is_slot_enabled_left(i)
-			var enabled_right : bool = node.is_slot_enabled_right(i)
-			var color_left : Color = node.get_slot_color_left(i)
+			var enabled_left: bool = node.is_slot_enabled_left(i)
+			var enabled_right: bool = node.is_slot_enabled_right(i)
+			var color_left: Color = node.get_slot_color_left(i)
 			if color_left.is_equal_approx(light_color) or color_left.is_equal_approx(dark_color): color_left = base_color
-			var color_right : Color = node.get_slot_color_right(i)
+			var color_right: Color = node.get_slot_color_right(i)
 			if color_right.is_equal_approx(light_color) or color_right.is_equal_approx(dark_color): color_right = base_color
 			node.set_slot(i, enabled_left, 0, color_left, enabled_right, 0, color_right)
 		
 		if 'base_color' in node: node.base_color = base_color
 
 
-func _on_add_menu_pressed(id : int):
+func _on_add_menu_pressed(id: int) -> void:
 	if not undo_redo:
 		add_node(id)
 		return
@@ -239,7 +240,7 @@ func _on_add_menu_pressed(id : int):
 	_on_modified()
 	
 	var prev_connection := get_connections(request_node, request_port)
-	var new_node : GraphNode = add_node(id)
+	var new_node: GraphNode = add_node(id)
 	
 	undo_redo.create_action('Add graph node')
 	undo_redo.add_do_method(self, 'add_child', new_node)
@@ -269,24 +270,24 @@ func _on_add_menu_pressed(id : int):
 	update_slots_color([new_node])
 
 
-func _on_node_selected(node : GraphNode):
+func _on_node_selected(node: GraphNode) -> void:
 	if not selected_nodes.has(node):
 		selected_nodes.append(node)
 
 
-func _on_node_deselected(node : GraphNode):
+func _on_node_deselected(node: GraphNode) -> void:
 	if selected_nodes.has(node):
 		selected_nodes.erase(node)
 
 
-func _on_node_dragged(from : Vector2, to : Vector2, node : GraphNode):
+func _on_node_dragged(from: Vector2, to: Vector2, node: GraphNode) -> void:
 	if not undo_redo:
 		cursor_pos = to
 		return
 	
 	_on_modified()
 	
-	undo_redo.create_action('Drag node : ' + str(from) + '->' + str(to))
+	undo_redo.create_action('Drag node: ' + str(from) + '->' + str(to))
 	undo_redo.add_do_property(node, 'position_offset', to)
 	undo_redo.add_do_property(self, 'cursor_pos', to)
 	undo_redo.add_do_method(self, '_on_modified')
@@ -296,7 +297,7 @@ func _on_node_dragged(from : Vector2, to : Vector2, node : GraphNode):
 	undo_redo.commit_action(false)
 
 
-func _on_duplicate_nodes_request():
+func _on_duplicate_nodes_request() -> void:
 	if selected_nodes.size() == 0: return
 	
 	var nodes_to_duplicate := selected_nodes.duplicate()
@@ -304,7 +305,7 @@ func _on_duplicate_nodes_request():
 	
 	for node in nodes_to_duplicate:
 		var clone_id := int(node.name.split('_')[0])
-		var clone_node : GraphNode = add_node(clone_id)
+		var clone_node: GraphNode = add_node(clone_id)
 		clone_node._from_dict(node._to_dict(self))
 		clone_node.position_offset = node.position_offset + _duplicate_offset
 		if clone_id == 1:
@@ -341,7 +342,7 @@ func _on_duplicate_nodes_request():
 	undo_redo.commit_action(false)
 
 
-func _on_delete_nodes_request(_nodes):
+func _on_delete_nodes_request(_nodes) -> void:
 	if not undo_redo:
 		for node in selected_nodes:
 			remove_child(node)
@@ -380,13 +381,13 @@ func _on_delete_nodes_request(_nodes):
 	deselect_all_nodes()
 
 
-func _on_connection_to_empty(from_node : String, from_port : int, release_position :Vector2):
+func _on_connection_to_empty(from_node: String, from_port: int, release_position :Vector2) -> void:
 	request_node = from_node
 	request_port = from_port
 	show_add_menu(release_position)
 
 
-func _on_connection_request(from_node : String, from_port : int, to_node : String, to_port : int):
+func _on_connection_request(from_node: String, from_port: int, to_node: String, to_port: int) -> void:
 	if not undo_redo:
 		var prev_connection := get_connections(from_node, from_port)
 		if prev_connection.size() > 0:
@@ -409,7 +410,7 @@ func _on_connection_request(from_node : String, from_port : int, to_node : Strin
 	undo_redo.commit_action()
 
 
-func _on_disconnection_request(from_node : String, from_port : int, to_node : String, to_port : int):
+func _on_disconnection_request(from_node: String, from_port: int, to_node: String, to_port: int) -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Disconnect nodes')
@@ -420,7 +421,7 @@ func _on_disconnection_request(from_node : String, from_port : int, to_node : St
 	undo_redo.commit_action()
 
 
-func _on_disconnection_from_request(from_node : String, from_port : int):
+func _on_disconnection_from_request(from_node: String, from_port: int) -> void:
 	if not undo_redo: return
 	
 	var connections := get_connections(from_node, from_port)
@@ -434,7 +435,7 @@ func _on_disconnection_from_request(from_node : String, from_port : int):
 	undo_redo.commit_action()
 
 
-func _on_connection_shift_request(from_node : String, old_port : int, new_port : int):
+func _on_connection_shift_request(from_node: String, old_port: int, new_port: int) -> void:
 	var connections := get_connections(from_node, old_port)
 	
 	if connections.size() == 0: return
@@ -443,19 +444,19 @@ func _on_connection_shift_request(from_node : String, old_port : int, new_port :
 	connect_node(from_node, new_port, connections[0]['to_node'], connections[0]['to_port'])
 
 
-func _on_characters_updated(character_list : Array[Character]):
+func _on_characters_updated(character_list: Array[Character]) -> void:
 	if not is_inside_tree(): return
 	
 	last_character_list = character_list
 	characters_updated.emit(character_list)
 
 
-func _on_run_requested(node : GraphNode):
+func _on_run_requested(node: GraphNode) -> void:
 	var idx := starts.find(node.name)
 	if idx == -1: return
 	
 	run_requested.emit(idx)
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

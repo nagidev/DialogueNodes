@@ -5,18 +5,19 @@ extends GraphNode
 signal modified
 signal run_requested
 
-@onready var ID = $HBoxContainer/ID
-@onready var start_id : String = ID.text
-@onready var timer = $Timer
+@onready var run_button := $HBoxContainer/RunButton
+@onready var ID := $HBoxContainer/ID
+@onready var start_id: String = ID.text
+@onready var timer := $Timer
 @onready var resize_timer: Timer = $ResizeTimer
 
-var undo_redo : EditorUndoRedoManager
+var undo_redo: EditorUndoRedoManager
 var last_size := size
 
 
-func _to_dict(graph : GraphEdit):
+func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
-	var connections : Array = graph.get_connections(name)
+	var connections: Array = graph.get_connections(name)
 	
 	dict['start_id'] = start_id
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
@@ -24,15 +25,15 @@ func _to_dict(graph : GraphEdit):
 	return dict
 
 
-func _from_dict(dict : Dictionary):
+func _from_dict(dict: Dictionary) -> Array[String]:
 	start_id = dict['start_id']
 	ID.text = start_id
 	return [dict['link']]
 
 
 ## convert graph/tree from this node to data
-func tree_to_data(graph : GraphEdit, data := DialogueData.new(), node : GraphNode = self):
-	var next_nodes : Array = graph.get_connections(node.name)
+func tree_to_data(graph: GraphEdit, data := DialogueData.new(), node: GraphNode = self) -> DialogueData:
+	var next_nodes: Array = graph.get_connections(node.name)
 	
 	# setup
 	if node == self:
@@ -59,7 +60,7 @@ func tree_to_data(graph : GraphEdit, data := DialogueData.new(), node : GraphNod
 
 
 ## create tree on this node from the given data
-func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
+func data_to_tree(graph: GraphEdit, data: DialogueData, node_name := name) -> void:
 	var next_nodes := []
 	
 	# setup and end
@@ -73,8 +74,8 @@ func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
 		return
 	elif not graph.has_node(NodePath(node_name)):
 		var type := int(node_name.split('_')[0])
-		var offset : Vector2 = data.nodes[node_name]['offset']
-		var node : GraphNode = graph.add_node(type, node_name, offset)
+		var offset: Vector2 = data.nodes[node_name]['offset']
+		var node: GraphNode = graph.add_node(type, node_name, offset)
 		next_nodes = node._from_dict(data.nodes[node_name])
 	elif graph.has_node(NodePath(node_name)) and graph.request_port > -1:
 		graph.connect_node(graph.request_node, graph.request_port, node_name, 0)
@@ -85,18 +86,18 @@ func data_to_tree(graph : GraphEdit, data : DialogueData, node_name := name):
 		data_to_tree(graph, data, next_nodes[i])
 
 
-func set_ID(new_id : String):
+func set_ID(new_id: String) -> void:
 	start_id = new_id
 	if ID.text != start_id:
 		ID.text = start_id
 
 
-func _on_ID_changed(_id):
+func _on_ID_changed(_id) -> void:
 	timer.stop()
 	timer.start()
 
 
-func _on_timer_timeout():
+func _on_timer_timeout() -> void:
 	if not undo_redo:
 		start_id = ID.text
 		return
@@ -109,26 +110,27 @@ func _on_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_run_pressed():
+func _on_run_pressed() -> void:
 	if start_id != '':
 		run_requested.emit()
+		run_button.release_focus()
 	else:
 		printerr(title, ' has no start_id!')
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()
 
 
-func _on_resize(_new_size):
+func _on_resize(_new_size) -> void:
 	resize_timer.stop()
 	resize_timer.start()
 	
-	# FIXME : find a way to clamp node size along y axis without using _process()
+	# FIXME: find a way to clamp node size along y axis without using _process()
 	size.y = 86
 
 
-func _on_resize_timer_timeout():
+func _on_resize_timer_timeout() -> void:
 	if not undo_redo:
 		print_rich('[shake][color="FF8866"]WOMP WOMP no undo_redo??[/color][/shake]')
 		return
