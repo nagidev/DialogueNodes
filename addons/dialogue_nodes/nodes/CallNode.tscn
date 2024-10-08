@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cu71fiowdkvmr"]
+[gd_scene load_steps=4 format=3 uid="uid://cu71fiowdkvmr"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/callNode.gd" id="1_hul2k"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="2_w7ejb"]
-[ext_resource type="PackedScene" uid="uid://bskh1vm7i45nw" path="res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeParameter.tscn" id="3_tyq50"]
 [ext_resource type="PackedScene" uid="uid://djc2ggs14vbxc" path="res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn" id="4_mw7lj"]
 
 [node name="CallNode" type="GraphNode"]
@@ -65,13 +64,14 @@ layout_mode = 2
 size_flags_horizontal = 8
 icon = ExtResource("2_w7ejb")
 
-[node name="MethodSelection" type="OptionButton" parent="MethodSetup"]
+[node name="MethodSelector" type="OptionButton" parent="MethodSetup"]
 unique_name_in_owner = true
 layout_mode = 2
 selected = 0
 allow_reselect = true
-item_count = 1
-popup/item_0/text = "sample_method"
+item_count = 2
+popup/item_1/text = "sample_method"
+popup/item_1/id = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MethodSetup"]
 layout_mode = 2
@@ -81,18 +81,10 @@ size_flags_vertical = 4
 layout_mode = 2
 size_flags_horizontal = 0
 
-[node name="ParameterContainer" type="VBoxContainer" parent="MethodSetup/HBoxContainer"]
+[node name="ArgumentsContainer" type="VBoxContainer" parent="MethodSetup/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="CallNodeParameter" parent="MethodSetup/HBoxContainer/ParameterContainer" instance=ExtResource("3_tyq50")]
-layout_mode = 2
-
-[node name="CallNodeParameter2" parent="MethodSetup/HBoxContainer/ParameterContainer" instance=ExtResource("3_tyq50")]
-layout_mode = 2
-
-[node name="CallNodeParameter3" parent="MethodSetup/HBoxContainer/ParameterContainer" instance=ExtResource("3_tyq50")]
-layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
@@ -106,3 +98,5 @@ layout_mode = 2
 
 [node name="FileDialog" type="FileDialog" parent="."]
 size = Vector2i(303, 180)
+
+[connection signal="item_selected" from="MethodSetup/MethodSelector" to="." method="_on_method_selector_item_selected"]

@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://bskh1vm7i45nw"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_argument.gd" id="1_mqq8d"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="2_h0t8n"]
+
+[node name="CallNodeArgument" type="HBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("1_mqq8d")
+
+[node name="ArgumentLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "ArgName"
+
+[node name="ArgumentInput" type="LineEdit" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "Default"
+placeholder_text = "Type"
+
+[node name="ResetButton" type="Button" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+icon = ExtResource("2_h0t8n")
+
+[connection signal="text_changed" from="ArgumentInput" to="." method="_on_argument_input_text_changed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
