@@ -42,7 +42,7 @@ var _nest_links: Array[String] = []
 
 
 ## Loads the [param DialogueData] resource from the given [param path]. The loaded resource can be accessed using [member data].
-func load_data(path: String):
+func load_data(path: String) -> void:
 	if not path.ends_with('.tres'): return
 	var new_data := ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_IGNORE)
 	if not new_data is DialogueData: return
@@ -50,7 +50,7 @@ func load_data(path: String):
 
 
 ## Setter for [member data].
-func set_data(new_data: DialogueData):
+func set_data(new_data: DialogueData) -> void:
 	data = new_data
 	_data.clear()
 	_characters.clear()
@@ -68,7 +68,7 @@ func set_data(new_data: DialogueData):
 
 
 ## Starts processing the dialogue data set in [member data], starting with the Start Node with its ID set to [param start_id].
-func start(start_id: String):
+func start(start_id: String) -> void:
 	if not data:
 		printerr('No dialogue data loaded!')
 		return
@@ -83,13 +83,13 @@ func start(start_id: String):
 
 
 ## Stops processing the dialogue tree.
-func stop():
+func stop() -> void:
 	_running = false
 	dialogue_ended.emit()
 
 
 ## Continues processing the dialogue tree from the node connected to the option at [param idx].
-func select_option(idx: int):
+func select_option(idx: int) -> void:
 	if not _running: return
 	
 	if _option_links.size() == 0 or idx > _option_links.size():
@@ -101,11 +101,11 @@ func select_option(idx: int):
 
 
 ## Returns [code]true[/code] if the [DialogueParser] is processing a dialogue tree.
-func is_running(): return _running
+func is_running() -> bool: return _running
 
 
 # Proceeds the parser to the next node and runs its corresponding _process_* function.
-func _proceed(node_name: String):
+func _proceed(node_name: String) -> void:
 	if not _running: return
 	if node_name == 'END':
 		if _nest_links.size() > 0:
@@ -134,12 +134,12 @@ func _proceed(node_name: String):
 
 
 # Processes the start node data (dict).
-func _process_start(dict: Dictionary):
+func _process_start(dict: Dictionary) -> void:
 	_proceed(dict.link)
 
 
 # Processes the dialogue node data (dict).
-func _process_dialogue(dict: Dictionary):
+func _process_dialogue(dict: Dictionary) -> void:
 	var speaker = ''
 	
 	if dict.speaker is String:
@@ -163,13 +163,13 @@ func _process_dialogue(dict: Dictionary):
 
 
 # Processes the signal node data (dict).
-func _process_signal(dict: Dictionary):
+func _process_signal(dict: Dictionary) -> void:
 	dialogue_signal.emit(dict.signalValue)
 	_proceed(dict.link)
 
 
 # Processes the set node data (dict).
-func _process_set(dict: Dictionary):
+func _process_set(dict: Dictionary) -> void:
 	if not variables.has(dict.variable):
 		printerr('Variable ', dict.variable, ' not found in variables list')
 		_proceed(dict.link)
@@ -220,13 +220,13 @@ func _process_set(dict: Dictionary):
 
 
 # Processes the condition node data (dict).
-func _process_condition(dict: Dictionary):
+func _process_condition(dict: Dictionary) -> void:
 	var result = _check_condition(dict['condition'])
 	_proceed(dict[str(result).to_lower()])
 
 
 # Processes the fork node data (dict).
-func _process_fork(dict : Dictionary):
+func _process_fork(dict : Dictionary) -> void:
 	var result = dict.default
 	var forks = dict.forks
 	# index traversal to ensure they're checked in order
@@ -238,7 +238,7 @@ func _process_fork(dict : Dictionary):
 
 
 # Checks the condition based on dict.value1, dict.value2 and dict.operator
-func _check_condition(conditions: Array):
+func _check_condition(conditions: Array) -> bool:
 	var result := true
 	var combiner := 1
 	
@@ -292,7 +292,7 @@ func _check_condition(conditions: Array):
 
 
 # Processes the nest node data (dict).
-func _process_nest(dict: Dictionary):
+func _process_nest(dict: Dictionary) -> void:
 	if not dict.file_path.ends_with('.tres'):
 		printerr('Invalid file: ', dict.file_path)
 		_proceed(dict.link)
@@ -323,7 +323,7 @@ func _process_nest(dict: Dictionary):
 
 # Replaces all {{}} variables with their corresponding values in the value string.
 # If variable is not found in [member DialogueParse.variables], it is substituted with an empty string along with a console error.
-func _parse_variables(value: String):
+func _parse_variables(value: String) -> String:
 	# check for missing }}
 	if value.count('{{') != value.count('}}'):
 		printerr('Failed to parse variables. Missing {{ or }}.')
@@ -347,7 +347,7 @@ func _parse_variables(value: String):
 
 
 # Returns a list of all the variables in a string denoted in {{}}.
-func _parse_variable_names(value: String):
+func _parse_variable_names(value: String) -> Array:
 	var regex := RegEx.new()
 	regex.compile('{{([^{}]+)}}')
 	var results = regex.search_all(value)
@@ -357,7 +357,7 @@ func _parse_variable_names(value: String):
 
 # FIXME : Length calculation is borked when the value has [, ] unrelated to any bbcodes.
 # Updates all the [wait] bbcode tags in the given text to include additional info about the text
-func _update_wait_tags(node: RichTextLabel, value: String):
+func _update_wait_tags(node: RichTextLabel, value: String) -> String:
 	# add a wait if none present at beginning
 	if not value.begins_with('[wait'):
 		value = '[wait]' + value + '[/wait]'

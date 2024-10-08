@@ -2,16 +2,16 @@
 extends EditorPlugin
 
 
-const EditorScene = preload('res://addons/dialogue_nodes/Editor.tscn')
-const DialogueBoxScene = preload('res://addons/dialogue_nodes/objects/DialogueBox.gd')
-const DialogueBubbleScene = preload('res://addons/dialogue_nodes/objects/DialogueBubble.gd')
-const DialogueBoxIcon = preload('res://addons/dialogue_nodes/icons/DialogueBox.svg')
-const DialogueBubbleIcon = preload('res://addons/dialogue_nodes/icons/DialogueBubble.svg')
+const EditorScene := preload('res://addons/dialogue_nodes/Editor.tscn')
+const DialogueBoxScene := preload('res://addons/dialogue_nodes/objects/DialogueBox.gd')
+const DialogueBubbleScene := preload('res://addons/dialogue_nodes/objects/DialogueBubble.gd')
+const DialogueBoxIcon := preload('res://addons/dialogue_nodes/icons/DialogueBox.svg')
+const DialogueBubbleIcon := preload('res://addons/dialogue_nodes/icons/DialogueBubble.svg')
 
-var editor
+var editor: Control
 
 
-func _enter_tree():
+func _enter_tree() -> void:
 	editor = EditorScene.instantiate()
 	
 	# add editor to main viewport
@@ -38,7 +38,7 @@ func _enter_tree():
 	print_debug('Plugin Enabled')
 
 
-func _exit_tree():
+func _exit_tree() -> void:
 	# remove from main viewport
 	if is_instance_valid(editor):
 		editor.queue_free()
@@ -48,32 +48,32 @@ func _exit_tree():
 	print_debug('Plugin Disabled')
 
 
-func _has_main_screen():
+func _has_main_screen() -> bool:
 	return true
 
 
-func _make_visible(visible):
+func _make_visible(visible) -> void:
 	if is_instance_valid(editor):
 		editor.visible = visible
 
 
-func _get_plugin_name():
+func _get_plugin_name() -> String:
 	return 'Dialogue'
 
 
-func _get_plugin_icon():
+func _get_plugin_icon() -> Texture2D:
 	return preload('res://addons/dialogue_nodes/icons/Dialogue.svg')
 
 
-func _handles(object):
+func _handles(object) -> bool:
 	return object is DialogueData
 
 
-func _edit(object):
+func _edit(object) -> void:
 	if object is DialogueData and is_instance_valid(editor):
 		editor.files.open_file(object.resource_path)
 
 
-func _save_external_data():
+func _save_external_data() -> void:
 	if is_instance_valid(editor):
 		editor.files.save_all()

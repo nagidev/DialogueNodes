@@ -3,4 +3,4 @@
 class_name CharacterList
 extends Resource
 
-@export var characters : Array[Character]
+@export var characters: Array[Character]

@@ -5,19 +5,19 @@ extends Panel
  
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.
-signal dialogue_started(id : String)
+signal dialogue_started(id: String)
 ## Triggered when a single dialogue block has been processed.
 ## Passes [param speaker] which can be a [String] or a [param Character] resource, a [param dialogue] containing the text to be displayed
 ## and an [param options] list containing the texts for each option.
-signal dialogue_processed(speaker : Variant, dialogue : String, options : Array[String])
+signal dialogue_processed(speaker: Variant, dialogue: String, options: Array[String])
 ## Triggered when an option is selected
-signal option_selected(idx : int)
+signal option_selected(idx: int)
 ## Triggered when a SignalNode is encountered while processing the dialogue.
 ## Passes a [param value] of type [String] that is defined in the SignalNode in the dialogue tree.
-signal dialogue_signal(value : String)
+signal dialogue_signal(value: String)
 ## Triggered when a variable value is changed.
 ## Passes the [param variable_name] along with it's [param value]
-signal variable_changed(variable_name : String, value)
+signal variable_changed(variable_name: String, value)
 ## Triggered when a dialogue tree has ended processing and reached the end of the dialogue.
 ## The [DialogueBox] may hide based on the [member hide_on_dialogue_end] property.
 signal dialogue_ended
@@ -25,7 +25,7 @@ signal dialogue_ended
 
 @export_group('Data')
 ## Contains the [param DialogueData] resource created using the Dialogue Nodes editor.
-@export var data : DialogueData :
+@export var data: DialogueData :
 	get:
 		return data
 	set(value):
@@ -35,7 +35,7 @@ signal dialogue_ended
 			variables = _dialogue_parser.variables
 			characters = _dialogue_parser.characters
 ## The default start ID to begin dialogue from. This is the value you set in the Dialogue Nodes editor.
-@export var start_id : String
+@export var start_id: String
 
 @export_group('Speaker')
 ## The default color for the speaker label.
@@ -61,7 +61,7 @@ signal dialogue_ended
 @export var skip_input_action := 'ui_cancel'
 ## Custom RichTextEffects that can be used in the dialogue as bbcodes.[br]
 ## Example: [code][ghost]Spooky dialogue![/ghost][/code]
-@export var custom_effects : Array[RichTextEffect] = [
+@export var custom_effects: Array[RichTextEffect] = [
 	RichTextWait.new(),
 	RichTextGhost.new(),
 	RichTextMatrix.new()
@@ -87,7 +87,7 @@ signal dialogue_ended
 				button.text = 'Option '+str(idx+1)
 				button.pressed.connect(select_option.bind(idx))
 ## Icon displayed when no text options are available.
-@export var next_icon : Texture2D = preload('res://addons/dialogue_nodes/icons/Play.svg')
+@export var next_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/Play.svg')
 ## Alignment of options.
 @export_enum('Begin', 'Center', 'End') var options_alignment := 2 :
 	set(value):
@@ -137,27 +137,27 @@ signal dialogue_ended
 
 ## Contains the variable data from the [param DialogueData] parsed in an easy to access dictionary.[br]
 ## Example: [code]{ "COINS": 10, "NAME": "Obama", "ALIVE": true }[/code]
-var variables : Dictionary
+var variables: Dictionary
 ## Contains all the [param Character] resources loaded from the path in the [member data].
-var characters : Array[Character]
+var characters: Array[Character]
 ## Displays the portrait image of the speaker in the [DialogueBox]. Access the speaker's texture by [member DialogueBox.portrait.texture]. This value is automatically set while running a dialogue tree.
-var portrait : TextureRect
+var portrait: TextureRect
 ## Displays the name of the speaker in the [DialogueBox]. Access the speaker name by [code]DialogueBox.speaker_label.text[/code]. This value is automatically set while running a dialogue tree.
-var speaker_label : Label
+var speaker_label: Label
 ## Displays the dialogue text. This node's value is automatically set while running a dialogue tree.
-var dialogue_label : RichTextLabel
+var dialogue_label: RichTextLabel
 ## Contains all the option buttons. The currently displayed options are visible while the rest are hidden. This value is automatically set while running a dialogue tree.
-var options_container : BoxContainer
+var options_container: BoxContainer
 
 # [param DialogueParser] used for parsing the dialogue [member data].[br]
 # NOTE: Using [param DialogueParser] as a child instead of extending from it, because [DialogueBox] needs to extend from [Panel].
-var _dialogue_parser : DialogueParser
-var _main_container : BoxContainer
-var _sub_container : BoxContainer
-var _wait_effect : RichTextWait
+var _dialogue_parser: DialogueParser
+var _main_container: BoxContainer
+var _sub_container: BoxContainer
+var _wait_effect: RichTextWait
 
 
-func _enter_tree():
+func _enter_tree() -> void:
 	if get_child_count() > 0:
 		for child in get_children():
 			remove_child(child)
@@ -221,7 +221,7 @@ func _enter_tree():
 	_dialogue_parser.dialogue_ended.connect(_on_dialogue_ended)
 
 
-func _ready():
+func _ready() -> void:
 	for effect in custom_effects:
 		if effect is RichTextWait:
 			_wait_effect = effect
@@ -231,7 +231,7 @@ func _ready():
 	hide()
 
 
-func _process(delta):
+func _process(delta) -> void:
 	if not is_running(): return
 	
 	# scrolling for longer dialogues
@@ -245,7 +245,7 @@ func _process(delta):
 		dialogue_label.get_v_scroll_bar().value += int(scroll_amt * scroll_speed)
 
 
-func _input(event):
+func _input(event) -> void:
 	if is_running() and Input.is_action_just_pressed(skip_input_action):
 		if _wait_effect and not _wait_effect.skip:
 			_wait_effect.skip = true
@@ -254,29 +254,29 @@ func _input(event):
 
 
 ## Starts processing the dialogue [member data], starting with the Start Node with its ID set to [param start_id].
-func start(id := start_id):
+func start(id := start_id) -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.start(id)
 
 
 ## Stops processing the dialogue tree.
-func stop():
+func stop() -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.stop()
 
 
 ## Continues processing the dialogue tree from the node connected to the option at [param idx].
-func select_option(idx : int):
+func select_option(idx: int) -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.select_option(idx)
 
 
 ## Returns [code]true[/code] if the [DialogueBox] is processing a dialogue tree.
-func is_running():
+func is_running() -> bool:
 	return _dialogue_parser.is_running()
 
 
-func _on_dialogue_started(id : String):
+func _on_dialogue_started(id: String) -> void:
 	speaker_label.text = ''
 	portrait.texture = null
 	dialogue_label.text = ''
@@ -284,7 +284,7 @@ func _on_dialogue_started(id : String):
 	dialogue_started.emit(id)
 
 
-func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Array[String]):
+func _on_dialogue_processed(speaker: Variant, dialogue: String, options: Array[String]) -> void:
 	# set speaker
 	speaker_label.text = ''
 	portrait.texture = null
@@ -309,7 +309,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	
 	# set options
 	for idx in range(options_container.get_child_count()):
-		var option : Button = options_container.get_child(idx)
+		var option: Button = options_container.get_child(idx)
 		if idx >= options.size():
 			option.hide()
 			continue
@@ -321,24 +321,24 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	dialogue_processed.emit(speaker, dialogue, options)
 
 
-func _on_option_selected(idx : int):
+func _on_option_selected(idx: int) -> void:
 	option_selected.emit(idx)
 
 
-func _on_dialogue_signal(value : String):
+func _on_dialogue_signal(value: String) -> void:
 	dialogue_signal.emit(value)
 
 
-func _on_variable_changed(variable_name : String, value):
+func _on_variable_changed(variable_name: String, value) -> void:
 	variable_changed.emit(variable_name, value)
 
 
-func _on_dialogue_ended():
+func _on_dialogue_ended() -> void:
 	if hide_on_dialogue_end: hide()
 	dialogue_ended.emit()
 
 
-func _on_wait_finished():
+func _on_wait_finished() -> void:
 	options_container.show()
 	if Engine.is_editor_hint(): return
 	options_container.get_child(0).grab_focus()

@@ -12,12 +12,12 @@ signal modified
 @onready var path_timer: Timer = $PathTimer
 @onready var id_timer: Timer = $IDTimer
 
-var undo_redo : EditorUndoRedoManager
+var undo_redo: EditorUndoRedoManager
 
 
-func _to_dict(graph : GraphEdit):
+func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
-	var connections : Array = graph.get_connections(name)
+	var connections: Array = graph.get_connections(name)
 	
 	dict['file_path'] = file_path
 	dict['start_id'] = start_id
@@ -26,20 +26,20 @@ func _to_dict(graph : GraphEdit):
 	return dict
 
 
-func _from_dict(dict : Dictionary):
+func _from_dict(dict: Dictionary) -> Array[String]:
 	set_path(dict['file_path'])
 	set_ID(dict['start_id'])
 	
 	return [dict['link']]
 
 
-func set_path(new_path: String):
+func set_path(new_path: String) -> void:
 	file_path = new_path
 	if path.text != file_path:
 		path.text = file_path
 
 
-func set_ID(new_id: String):
+func set_ID(new_id: String) -> void:
 	start_id = new_id
 	if ID.text != start_id:
 		ID.text = start_id
@@ -72,12 +72,12 @@ func _on_path_timer_timeout() -> void:
 	undo_redo.commit_action()
 
 
-func _on_ID_changed(_id):
+func _on_ID_changed(_id) -> void:
 	id_timer.stop()
 	id_timer.start()
 
 
-func _on_id_timer_timeout():
+func _on_id_timer_timeout() -> void:
 	if not undo_redo:
 		start_id = ID.text
 		return
@@ -90,5 +90,5 @@ func _on_id_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

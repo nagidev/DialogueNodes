@@ -4,7 +4,7 @@ class_name RichTextWait
 
 
 signal wait_finished
-signal char_displayed(char_index : int)
+signal char_displayed(char_index: int)
 
 var bbcode := 'wait'
 var finished := false
@@ -12,7 +12,7 @@ var skip := false
 var displayed := {}
 
 
-func _process_custom_fx(char_fx : CharFXTransform):
+func _process_custom_fx(char_fx: CharFXTransform) -> bool:
 	var waitTime := float(char_fx.env.get('time', 0.0))
 	var speed := float(char_fx.env.get('speed', 50.0))
 	var start := int(char_fx.env.get('start', 0))

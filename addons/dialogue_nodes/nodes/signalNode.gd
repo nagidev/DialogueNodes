@@ -4,16 +4,16 @@ extends GraphNode
 
 signal modified
 
-@onready var value = $SignalValue
-@onready var timer = $Timer
+@onready var value := $SignalValue
+@onready var timer := $Timer
 
-var undo_redo : EditorUndoRedoManager
+var undo_redo: EditorUndoRedoManager
 var last_value := ''
 
 
-func _to_dict(graph : GraphEdit):
+func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
-	var connections : Array = graph.get_connections(name)
+	var connections: Array = graph.get_connections(name)
 	
 	dict['signalValue'] = value.text
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
@@ -21,25 +21,25 @@ func _to_dict(graph : GraphEdit):
 	return dict
 
 
-func _from_dict(dict : Dictionary):
+func _from_dict(dict: Dictionary) -> Array[String]:
 	value.text = dict['signalValue']
 	last_value = value.text
 	
 	return [dict['link']]
 
 
-func set_value(new_value : String):
+func set_value(new_value: String) -> void:
 	if value.text != new_value:
 		value.text = new_value
 	last_value = new_value
 
 
-func _on_signal_value_changed(_new_text):
+func _on_signal_value_changed(_new_text) -> void:
 	timer.stop()
 	timer.start()
 
 
-func _on_timer_timeout():
+func _on_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set signal value')
@@ -50,5 +50,5 @@ func _on_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

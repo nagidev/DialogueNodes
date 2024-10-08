@@ -12,12 +12,12 @@ signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 @export var custom_speaker_timer: Timer
 @export var dialogue_timer: Timer
 
-@onready var speaker = %Speaker
-@onready var custom_speaker = %CustomSpeaker
-@onready var character_toggle = %CharacterToggle
-@onready var dialogue = %Dialogue
-@onready var dialogue_panel = %DialoguePanel
-@onready var dialogue_expanded = %DialogueExpanded
+@onready var speaker := %Speaker
+@onready var custom_speaker := %CustomSpeaker
+@onready var character_toggle := %CharacterToggle
+@onready var dialogue := %Dialogue
+@onready var dialogue_panel := %DialoguePanel
+@onready var dialogue_expanded := %DialogueExpanded
 
 var undo_redo: EditorUndoRedoManager
 var last_size := size
@@ -31,7 +31,7 @@ var first_option_index := -1
 var base_color: Color = Color.WHITE
 
 
-func _ready():
+func _ready() -> void:
 	options.clear()
 	for idx in range(get_child_count() - 1, -1, -1):
 		var child = get_child(idx)
@@ -43,8 +43,8 @@ func _ready():
 	reset_size()
 
 
-func _to_dict(graph: GraphEdit):
-	var dict = {}
+func _to_dict(graph: GraphEdit) -> Dictionary:
+	var dict := {}
 	var empty_condition: Array[Dictionary] = []
 	
 	if custom_speaker.visible:
@@ -91,8 +91,8 @@ func _to_dict(graph: GraphEdit):
 	return dict
 
 
-func _from_dict(dict: Dictionary):
-	var next_nodes = []
+func _from_dict(dict: Dictionary) -> Array[String]:
+	var next_nodes: Array[String] = []
 	
 	# set values
 	if dict['speaker'] is String:
@@ -145,18 +145,18 @@ func _from_dict(dict: Dictionary):
 	return next_nodes
 
 
-func set_custom_speaker(new_custom_speaker: String):
+func set_custom_speaker(new_custom_speaker: String) -> void:
 	if custom_speaker.text != new_custom_speaker:
 		custom_speaker.text = new_custom_speaker
 	last_custom_speaker = custom_speaker.text
 
 
-func toggle_speaker_input(use_speaker_list: bool):
+func toggle_speaker_input(use_speaker_list: bool) -> void:
 	custom_speaker.visible = not use_speaker_list
 	speaker.visible = use_speaker_list
 
 
-func set_dialogue_text(new_text: String):
+func set_dialogue_text(new_text: String) -> void:
 	if dialogue.text != new_text:
 		dialogue.text = new_text
 	if dialogue_expanded.text != new_text:
@@ -164,7 +164,7 @@ func set_dialogue_text(new_text: String):
 	last_dialogue = dialogue.text
 
 
-func add_option(option: BoxContainer, to_idx := -1):
+func add_option(option: BoxContainer, to_idx := -1) -> void:
 	if option.get_parent() != self: add_child(option, true)
 	if to_idx > -1: move_child(option, to_idx)
 	
@@ -186,7 +186,7 @@ func add_option(option: BoxContainer, to_idx := -1):
 			connection_shift_request.emit(name, i - 1, i)
 
 
-func remove_option(option: BoxContainer):
+func remove_option(option: BoxContainer) -> void:
 	# shift slot connections
 	var index := options.find(option)
 	for i in range(index, options.size() - 1):
@@ -201,7 +201,7 @@ func remove_option(option: BoxContainer):
 	if option.get_parent() == self: remove_child(option)
 
 
-func update_slots():
+func update_slots() -> void:
 	if options.size() == 1:
 		set_slot(options[0].get_index(), false, 0, base_color, true, 0, base_color)
 		return
@@ -211,12 +211,12 @@ func update_slots():
 		set_slot(option.get_index(), false, 0, base_color, enabled, 0, base_color)
 
 
-func _on_resize(_new_size):
+func _on_resize(_new_size) -> void:
 	resize_timer.stop()
 	resize_timer.start()
 
 
-func _on_resize_timer_timeout():
+func _on_resize_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set node size')
@@ -229,12 +229,12 @@ func _on_resize_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_custom_speaker_changed(_new_text):
+func _on_custom_speaker_changed(_new_text) -> void:
 	custom_speaker_timer.stop()
 	custom_speaker_timer.start()
 
 
-func _on_custom_speaker_timer_timeout():
+func _on_custom_speaker_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set custom speaker')
@@ -245,7 +245,7 @@ func _on_custom_speaker_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_characters_updated(character_list: Array[Character]):
+func _on_characters_updated(character_list: Array[Character]) -> void:
 	speaker.clear()
 	
 	for character in character_list:
@@ -259,7 +259,7 @@ func _on_characters_updated(character_list: Array[Character]):
 		speaker.select(-1)
 
 
-func _on_speaker_selected(idx: int):
+func _on_speaker_selected(idx: int) -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set speaker')
@@ -272,7 +272,7 @@ func _on_speaker_selected(idx: int):
 	undo_redo.commit_action()
 
 
-func _on_speaker_toggled(toggled_on: bool):
+func _on_speaker_toggled(toggled_on: bool) -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Toggle character list')
@@ -285,12 +285,12 @@ func _on_speaker_toggled(toggled_on: bool):
 	undo_redo.commit_action()
 
 
-func _on_dialogue_text_changed():
+func _on_dialogue_text_changed() -> void:
 	dialogue_timer.stop()
 	dialogue_timer.start()
 
 
-func _on_dialogue_timer_timeout():
+func _on_dialogue_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set dialogue text')
@@ -305,19 +305,19 @@ func _on_dialogue_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_expand_button_pressed():
+func _on_expand_button_pressed() -> void:
 	dialogue_panel.popup_centered()
 	dialogue_expanded.grab_focus()
 
 
-func _on_close_button_pressed():
+func _on_close_button_pressed() -> void:
 	dialogue_panel.hide()
 
 
-func _on_option_text_changed(new_text: String, option: BoxContainer):
+func _on_option_text_changed(new_text: String, option: BoxContainer) -> void:
 	if not undo_redo: return
 	
-	var idx = option.get_index()
+	var idx := option.get_index()
 	
 	# case 0: option was queued for deletion but changed from '' to 'something'
 	if option == empty_option:
@@ -372,12 +372,12 @@ func _on_option_text_changed(new_text: String, option: BoxContainer):
 	undo_redo.commit_action()
 
 
-func _on_option_focus_exited(option: BoxContainer):
+func _on_option_focus_exited(option: BoxContainer) -> void:
 	if not undo_redo: return
 	
 	# case 2: remove option when focus exits
 	if option == empty_option:
-		var idx = option.get_index()
+		var idx := option.get_index()
 		
 		disconnection_from_request.emit(name, idx - first_option_index)
 		
@@ -399,5 +399,5 @@ func _on_option_focus_exited(option: BoxContainer):
 		empty_option = null
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

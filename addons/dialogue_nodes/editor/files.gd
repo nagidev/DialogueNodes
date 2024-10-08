@@ -5,25 +5,25 @@ extends ItemList
 signal file_list_changed
 signal file_switched
 
-@export var editor : Control
-@export var workspace : Control
-@export var data_container : Control
+@export var editor: Control
+@export var workspace: Control
+@export var data_container: Control
 
-@onready var popup_menu = $PopupMenu
-@onready var new_dialog = $NewDialog
-@onready var save_as_dialog = $SaveDialog
-@onready var open_dialog = $OpenDialog
-@onready var confirm_dialog = $ConfirmationDialog
+@onready var popup_menu := $PopupMenu
+@onready var new_dialog := $NewDialog
+@onready var save_as_dialog := $SaveDialog
+@onready var open_dialog := $OpenDialog
+@onready var confirm_dialog := $ConfirmationDialog
 
-const VariablesScene = preload('res://addons/dialogue_nodes/editor/Variables.tscn')
-const GraphScene = preload('res://addons/dialogue_nodes/editor/Graph.tscn')
+const VariablesScene := preload('res://addons/dialogue_nodes/editor/Variables.tscn')
+const GraphScene := preload('res://addons/dialogue_nodes/editor/Graph.tscn')
 
 var file_icon := preload('res://addons/dialogue_nodes/icons/Script.svg')
 var cur_idx := -1
 var deletion_queue := []
 
 
-func _ready():
+func _ready() -> void:
 	confirm_dialog.get_ok_button().hide()
 	confirm_dialog.add_button('Save', true, 'save_file')
 	confirm_dialog.add_button('Discard', true, 'discard_file')
@@ -32,8 +32,8 @@ func _ready():
 	data_container.get_node('Characters').modified.connect(_on_data_modified)
 
 
-func create_entry(file_name : String, path : String, data : DialogueData):
-	var new_idx : int = item_count
+func create_entry(file_name: String, path: String, data: DialogueData) -> void:
+	var new_idx: int = item_count
 	
 	# check if the file is already loaded
 	var already_loaded := false
@@ -89,18 +89,18 @@ func create_entry(file_name : String, path : String, data : DialogueData):
 	file_list_changed.emit()
 
 
-func show_dir(idx : int):
+func show_dir(idx: int) -> void:
 	var metadata := get_item_metadata(idx)
-	var parts : Array = metadata['path'].split('/')
+	var parts: Array = metadata['path'].split('/')
 	if parts[-2] != '':
-		var display_name = parts[-2] + '/' + parts[-1]
+		var display_name: String= parts[-2] + '/' + parts[-1]
 		metadata['display_name'] = display_name
 		set_item_text(idx, display_name)
 		set_item_metadata(idx, metadata)
 
 
-func new_file(path : String):
-	var file_name : String = path.split('/')[-1]
+func new_file(path: String) -> void:
+	var file_name: String = path.split('/')[-1]
 	var data := DialogueData.new()
 	
 	# create entry for file
@@ -113,8 +113,8 @@ func new_file(path : String):
 		print('File created: ', path)
 
 
-func open_file(path : String):
-	var file_name : String = path.split('/')[-1]
+func open_file(path: String) -> void:
+	var file_name: String = path.split('/')[-1]
 	var data := ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_IGNORE)
 	if not data is DialogueData:
 		printerr('File is not supported!')
@@ -127,12 +127,12 @@ func open_file(path : String):
 		print('File opened: ', path)
 
 
-func save_file(idx := cur_idx):
+func save_file(idx := cur_idx) -> void:
 	if idx < 0: return
 	
 	var metadata := get_item_metadata(idx)
 	
-	var data : DialogueData = metadata['graph'].get_data()
+	var data: DialogueData = metadata['graph'].get_data()
 	if idx == cur_idx:
 		data.characters = data_container.get_node('Characters').get_data()
 	else:
@@ -153,11 +153,11 @@ func save_file(idx := cur_idx):
 		print('File saved: ', metadata['path'])
 
 
-func save_as(path : String):
-	var file_name : String = path.split('/')[-1]
+func save_as(path: String) -> void:
+	var file_name: String = path.split('/')[-1]
 	var metadata := get_item_metadata(cur_idx)
 	
-	var data : DialogueData = metadata['graph'].get_data()
+	var data: DialogueData = metadata['graph'].get_data()
 	data.characters = data_container.get_node('Characters').get_data()
 	data.variables = metadata['variables'].get_data()
 	
@@ -171,12 +171,12 @@ func save_as(path : String):
 		print('File saved as: ', path)
 
 
-func save_all():
+func save_all() -> void:
 	for idx in range(item_count):
 		save_file(idx)
 
 
-func close_file(idx := cur_idx):
+func close_file(idx := cur_idx) -> void:
 	if item_count == 0: return
 	
 	idx = wrapi(idx, 0, item_count)
@@ -212,7 +212,7 @@ func close_file(idx := cur_idx):
 		print('File closed: ', metadata['path'])
 
 
-func close_all():
+func close_all() -> void:
 	# check any modified files
 	deletion_queue.clear()
 	for idx in range(item_count):
@@ -228,7 +228,7 @@ func close_all():
 		close_file(0)
 
 
-func switch_file(idx : int, ensure_path := ''):
+func switch_file(idx: int, ensure_path := '') -> void:
 	if item_count == 0 or idx > item_count:
 		return
 	
@@ -264,7 +264,7 @@ func switch_file(idx : int, ensure_path := ''):
 	file_switched.emit()
 
 
-func set_modified(idx : int, value : bool):
+func set_modified(idx: int, value: bool) -> void:
 	if cur_idx == -1:
 		return
 	
@@ -275,23 +275,23 @@ func set_modified(idx : int, value : bool):
 	set_item_text(idx, metadata['display_name'] + suffix)
 
 
-func get_current_metadata():
+func get_current_metadata() -> Dictionary:
 	if cur_idx == -1: return {}
 	
 	return get_item_metadata(cur_idx)
 
 
-func _on_empty_clicked(at_pos : Vector2, mouse_button_index : int):
+func _on_empty_clicked(at_pos: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
 		var pop_pos := at_pos + global_position + Vector2(get_window().position)
 		popup_menu.popup(Rect2(pop_pos, popup_menu.size))
 
 
-func _on_item_clicked(_idx, at_pos : Vector2, mouse_button_index : int):
+func _on_item_clicked(_idx, at_pos: Vector2, mouse_button_index: int) -> void:
 	_on_empty_clicked(at_pos, mouse_button_index)
 
 
-func _on_toolbar_menu_pressed(id : int):
+func _on_toolbar_menu_pressed(id: int) -> void:
 	
 	match( id ):
 		0:
@@ -315,7 +315,7 @@ func _on_toolbar_menu_pressed(id : int):
 			close_all()
 
 
-func _on_popup_menu_pressed(id : int):
+func _on_popup_menu_pressed(id: int) -> void:
 	match (id):
 		0:
 			# save
@@ -332,7 +332,7 @@ func _on_popup_menu_pressed(id : int):
 			close_all()
 
 
-func _on_file_selected(idx : int):
+func _on_file_selected(idx: int) -> void:
 	if not editor.undo_redo:
 		switch_file(idx)
 		return
@@ -346,11 +346,11 @@ func _on_file_selected(idx : int):
 	editor.undo_redo.commit_action()
 
 
-func _on_data_modified(_a=0):
+func _on_data_modified(_a=0) -> void:
 	set_modified(cur_idx, true)
 
 
-func _on_confirm_dialog_action(action : String):
+func _on_confirm_dialog_action(action: String) -> void:
 	confirm_dialog.hide()
 	
 	if deletion_queue.size() == 0:
@@ -368,5 +368,5 @@ func _on_confirm_dialog_action(action : String):
 	deletion_queue.clear()
 
 
-func _on_confirm_dialog_canceled():
+func _on_confirm_dialog_canceled() -> void:
 	deletion_queue.clear()

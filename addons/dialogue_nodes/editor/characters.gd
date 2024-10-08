@@ -3,29 +3,29 @@ extends Control
 
 
 signal modified
-signal characters_updated(character_list : Array[Character])
+signal characters_updated(character_list: Array[Character])
 
 @export var editor_path: NodePath
 
-@onready var reset_button = $HBoxContainer/ResetButton
-@onready var file_path = $HBoxContainer/FilePath
-@onready var load_button = $HBoxContainer/LoadButton
-@onready var open_dialog = $OpenDialog
+@onready var reset_button := $HBoxContainer/ResetButton
+@onready var file_path := $HBoxContainer/FilePath
+@onready var load_button := $HBoxContainer/LoadButton
+@onready var open_dialog := $OpenDialog
 
-var editor
-var last_file_path : String
+var editor: Control
+var last_file_path: String
 
 
-func _ready():
+func _ready() -> void:
 	editor = get_node(editor_path)
 	reset_button.hide()
 
 
-func get_data():
+func get_data() -> String:
 	return file_path.text
 
 
-func load_data(path : String):
+func load_data(path: String) -> void:
 	if path == '':
 		reset_button.hide()
 	else:
@@ -35,8 +35,8 @@ func load_data(path : String):
 		file_path.text = path
 	last_file_path = path
 	
-	var resource : Resource
-	var character_list : Array[Character] = []
+	var resource: Resource
+	var character_list: Array[Character] = []
 	if path.ends_with('.tres') and ResourceLoader.exists(path):
 		resource = ResourceLoader.load(path, '', ResourceLoader.CACHE_MODE_REPLACE)
 		if resource is CharacterList:
@@ -53,12 +53,12 @@ func load_data(path : String):
 				printerr('Selected file is not a CharacterList resource')
 
 
-func _on_reset_button_pressed():
+func _on_reset_button_pressed() -> void:
 	if not editor.undo_redo:
 		load_data('')
 		return
 	
-	var cur_path = file_path.text
+	var cur_path: String = file_path.text
 	editor.undo_redo.create_action('Reset character list path')
 	editor.undo_redo.add_do_method(self, 'load_data', '')
 	editor.undo_redo.add_do_method(self, '_on_modified')
@@ -67,7 +67,7 @@ func _on_reset_button_pressed():
 	editor.undo_redo.commit_action()
 
 
-func _on_file_path_text_changed():
+func _on_file_path_text_changed() -> void:
 	if not editor.undo_redo:
 		load_data(file_path.text)
 		return
@@ -80,11 +80,11 @@ func _on_file_path_text_changed():
 	editor.undo_redo.commit_action()
 
 
-func _on_load_button_pressed():
+func _on_load_button_pressed() -> void:
 	open_dialog.popup_centered()
 
 
-func _on_file_selected(path : String):
+func _on_file_selected(path: String) -> void:
 	if not editor.undo_redo:
 		load_data(path)
 		return
@@ -97,5 +97,5 @@ func _on_file_selected(path : String):
 	editor.undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

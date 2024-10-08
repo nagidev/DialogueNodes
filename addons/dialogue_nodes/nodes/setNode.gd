@@ -4,21 +4,21 @@ extends GraphNode
 
 signal modified
 
-@onready var variable = $BoxContainer/Variable
-@onready var variable_timer = $VariableTimer
-@onready var type = $BoxContainer/Type
-@onready var value = $BoxContainer/Value
-@onready var value_timer = $ValueTimer
+@onready var variable := $BoxContainer/Variable
+@onready var variable_timer := $VariableTimer
+@onready var type := $BoxContainer/Type
+@onready var value := $BoxContainer/Value
+@onready var value_timer := $ValueTimer
 
-var undo_redo : EditorUndoRedoManager
-var last_variable : String
-var last_type : int
-var last_value : String
+var undo_redo: EditorUndoRedoManager
+var last_variable: String
+var last_type: int
+var last_value: String
 
 
-func _to_dict(graph : GraphEdit):
+func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
-	var connections : Array = graph.get_connections(name)
+	var connections: Array = graph.get_connections(name)
 	
 	dict['variable'] = variable.text
 	dict['type'] = type.selected
@@ -28,7 +28,7 @@ func _to_dict(graph : GraphEdit):
 	return dict
 
 
-func _from_dict(dict : Dictionary):
+func _from_dict(dict: Dictionary) -> Array[String]:
 	variable.text = dict['variable']
 	type.selected = dict['type']
 	value.text = dict['value']
@@ -40,24 +40,24 @@ func _from_dict(dict : Dictionary):
 	return [dict['link']]
 
 
-func set_variable(new_variable : String):
+func set_variable(new_variable: String) -> void:
 	if variable.text != new_variable:
 		variable.text = new_variable
 	last_variable = new_variable
 
 
-func set_value(new_value : String):
+func set_value(new_value: String) -> void:
 	if value.text != new_value:
 		value.text = new_value
 	last_value = new_value
 
 
-func _on_variable_changed(_new_text):
+func _on_variable_changed(_new_text) -> void:
 	variable_timer.stop()
 	variable_timer.start()
 
 
-func _on_variable_timer_timeout():
+func _on_variable_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set variable name')
@@ -68,7 +68,7 @@ func _on_variable_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_type_selected(idx : int):
+func _on_type_selected(idx: int) -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set operator type')
@@ -81,12 +81,12 @@ func _on_type_selected(idx : int):
 	undo_redo.commit_action()
 
 
-func _on_value_changed(_new_text):
+func _on_value_changed(_new_text) -> void:
 	value_timer.stop()
 	value_timer.start()
 
 
-func _on_value_timer_timeout():
+func _on_value_timer_timeout() -> void:
 	if not undo_redo: return
 	
 	undo_redo.create_action('Set value')
@@ -97,5 +97,5 @@ func _on_value_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()
