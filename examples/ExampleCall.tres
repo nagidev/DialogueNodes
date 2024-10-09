@@ -1,0 +1,193 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://c2271nfd3mqia"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_n0lp3"]
+
+[resource]
+script = ExtResource("1_n0lp3")
+starts = {
+"START": &"0_1"
+}
+nodes = {
+"0_1": {
+"link": &"8_1",
+"offset": Vector2(-220, -140),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "I rolled 1!",
+"offset": Vector2(360, -300),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_2": {
+"dialogue": "I rolled 2!",
+"offset": Vector2(700, -300),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_3": {
+"dialogue": "I rolled 3!",
+"offset": Vector2(1020, -300),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_4": {
+"dialogue": "I rolled 4!",
+"offset": Vector2(360, 0),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_5": {
+"dialogue": "I rolled 5!",
+"offset": Vector2(700, 0),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_6": {
+"dialogue": "I rolled 6!",
+"offset": Vector2(1020, 0),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"1_7": {
+"dialogue": "I rolled above 6! This wasn't a regular dice!",
+"offset": Vector2(360, 300),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Announcer"
+},
+"2_1": {
+"comment": "A Call allows you to call a method from the calls.gd
+script or another script of your choice with custom
+arguments, listing any possible outputs to
+determine where the node will connect to
+depending on what the method returns,
+with a default output if no return case matches.",
+"offset": Vector2(-440, 40),
+"size": Vector2(380, 200)
+},
+"8_1": {
+"args": {
+0: "",
+1: "6"
+},
+"default": &"1_7",
+"library": "res://addons/dialogue_nodes/editor/calls.gd",
+"method": {
+"args": Array[Dictionary]([{
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "die_name",
+"type": 4,
+"usage": 0
+}, {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "faces",
+"type": 2,
+"usage": 0
+}]),
+"default_args": [6],
+"flags": 1,
+"id": 0,
+"name": "roll_dice",
+"return": {
+"class_name": &"",
+"hint": 0,
+"hint_string": "",
+"name": "",
+"type": 2,
+"usage": 0
+}
+},
+"offset": Vector2(80, -240),
+"rets": {
+0: {
+"link": &"1_1",
+"value": "1"
+},
+1: {
+"link": &"1_2",
+"value": "2"
+},
+2: {
+"link": &"1_3",
+"value": "3"
+},
+3: {
+"link": &"1_4",
+"value": "4"
+},
+4: {
+"link": &"1_5",
+"value": "5"
+},
+5: {
+"link": &"1_6",
+"value": "6"
+}
+}
+}
+}
+variables = {
+"blue_pill": {
+"type": 1,
+"value": false
+},
+"red_pill": {
+"type": 1,
+"value": false
+}
+}
+strays = Array[String](["2_1"])
+characters = ""
