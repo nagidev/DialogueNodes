@@ -94,6 +94,7 @@ func _reload_args_ui() -> void:
 	# If no active method, clear all arguments
 	if _active_method.is_empty():
 		_clear_arguments()
+		_args_section_container.visible = false
 		return
 	
 	# Remove old arguments (don't destroy them yet)

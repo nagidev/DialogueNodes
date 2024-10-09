@@ -55,14 +55,4 @@ func _on_reset_button_pressed() -> void:
 
 
 func _on_argument_input_focus_exited() -> void:
-	if type == Variant.Type.TYPE_NIL:
-		return
-	var convert_test = type_convert(_input.text, type)
-	if typeof(convert_test) != type:
-		push_warning(
-			"Argument <%s> in CallNode <%s> cannot be converted to type <%s>!"
-			% [name, _call_node.title, type_string(type)]
-		)
-	
-	print(_input.text)
-	print(convert_test)
+	pass

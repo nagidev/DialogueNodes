@@ -31,14 +31,7 @@ func set_type(new_type: Variant.Type) -> void:
 
 
 func _on_return_input_focus_exited() -> void:
-	if type == Variant.Type.TYPE_NIL:
-		return
-	var convert_test = type_convert(_input.text, type)
-	if typeof(convert_test) != type:
-		push_warning(
-			"Return <%s> in CallNode <%s> cannot be converted to type <%s>!"
-			% [name, _call_node.title, type_string(type)]
-		)
+	pass
 
 
 func _on_remove_button_pressed() -> void:
