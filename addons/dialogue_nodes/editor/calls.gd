@@ -7,5 +7,5 @@ extends Script
 ## This script is expected to be expanded by the user, customized to their needs.
 ## Alternativelly, the user may create new scripts to call methods from.
 
-func sample_method(nickname: String, age: int, height: float = 5.1) -> Array:
-	return [nickname, age, height]
+func sample_method(nickname, age: int, height: float = 5.1) -> String:
+	return "My name is %s, I am %d years old, and I am %.2 feet tall!" % [nickname, age, height]

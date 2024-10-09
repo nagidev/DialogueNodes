@@ -1,11 +1,27 @@
-[gd_scene format=3 uid="uid://djc2ggs14vbxc"]
+[gd_scene load_steps=3 format=3 uid="uid://djc2ggs14vbxc"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_return.gd" id="1_lcs7a"]
+[ext_resource type="Texture2D" uid="uid://b8o81rn8q8a43" path="res://addons/dialogue_nodes/icons/Remove.svg" id="1_t7mvg"]
 
 [node name="CallNodeReturn" type="HBoxContainer"]
 size_flags_horizontal = 3
 size_flags_vertical = 4
+script = ExtResource("1_lcs7a")
 
-[node name="ParameterInput" type="LineEdit" parent="."]
+[node name="ReturnInput" type="LineEdit" parent="."]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 placeholder_text = "Type"
+expand_to_text_length = true
+
+[node name="RemoveButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("1_t7mvg")
+flat = true
+
+[connection signal="focus_exited" from="ReturnInput" to="." method="_on_return_input_focus_exited"]
+[connection signal="pressed" from="RemoveButton" to="." method="_on_remove_button_pressed"]

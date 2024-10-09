@@ -21,13 +21,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 4
 text = "Default"
 placeholder_text = "Type"
+expand_to_text_length = true
 
 [node name="ResetButton" type="Button" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 icon = ExtResource("2_h0t8n")
+flat = true
 
+[connection signal="focus_exited" from="ArgumentInput" to="." method="_on_argument_input_focus_exited"]
 [connection signal="text_changed" from="ArgumentInput" to="." method="_on_argument_input_text_changed"]
 [connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
