@@ -125,7 +125,8 @@ func _proceed(node_name: String):
 		_process_set,
 		_process_condition,
 		_process_nest,
-		_process_fork
+		_process_fork,
+		_process_call
 	]
 	
 	var id := int(node_name.split('_')[0])
@@ -235,6 +236,23 @@ func _process_fork(dict : Dictionary):
 			result = forks[i].link
 			break
 	_proceed(result)
+
+
+func _process_call(dict: Dictionary):
+	if dict.method.is_empty():
+		_proceed(dict.default)
+		return
+
+	var args: Array = []
+	for idx: int in dict.args.size():
+		args.push_back(type_convert(dict.args[idx], dict.method.args[idx].type))
+	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
+
+	for idx: int in dict.rets:
+		if type_convert(dict.rets[idx].value, dict.method.return.type) == ret:
+			_proceed(dict.rets[idx].link)
+			return
+	_proceed(dict.default)
 
 
 # Checks the condition based on dict.value1, dict.value2 and dict.operator

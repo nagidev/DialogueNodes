@@ -18,14 +18,22 @@ var _call_node: GraphNode = null
 
 func set_call_node(call_node: GraphNode) -> void:
 	if call_node != get_parent_control():
-		push_error("A CallNodeReturn MUST be a direct child of the CallNode is bound to!")
+		push_error('A CallNodeReturn MUST be a direct child of the CallNode is bound to!')
 		return
 	_call_node = call_node
 
 
+func get_ret() -> String:
+	return _input.text
+
+
+func set_ret(new_ret: String) -> void:
+	_input.text = new_ret
+
+
 func set_type(new_type: Variant.Type) -> void:
 	_input.placeholder_text = (
-		type_string(new_type) if new_type != Variant.Type.TYPE_NIL else ""
+		type_string(new_type) if new_type != Variant.Type.TYPE_NIL else ''
 	)
 	type = new_type
 

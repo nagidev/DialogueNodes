@@ -1,9 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://cu71fiowdkvmr"]
+[gd_scene load_steps=4 format=3 uid="uid://cu71fiowdkvmr"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/callNode.gd" id="1_hul2k"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="2_w7ejb"]
 [ext_resource type="Texture2D" uid="uid://cj0m8q8hgm0ed" path="res://addons/dialogue_nodes/icons/Add.svg" id="4_hca56"]
-[ext_resource type="PackedScene" uid="uid://djc2ggs14vbxc" path="res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn" id="4_mw7lj"]
 
 [node name="CallNode" type="GraphNode"]
 custom_minimum_size = Vector2(200, 180)
@@ -50,7 +49,7 @@ slot/4/left_enabled = false
 slot/4/left_type = 0
 slot/4/left_color = Color(1, 1, 1, 1)
 slot/4/left_icon = null
-slot/4/right_enabled = false
+slot/4/right_enabled = true
 slot/4/right_type = 0
 slot/4/right_color = Color(1, 1, 1, 1)
 slot/4/right_icon = null
@@ -80,11 +79,12 @@ layout_mode = 2
 selected = 0
 allow_reselect = true
 item_count = 2
-popup/item_1/text = "sample_method"
+popup/item_1/text = "roll_dice"
 popup/item_1/id = 1
 
 [node name="ArgumentsSectionContainer" type="HBoxContainer" parent="MethodSetup"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 
@@ -110,21 +110,14 @@ layout_mode = 2
 icon = ExtResource("4_hca56")
 icon_alignment = 1
 
-[node name="DefaultReturn" parent="." instance=ExtResource("4_mw7lj")]
+[node name="DefaultLabel" type="Label" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
-
-[node name="ReturnInput" parent="DefaultReturn" index="0"]
-placeholder_text = "NoValidReturn"
-editable = false
-
-[node name="RemoveButton" parent="DefaultReturn" index="1"]
-visible = false
+text = "Default Exit"
+horizontal_alignment = 2
 
 [node name="FileDialog" type="FileDialog" parent="."]
 size = Vector2i(800, 400)
 
 [connection signal="item_selected" from="MethodSetup/MethodSelector" to="." method="_on_method_selector_item_selected"]
 [connection signal="pressed" from="AddReturnButton" to="." method="_on_add_return_button_pressed"]
-
-[editable path="DefaultReturn"]

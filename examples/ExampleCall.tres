@@ -115,10 +115,7 @@ with a default output if no return case matches.",
 "size": Vector2(380, 200)
 },
 "8_1": {
-"args": {
-0: "",
-1: "6"
-},
+"args": ["Regular", "6"],
 "default": &"1_7",
 "library": "res://addons/dialogue_nodes/editor/calls.gd",
 "method": {
@@ -138,7 +135,7 @@ with a default output if no return case matches.",
 "usage": 0
 }]),
 "default_args": [6],
-"flags": 1,
+"flags": 33,
 "id": 0,
 "name": "roll_dice",
 "return": {
