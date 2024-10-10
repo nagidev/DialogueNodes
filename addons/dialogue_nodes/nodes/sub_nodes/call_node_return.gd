@@ -38,9 +38,22 @@ func set_type(new_type: Variant.Type) -> void:
 	type = new_type
 
 
+func _validate_input_type() -> bool:
+	return (
+		type == Variant.Type.TYPE_NIL
+		or type == Variant.Type.TYPE_STRING
+		or typeof(str_to_var(_input.text)) == type
+	)
+
+
 func _on_remove_button_pressed() -> void:
 	requested_removal.emit(self)
 
 
 func _on_return_input_focus_exited() -> void:
+	if !_validate_input_type():
+		push_error(
+			'Return <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
+			% [_input.text, _call_node.title, type_string(type)]
+		)
 	_call_node.reset_size()

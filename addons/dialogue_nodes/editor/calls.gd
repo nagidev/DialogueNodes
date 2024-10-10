@@ -11,6 +11,10 @@ extends Script
 ## It is recommended they Static Typing is not used to specify their contents either.
 
 
+static func print_text(text: String) -> void:
+	print(text)
+
+
 static func roll_a_die(die_name: String, ignore: Array, faces: int = 6) -> int:
 	var result: int = -1
 	for i: int in 100:

@@ -59,6 +59,14 @@ func set_data(new_name: String, new_type: Variant.Type, argument: String, new_de
 		set_arg(str(new_default) if new_default != null else '')
 
 
+func _validate_input_type() -> bool:
+	return (
+		type == Variant.Type.TYPE_NIL
+		or type == Variant.Type.TYPE_STRING
+		or typeof(str_to_var(_input.text)) == type
+	)
+
+
 func _on_argument_input_text_changed(new_text: String) -> void:
 	_button.visible = new_text != (str(default_arg) if default_arg != null else '')
 
@@ -69,4 +77,9 @@ func _on_reset_button_pressed() -> void:
 
 
 func _on_argument_input_focus_exited() -> void:
+	if !_validate_input_type():
+		push_error(
+			'Argument <%s> with value <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
+			% [arg_name, _input.text, _call_node.title, type_string(type)]
+		)
 	_call_node.reset_size()

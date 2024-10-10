@@ -10,7 +10,7 @@ extends GraphNode
 ## [color=Yellow]Warning[/color]: All [i]Arguments[/i] and [i]Returns[/i] must be formatted
 ## so they can be converted to their appropriate types via [method @GlobalScope.str_to_var].
 
-const DEFAULT_CALLS: Script = preload("res://addons/dialogue_nodes/editor/calls.gd")
+const DEFAULT_CALLS: Script = preload('res://addons/dialogue_nodes/editor/calls.gd')
 
 signal modified
 signal disconnection_from_request(from_node: String, from_port: int)
@@ -25,8 +25,8 @@ var _num_rets: int = 0
 
 var base_color: Color = Color.WHITE
 
-var _arg_scene: PackedScene = preload("res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeArgument.tscn")
-var _ret_scene: PackedScene = preload("res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn")
+var _arg_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeArgument.tscn')
+var _ret_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn')
 
 @onready var _method_button: OptionButton = %MethodSelector
 @onready var _args_section_container: Container = %ArgumentsSectionContainer
@@ -191,6 +191,7 @@ func _set_method(method_name: String) -> bool:
 	_active_method = _calls[method_name]
 	_reload_args_ui()
 	_reload_rets_ui()
+	reset_size()
 	return true
 
 
@@ -198,6 +199,7 @@ func _clear_method() -> void:
 	_active_method = {}
 	_reload_args_ui()
 	_reload_rets_ui()
+	reset_size()
 
 
 # -------------------------------------------------------------------------------------------------
@@ -232,7 +234,7 @@ func _reload_args_ui() -> void:
 			continue
 		
 		# If new argument, instantiate a UI for it and set it up.
-		_add_argument(arg, "", null if i < non_def_args else _active_method.default_args[i - non_def_args])
+		_add_argument(arg, '', null if i < non_def_args else _active_method.default_args[i - non_def_args])
 	
 	# Remove old arguments that do not exist in new method.
 	for outdated_arg: Node in _old_args.values():
@@ -242,7 +244,7 @@ func _reload_args_ui() -> void:
 	_args_section_container.visible = _args_container.get_child_count() > 0
 
 
-func _add_argument(arg_data: Dictionary, arg: String = "", default_arg = null) -> Control:
+func _add_argument(arg_data: Dictionary, arg: String = '', default_arg = null) -> Control:
 	var new_arg_ui: Control = _arg_scene.instantiate()
 	_args_container.add_child(new_arg_ui)
 	new_arg_ui.set_call_node(self)
