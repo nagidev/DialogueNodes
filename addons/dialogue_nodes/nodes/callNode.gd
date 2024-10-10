@@ -273,13 +273,6 @@ func _clear_arguments() -> void:
 # Returns
 # -------------------------------------------------------------------------------------------------
 func _reload_rets_ui() -> void:
-	# @Choms-TODO: Add "automatic" bool returns, disallow adding more or less.
-	#if !_active_method.is_empty() and _active_method.return.type == Variant.Type.TYPE_BOOL:
-		#clear_returns()
-		#var true_ret: Control = _add_return()
-		#var false_ret: Control = _add_return()
-		#return
-
 	# Reset the type hint on all existing returns.
 	for idx: int in range(_ret_idx_start, _ret_idx_start + _num_rets):
 		var ret: Node = get_child(idx)
