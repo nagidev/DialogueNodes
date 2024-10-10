@@ -245,11 +245,20 @@ func _process_call(dict: Dictionary):
 
 	var args: Array = []
 	for idx: int in dict.args.size():
-		args.push_back(type_convert(dict.args[idx], dict.method.args[idx].type))
-	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
+		args.push_back(
+			dict.args[idx]
+			if dict.method.args[idx].type == Variant.Type.TYPE_STRING
+			else str_to_var(dict.args[idx])
+		)
 
+	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
 	for idx: int in dict.rets:
-		if type_convert(dict.rets[idx].value, dict.method.return.type) == ret:
+		var ret_option = (
+			dict.rets[idx].value
+			if dict.method.return.type == Variant.Type.TYPE_STRING
+			else str_to_var(dict.rets[idx].value)
+		)
+		if typeof(ret_option) == typeof(ret) and ret_option == ret:
 			_proceed(dict.rets[idx].link)
 			return
 	_proceed(dict.default)

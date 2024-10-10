@@ -6,6 +6,9 @@ extends GraphNode
 ## This Node calls a function from an expandable library of callables to determine which Node
 ## output to take based on what the method returned.
 ## The library, a static object called [DialogueCalls], is expected to be expanded by the user.
+## [br][br]
+## [color=Yellow]Warning[/color]: All [i]Arguments[/i] and [i]Returns[/i] must be formatted
+## so they can be converted to their appropriate types via [method @GlobalScope.str_to_var].
 
 const DEFAULT_CALLS: Script = preload("res://addons/dialogue_nodes/editor/calls.gd")
 
@@ -99,16 +102,25 @@ func _from_dict(dict: Dictionary) -> Array[String]:
 	if dict['method'].is_empty():
 		_clear_method()
 	else:
-		_set_method(dict['method'].name)
-		for i: int in _method_button.item_count:
-			if _method_button.get_item_text(i) == dict['method'].name:
-				_method_button.select(i)
-				break
+		if _set_method(dict['method'].name) == true:
+			for i: int in _method_button.item_count:
+				if _method_button.get_item_text(i) == dict['method'].name:
+					_method_button.select(i)
+					break
+		else:
+			_method_button.selected = -1
 	
 	# Import Arguments
-	var args: Array[Node] = _args_container.get_children()
-	for idx: int in dict['args'].size():
-		args[idx].set_arg(dict['args'][idx])
+	if !_active_method.is_empty():
+		var args: Array[Node] = _args_container.get_children()
+		if args.size() != dict['args'].size():
+			push_error(
+				"Number of Args of CallNode's <%s> Save and loaded Method <%s> do not match <%d != %d>!"
+				% [title, _active_method.name, args.size(), dict['args'].size()]
+			)
+		else:
+			for idx: int in dict['args'].size():
+				args[idx].set_arg(dict['args'][idx])
 	
 	# Import Returns
 	var next_nodes: Array[String] = []
@@ -172,13 +184,14 @@ func _reload_method_ui() -> void:
 		idx += 1
 
 
-func _set_method(method_name: String) -> void:
+func _set_method(method_name: String) -> bool:
 	if !_calls.has(method_name):
 		push_error("CallNode's selected method <%s> is not in calls library!" % method_name)
-		return
+		return false
 	_active_method = _calls[method_name]
 	_reload_args_ui()
 	_reload_rets_ui()
+	return true
 
 
 func _clear_method() -> void:
@@ -279,6 +292,7 @@ func _add_return() -> Control:
 	_num_rets += 1
 	
 	new_ret.requested_removal.connect(_on_return_requested_removal)
+	new_ret.set_call_node(self)
 	new_ret.set_type(_active_method.return.type if !_active_method.is_empty() else Variant.Type.TYPE_NIL)
 	
 	# Shift Return Connections

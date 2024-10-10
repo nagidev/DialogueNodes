@@ -10,11 +10,11 @@ starts = {
 nodes = {
 "0_1": {
 "link": &"8_1",
-"offset": Vector2(-220, -140),
+"offset": Vector2(-300, -220),
 "start_id": "START"
 },
 "1_1": {
-"dialogue": "I rolled 1!",
+"dialogue": "I will never roll a 1, as we ignore odd numbers.",
 "offset": Vector2(360, -300),
 "options": {
 0: {
@@ -40,7 +40,7 @@ nodes = {
 "speaker": "Announcer"
 },
 "1_3": {
-"dialogue": "I rolled 3!",
+"dialogue": "I will never roll a 3, as we ignore odd numbers.",
 "offset": Vector2(1020, -300),
 "options": {
 0: {
@@ -66,7 +66,7 @@ nodes = {
 "speaker": "Announcer"
 },
 "1_5": {
-"dialogue": "I rolled 5!",
+"dialogue": "I will never roll a 5, as we ignore odd numbers.",
 "offset": Vector2(700, 0),
 "options": {
 0: {
@@ -92,7 +92,7 @@ nodes = {
 "speaker": "Announcer"
 },
 "1_7": {
-"dialogue": "I rolled above 6! This wasn't a regular dice!",
+"dialogue": "I rolled something beyond 1-6. This is not your typical dice!",
 "offset": Vector2(360, 300),
 "options": {
 0: {
@@ -111,11 +111,11 @@ arguments, listing any possible outputs to
 determine where the node will connect to
 depending on what the method returns,
 with a default output if no return case matches.",
-"offset": Vector2(-440, 40),
+"offset": Vector2(-500, -60),
 "size": Vector2(380, 200)
 },
 "8_1": {
-"args": ["Regular", "6"],
+"args": ["{ \"d6\": {\"faces\": 7, \"ignore\": [1,3,5]} }"],
 "default": &"1_7",
 "library": "res://addons/dialogue_nodes/editor/calls.gd",
 "method": {
@@ -123,18 +123,11 @@ with a default output if no return case matches.",
 "class_name": &"",
 "hint": 0,
 "hint_string": "",
-"name": "die_name",
-"type": 4,
-"usage": 0
-}, {
-"class_name": &"",
-"hint": 0,
-"hint_string": "",
-"name": "faces",
-"type": 2,
+"name": "dice",
+"type": 27,
 "usage": 0
 }]),
-"default_args": [6],
+"default_args": [],
 "flags": 33,
 "id": 0,
 "name": "roll_dice",
@@ -143,35 +136,35 @@ with a default output if no return case matches.",
 "hint": 0,
 "hint_string": "",
 "name": "",
-"type": 2,
+"type": 28,
 "usage": 0
 }
 },
-"offset": Vector2(80, -240),
+"offset": Vector2(-60, -220),
 "rets": {
 0: {
 "link": &"1_1",
-"value": "1"
+"value": "[1]"
 },
 1: {
 "link": &"1_2",
-"value": "2"
+"value": "[2]"
 },
 2: {
 "link": &"1_3",
-"value": "3"
+"value": "[3]"
 },
 3: {
 "link": &"1_4",
-"value": "4"
+"value": "[4]"
 },
 4: {
 "link": &"1_5",
-"value": "5"
+"value": "[5]"
 },
 5: {
 "link": &"1_6",
-"value": "6"
+"value": "[6]"
 }
 }
 }

@@ -76,11 +76,7 @@ icon = ExtResource("2_w7ejb")
 [node name="MethodSelector" type="OptionButton" parent="MethodSetup"]
 unique_name_in_owner = true
 layout_mode = 2
-selected = 0
 allow_reselect = true
-item_count = 2
-popup/item_1/text = "roll_dice"
-popup/item_1/id = 1
 
 [node name="ArgumentsSectionContainer" type="HBoxContainer" parent="MethodSetup"]
 unique_name_in_owner = true
