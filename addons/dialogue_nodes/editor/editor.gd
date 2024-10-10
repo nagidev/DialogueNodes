@@ -2,27 +2,27 @@
 extends Control
 
 
-@onready var file_menu = $Main/ToolBar/FileMenu
-@onready var debug_menu = $Main/ToolBar/DebugMenu
-@onready var add_menu = $Main/ToolBar/AddMenu
-@onready var run_menu = $Main/ToolBar/RunMenu
-@onready var workspace = $Main/Workspace
-@onready var side_panel = $Main/Workspace/SidePanel
-@onready var files = $Main/Workspace/SidePanel/Files
-@onready var characters = $Main/Workspace/SidePanel/Data/Characters
-@onready var panel_toggle = $Main/Statusbar/PanelToggle
-@onready var version_number = $Main/Statusbar/VersionNumber
-@onready var dialogue_background = $DialogueBackground
-@onready var dialogue_box = $DialogueBox
+@onready var file_menu := $Main/ToolBar/FileMenu
+@onready var debug_menu := $Main/ToolBar/DebugMenu
+@onready var add_menu := $Main/ToolBar/AddMenu
+@onready var run_menu := $Main/ToolBar/RunMenu
+@onready var workspace := $Main/Workspace
+@onready var side_panel := $Main/Workspace/SidePanel
+@onready var files := $Main/Workspace/SidePanel/Files
+@onready var characters := $Main/Workspace/SidePanel/Data/Characters
+@onready var panel_toggle := $Main/Statusbar/PanelToggle
+@onready var version_number := $Main/Statusbar/VersionNumber
+@onready var dialogue_background := $DialogueBackground
+@onready var dialogue_box := $DialogueBox
 
-var undo_redo : EditorUndoRedoManager
-var graph : GraphEdit
-var variables : VBoxContainer
+var undo_redo: EditorUndoRedoManager
+var graph: GraphEdit
+var variables: VBoxContainer
 var _debug := false
 var _add_menu_initialized := false
 
 
-func _ready():
+func _ready() -> void:
 	file_menu.get_popup().id_pressed.connect(files._on_toolbar_menu_pressed)
 	run_menu.get_popup().id_pressed.connect(run_tree)
 	debug_menu.get_popup().id_pressed.connect(_on_debug_menu_pressed)
@@ -33,12 +33,12 @@ func _ready():
 	dialogue_box.variable_changed.connect(_on_dialogue_variable_changed)
 	dialogue_box.dialogue_ended.connect(_on_dialogue_ended)
 	
-	var config = ConfigFile.new()
+	var config := ConfigFile.new()
 	config.load('res://addons/dialogue_nodes/plugin.cfg')
 	version_number.text = config.get_value('plugin', 'version')
 
 
-func run_tree(start_node_idx : int):
+func run_tree(start_node_idx: int) -> void:
 	if not is_instance_valid(graph): return
 	
 	var start_node := graph.get_node(NodePath(graph.starts[start_node_idx]))
@@ -52,8 +52,8 @@ func run_tree(start_node_idx : int):
 	dialogue_background.show()
 
 
-func _on_debug_menu_pressed(idx : int):
-	var popup : PopupMenu = debug_menu.get_popup()
+func _on_debug_menu_pressed(idx: int) -> void:
+	var popup: PopupMenu = debug_menu.get_popup()
 	match (idx):
 		0:
 			_debug = !_debug
@@ -63,7 +63,7 @@ func _on_debug_menu_pressed(idx : int):
 			popup.set_item_checked(idx, dialogue_box.skip_options_condition_checks)
 
 
-func _on_run_menu_about_to_popup():
+func _on_run_menu_about_to_popup() -> void:
 	if not is_instance_valid(graph): return
 	
 	run_menu.get_popup().clear()
@@ -74,18 +74,18 @@ func _on_run_menu_about_to_popup():
 		return
 	
 	graph.starts.sort_custom(func (node_name1, node_name2):
-		var id1 : String = graph.get_node(NodePath(node_name1)).start_id
-		var id2 : String = graph.get_node(NodePath(node_name2)).start_id
+		var id1: String = graph.get_node(NodePath(node_name1)).start_id
+		var id2: String = graph.get_node(NodePath(node_name2)).start_id
 		return id1 < id2
 		)
 	
 	for start_node_name in graph.starts:
-		var start_id : String = graph.get_node(NodePath(start_node_name)).start_id
+		var start_id: String = graph.get_node(NodePath(start_node_name)).start_id
 		if start_id != '':
 			run_menu.get_popup().add_item(start_id)
 
 
-func _on_files_changed():
+func _on_files_changed() -> void:
 	add_menu.visible = files.item_count > 0
 	run_menu.visible = add_menu.visible
 	
@@ -94,7 +94,7 @@ func _on_files_changed():
 	
 	if files.item_count == 0: return
 	
-	var new_metadata : Dictionary = files.get_current_metadata()
+	var new_metadata: Dictionary = files.get_current_metadata()
 	
 	if new_metadata.is_empty():
 		graph = null
@@ -110,15 +110,15 @@ func _on_files_changed():
 		_add_menu_initialized = true
 
 
-func _on_files_toggle_button_pressed():
+func _on_files_toggle_button_pressed() -> void:
 	side_panel.visible = panel_toggle.button_pressed
 
 
-func _on_version_number_pressed():
+func _on_version_number_pressed() -> void:
 	DisplayServer.clipboard_set('v'+version_number.text)
 
 
-func _on_dialogue_background_input(event : InputEvent):
+func _on_dialogue_background_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		dialogue_box.stop()
 		
@@ -126,17 +126,17 @@ func _on_dialogue_background_input(event : InputEvent):
 			print('Dialogue canceled')
 
 
-func _on_dialogue_started(id : String):
+func _on_dialogue_started(id: String) -> void:
 	if _debug:
 		print_debug('Dialogue started: ', id)
 
 
-func _on_dialogue_option_selected(idx : int):
+func _on_dialogue_option_selected(idx: int) -> void:
 	if _debug:
 		print('Option selected. idx: ', idx, ', text: "', dialogue_box.options_container.get_child(idx).text, '"')
 
 
-func _on_dialogue_variable_changed(var_name : String, value):
+func _on_dialogue_variable_changed(var_name: String, value) -> void:
 	variables.set_value(var_name, value)
 	files.set_modified(files.cur_idx, true)
 	
@@ -144,12 +144,12 @@ func _on_dialogue_variable_changed(var_name : String, value):
 		print('Variable changed:', var_name, ', value:', value)
 
 
-func _on_dialogue_signal(value : String):
+func _on_dialogue_signal(value: String) -> void:
 	if _debug:
 		print('Dialogue emitted signal with value:', value)
 
 
-func _on_dialogue_ended():
+func _on_dialogue_ended() -> void:
 	dialogue_background.hide()
 
 	if _debug:

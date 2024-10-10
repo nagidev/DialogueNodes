@@ -7,25 +7,25 @@ extends RichTextLabel
 
 
 ## Triggered when a dialogue has started. Passes [param id] of the dialogue tree as defined in the StartNode.
-signal dialogue_started(id : String)
+signal dialogue_started(id: String)
 ## Triggered when a single dialogue block has been processed.
 ## Passes [param speaker] which can be a [String] or a [param Character] resource, a [param dialogue] containing the text to be displayed
 ## and an [param options] list containing the texts for each option.
-signal dialogue_processed(speaker : Variant, dialogue : String, options : Array[String])
+signal dialogue_processed(speaker: Variant, dialogue: String, options: Array[String])
 ## Triggered when an option is selected
-signal option_selected(idx : int)
+signal option_selected(idx: int)
 ## Triggered when a SignalNode is encountered while processing the dialogue.
 ## Passes a [param value] of type [String] that is defined in the SignalNode in the dialogue tree.
-signal dialogue_signal(value : String)
+signal dialogue_signal(value: String)
 ## Triggered when a variable value is changed.
 ## Passes the [param variable_name] along with it's [param value]
-signal variable_changed(variable_name : String, value)
+signal variable_changed(variable_name: String, value)
 ## Triggered when a dialogue tree has ended processing and reached the end of the dialogue.
 signal dialogue_ended
 
 @export_group('Data')
 ## Contains the [param DialogueData] resource created using the Dialogue Nodes editor.
-@export var data : DialogueData :
+@export var data: DialogueData :
 	get:
 		return data
 	set(value):
@@ -35,11 +35,11 @@ signal dialogue_ended
 			variables = _dialogue_parser.variables
 			characters = _dialogue_parser.characters
 ## The default start ID to begin dialogue from. This is the value you set in the Dialogue Nodes editor.
-@export var start_id : String
+@export var start_id: String
 
 @export_group('Bubble')
 ## The node the dialogue bubble would follow. Only accepts [Node2D], [Node3D] or their derivitives.
-@export var follow_node : Node :
+@export var follow_node: Node :
 	set(value):
 		if (not value) or (value is Node2D) or (value is Node3D):
 			follow_node = value
@@ -72,7 +72,7 @@ signal dialogue_ended
 @export var skip_input_action := 'ui_cancel'
 ## Custom RichTextEffects that can be used in the dialogue as bbcodes.[br]
 ## Example: [code][ghost]Spooky dialogue![/ghost][/code]
-@export var dialogue_custom_effects : Array[RichTextEffect] = [
+@export var dialogue_custom_effects: Array[RichTextEffect] = [
 	RichTextWait.new(),
 	RichTextGhost.new(),
 	RichTextMatrix.new()
@@ -111,26 +111,26 @@ signal dialogue_ended
 
 ## Contains the variable data from the [param DialogueData] parsed in an easy to access dictionary.[br]
 ## Example: [code]{ "COINS": 10, "NAME": "Obama", "ALIVE": true }[/code]
-var variables : Dictionary
+var variables: Dictionary
 ## Contains all the [param Character] resources loaded from the path in the [member data].
-var characters : Array[Character]
+var characters: Array[Character]
 ## The tail of the dialogue bubble.
-var tail : Polygon2D
+var tail: Polygon2D
 ## Displays the name of the speaker in the [DialogueBox]. Access the speaker name by [code]DialogueBox.speaker_label.text[/code]. This value is automatically set while running a dialogue tree.
-var speaker_label : Label
+var speaker_label: Label
 ## Contains all the option buttons. The currently displayed options are visible while the rest are hidden. This value is automatically set while running a dialogue tree.
-var options_container : BoxContainer
+var options_container: BoxContainer
 
 # [param DialogueParser] used for parsing the dialogue [member data].[br]
 # NOTE: Using [param DialogueParser] as a child instead of extending from it, because [DialogueBox] needs to extend from Panel.
-var _dialogue_parser : DialogueParser
-var _visible_on_screen_notifier : VisibleOnScreenNotifier3D
-var _wait_effect : RichTextWait
-var _fade_tween : Tween
+var _dialogue_parser: DialogueParser
+var _visible_on_screen_notifier: VisibleOnScreenNotifier3D
+var _wait_effect: RichTextWait
+var _fade_tween: Tween
 var _running := false
 
 # All the children nodes are created in this function
-func _enter_tree():
+func _enter_tree() -> void:
 	if get_child_count() > 0:
 		for child in get_children():
 			remove_child(child)
@@ -192,7 +192,7 @@ func _enter_tree():
 	_dialogue_parser.dialogue_ended.connect(_on_dialogue_ended)
 
 
-func _ready():
+func _ready() -> void:
 	for effect in custom_effects:
 		if effect is RichTextWait:
 			_wait_effect = effect
@@ -205,15 +205,15 @@ func _ready():
 		hide()
 
 
-func _process(delta):
+func _process(delta) -> void:
 	if Engine.is_editor_hint(): return
 	if not _running: return
 	if not follow_node: return
 	
 	var camera
-	var screen_center : Vector2
-	var follow_pos : Vector2
-	var target_pos : Vector2
+	var screen_center: Vector2
+	var follow_pos: Vector2
+	var target_pos: Vector2
 	
 	if follow_node is Node2D:
 		camera = get_viewport().get_camera_2d()
@@ -236,20 +236,20 @@ func _process(delta):
 	
 	pivot_offset = follow_pos - position
 	position = lerp(position, target_pos - size * 0.5, smooth_follow * delta)
-	var viewport_rect = get_viewport_rect()
-	var min_clamp = screen_center - viewport_rect.size * 0.45
-	var max_clamp = screen_center + viewport_rect.size * 0.45
+	var viewport_rect := get_viewport_rect()
+	var min_clamp := screen_center - viewport_rect.size * 0.45
+	var max_clamp := screen_center + viewport_rect.size * 0.45
 	position.x = clamp(position.x, min_clamp.x, max_clamp.x - size.x * 0.5)
 	position.y = clamp(position.y, min_clamp.y, max_clamp.y - size.y * 0.5)
 	
-	var dir : Vector2 = follow_pos.direction_to(position + size * 0.5)
-	var perp = dir.rotated(PI * 0.5)
+	var dir: Vector2 = follow_pos.direction_to(position + size * 0.5)
+	var perp := dir.rotated(PI * 0.5)
 	tail.polygon[0] = follow_pos - position + dir * tail_offset
 	tail.polygon[1] = size * 0.5 + perp * (size.y * 0.4 + tail_base)
 	tail.polygon[2] = size * 0.5 - perp * (size.y * 0.4 + tail_base)
 
 
-func _input(_event):
+func _input(_event) -> void:
 	if is_running() and Input.is_action_just_pressed(skip_input_action):
 		if _wait_effect and not _wait_effect.skip:
 			_wait_effect.skip = true
@@ -258,38 +258,38 @@ func _input(_event):
 
 
 ## Starts processing the dialogue [member data], starting with the Start Node with its ID set to [param start_id].
-func start(id := start_id):
+func start(id := start_id) -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.start(id)
 
 
 ## Stops processing the dialogue tree.
-func stop():
+func stop() -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.stop()
 
 
 ## Continues processing the dialogue tree from the node connected to the option at [param idx].
-func select_option(idx : int):
+func select_option(idx: int) -> void:
 	if not _dialogue_parser: return
 	_dialogue_parser.select_option(idx)
 
 
 ## Returns [code]true[/code] if the [DialogueBubble] is processing a dialogue tree.
-func is_running():
+func is_running() -> bool:
 	return _running
 
 
-func _on_dialogue_started(id : String):
+func _on_dialogue_started(id: String) -> void:
 	_running = true
-	var tween = create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	var tween := create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 	tween.tween_property(self, 'scale', Vector2.ONE, 0.3)
 	tween.parallel().tween_property(self, 'modulate', Color.WHITE, 0.3)
 	show()
 	dialogue_started.emit(id)
 
 
-func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Array[String]):
+func _on_dialogue_processed(speaker: Variant, dialogue: String, options: Array[String]) -> void:
 	# set speaker
 	speaker_label.text = ''
 	if speaker is Character:
@@ -307,7 +307,7 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	
 	# set options
 	for idx in range(options_container.get_child_count()):
-		var option : Button = options_container.get_child(idx)
+		var option: Button = options_container.get_child(idx)
 		if idx >= options.size():
 			option.hide()
 			continue
@@ -319,19 +319,19 @@ func _on_dialogue_processed(speaker : Variant, dialogue : String, options : Arra
 	dialogue_processed.emit(speaker, dialogue, options)
 
 
-func _on_option_selected(idx : int):
+func _on_option_selected(idx: int) -> void:
 	option_selected.emit(idx)
 
 
-func _on_dialogue_signal(value : String):
+func _on_dialogue_signal(value: String) -> void:
 	dialogue_signal.emit(value)
 
 
-func _on_variable_changed(variable_name : String, value):
+func _on_variable_changed(variable_name: String, value) -> void:
 	variable_changed.emit(variable_name, value)
 
 
-func _on_dialogue_ended():
+func _on_dialogue_ended() -> void:
 	_running = false
 	var tween = create_tween().set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
 	tween.parallel().tween_property(self, 'scale', Vector2.ZERO, 0.3)
@@ -341,7 +341,7 @@ func _on_dialogue_ended():
 	dialogue_ended.emit()
 
 
-func _on_screen_entered():
+func _on_screen_entered() -> void:
 	if _running:
 		_dialogue_parser._running = true
 		options_container.get_child(0).grab_focus()
@@ -351,7 +351,7 @@ func _on_screen_entered():
 		show()
 
 
-func _on_screen_exited():
+func _on_screen_exited() -> void:
 	if _running:
 		_dialogue_parser._running = false
 		if _fade_tween: _fade_tween.kill()
@@ -361,7 +361,7 @@ func _on_screen_exited():
 		hide()
 
 
-func _on_wait_finished():
+func _on_wait_finished() -> void:
 	options_container.show()
 	options_container.get_child(0).show()
 	options_container.get_child(0).grab_focus()

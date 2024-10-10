@@ -14,7 +14,7 @@ signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 @onready var fork_title: LineEdit = $ForkTitle
 @onready var add_button: Button = $AddButton
 
-const ForkItemScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkItem.tscn')
+const ForkItemScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkItem.tscn')
 
 var undo_redo: EditorUndoRedoManager
 var forks: Array[Control] = []
@@ -146,7 +146,7 @@ func _on_item_deleted(item: BoxContainer) -> void:
 		remove_item(item)
 		return
 	
-	var idx = item.get_index()
+	var idx := item.get_index()
 	disconnection_from_request.emit(name, forks.find(item))
 	
 	undo_redo.create_action('Remove fork item')

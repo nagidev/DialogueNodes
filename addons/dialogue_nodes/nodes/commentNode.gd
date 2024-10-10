@@ -4,16 +4,16 @@ extends GraphNode
 
 signal modified
 
-@onready var text_edit = $TextEdit
-@onready var resize_timer = $ResizeTimer
-@onready var text_timer = $TextTimer
+@onready var text_edit := $TextEdit
+@onready var resize_timer := $ResizeTimer
+@onready var text_timer := $TextTimer
 
 var undo_redo : EditorUndoRedoManager
 var last_size := size
 var last_text := ''
 
 
-func _to_dict(_graph):
+func _to_dict(_graph) -> Dictionary:
 	var dict = {}
 	
 	dict['comment'] = text_edit.text
@@ -22,7 +22,7 @@ func _to_dict(_graph):
 	return dict
 
 
-func _from_dict(dict : Dictionary):
+func _from_dict(dict : Dictionary) -> Array[String]:
 	if dict.has('size') and dict['size'] is Vector2:
 		size = dict['size']
 		last_size = size
@@ -33,18 +33,18 @@ func _from_dict(dict : Dictionary):
 	return []
 
 
-func set_text(new_text : String):
+func set_text(new_text : String) -> void:
 	if text_edit.text != new_text:
 		text_edit.text = new_text
 	last_text = new_text
 
 
-func _on_resize(_new_size):
+func _on_resize(_new_size) -> void:
 	resize_timer.stop()
 	resize_timer.start()
 
 
-func _on_resize_timer_timeout():
+func _on_resize_timer_timeout() -> void:
 	if not undo_redo:
 		print_rich('[shake][color="FF8866"]WOMP WOMP no undo_redo??[/color][/shake]')
 		return
@@ -59,12 +59,12 @@ func _on_resize_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_text_changed():
+func _on_text_changed() -> void:
 	text_timer.stop()
 	text_timer.start()
 
 
-func _on_text_timer_timeout():
+func _on_text_timer_timeout() -> void:
 	if not undo_redo:
 		return
 	
@@ -76,5 +76,5 @@ func _on_text_timer_timeout():
 	undo_redo.commit_action()
 
 
-func _on_modified():
+func _on_modified() -> void:
 	modified.emit()

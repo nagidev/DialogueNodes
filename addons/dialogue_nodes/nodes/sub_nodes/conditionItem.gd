@@ -80,7 +80,7 @@ func _on_condition_changing(_a=0) -> void:
 func _on_condition_changed() -> void:
 	if not undo_redo: return
 	
-	var new_condition : Dictionary = _to_dict()
+	var new_condition: Dictionary = _to_dict()
 	
 	undo_redo.create_action('Set condition')
 	undo_redo.add_do_method(self, '_from_dict', new_condition)
