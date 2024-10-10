@@ -38,9 +38,9 @@ func set_type(new_type: Variant.Type) -> void:
 	type = new_type
 
 
-func _on_return_input_focus_exited() -> void:
-	pass
-
-
 func _on_remove_button_pressed() -> void:
 	requested_removal.emit(self)
+
+
+func _on_return_input_focus_exited() -> void:
+	_call_node.reset_size()

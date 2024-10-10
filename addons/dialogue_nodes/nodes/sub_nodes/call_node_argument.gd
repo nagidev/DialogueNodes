@@ -69,4 +69,4 @@ func _on_reset_button_pressed() -> void:
 
 
 func _on_argument_input_focus_exited() -> void:
-	pass
+	_call_node.reset_size()
