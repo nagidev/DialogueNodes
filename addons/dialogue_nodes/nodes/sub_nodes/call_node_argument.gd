@@ -70,7 +70,6 @@ func set_data(new_name: String, new_type: Variant.Type, argument: String, new_de
 
 
 func _set_reset_button_visibility() -> void:
-	print("I was here")
 	_reset_button.visible = _arg != (str(default_arg) if default_arg != null else '')
 
 
