@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bskh1vm7i45nw"]
+[gd_scene load_steps=4 format=3 uid="uid://bskh1vm7i45nw"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_argument.gd" id="1_mqq8d"]
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="2_h0t8n"]
+[ext_resource type="Texture2D" uid="uid://c1quecpfgc2t0" path="res://addons/dialogue_nodes/icons/LineEdit.svg" id="3_eqbi1"]
 
 [node name="CallNodeArgument" type="HBoxContainer"]
 size_flags_horizontal = 3
@@ -14,7 +15,7 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "ArgName"
 
-[node name="ArgumentInput" type="LineEdit" parent="."]
+[node name="ArgumentLineEdit" type="LineEdit" parent="."]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -23,15 +24,41 @@ text = "Default"
 placeholder_text = "Type"
 expand_to_text_length = true
 
-[node name="ResetButton" type="Button" parent="."]
+[node name="ArgumentTextEdit" type="TextEdit" parent="."]
 unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "Default"
+placeholder_text = "Type"
+scroll_fit_content_height = true
+
+[node name="VFlowContainer" type="VFlowContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 1
+
+[node name="ResetButton" type="Button" parent="VFlowContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 icon = ExtResource("2_h0t8n")
 flat = true
 
-[connection signal="focus_exited" from="ArgumentInput" to="." method="_on_argument_input_focus_exited"]
-[connection signal="text_changed" from="ArgumentInput" to="." method="_on_argument_input_text_changed"]
-[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
+[node name="SwapEditButton" type="Button" parent="VFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("3_eqbi1")
+flat = true
+
+[connection signal="focus_exited" from="ArgumentLineEdit" to="." method="_on_any_argument_edit_focus_exited"]
+[connection signal="text_changed" from="ArgumentLineEdit" to="." method="_on_argument_line_edit_text_changed"]
+[connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_any_argument_edit_focus_exited"]
+[connection signal="text_changed" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_text_changed"]
+[connection signal="pressed" from="VFlowContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="VFlowContainer/SwapEditButton" to="." method="_on_swap_edit_button_pressed"]
