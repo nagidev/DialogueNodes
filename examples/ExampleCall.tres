@@ -130,6 +130,7 @@ with a default output if no return case matches.",
 "default_args": [],
 "flags": 33,
 "id": 0,
+"index": 3,
 "name": "roll_dice",
 "return": {
 "class_name": &"",

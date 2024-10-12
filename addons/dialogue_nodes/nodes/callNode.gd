@@ -18,12 +18,12 @@ signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 
 var undo_redo: EditorUndoRedoManager
 
+var base_color: Color = Color.WHITE
+
 var _calls_script: Script = null
 var _calls: Dictionary = {}
 var _active_method: Dictionary = {}
 var _num_rets: int = 0
-
-var base_color: Color = Color.WHITE
 
 var _arg_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeArgument.tscn')
 var _ret_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn')
@@ -100,7 +100,7 @@ func _from_dict(dict: Dictionary) -> Array[String]:
 	# Import Method
 	_reload_method_ui()
 	if dict['method'].is_empty():
-		_clear_method()
+		_set_method("")
 	else:
 		if _set_method(dict['method'].name) == true:
 			for i: int in _method_button.item_count:
@@ -108,7 +108,7 @@ func _from_dict(dict: Dictionary) -> Array[String]:
 					_method_button.select(i)
 					break
 		else:
-			_method_button.selected = -1
+			_method_button.select(-1)
 	
 	# Import Arguments
 	if !_active_method.is_empty():
@@ -150,11 +150,6 @@ func _reload_library(script: Script) -> bool:
 		push_error("Cannot reload CallNode's library with a NULL script!")
 		return false
 	
-	# Swap signal connections
-	if _calls_script != null and _calls_script.script_changed.is_connected(_on_calls_script_changed):
-		_calls_script.script_changed.disconnect(_on_calls_script_changed)
-	script.script_changed.connect(_on_calls_script_changed, ConnectFlags.CONNECT_DEFERRED)
-	
 	# Re-write Calls Library with new methods
 	_calls.clear()
 	for method: Dictionary in script.get_script_method_list():
@@ -173,33 +168,31 @@ func _reload_method_ui() -> void:
 		curr_method_name = _method_button.get_item_text(_method_button.selected)
 	
 	_method_button.clear()
-	_method_button.selected = -1
 	_method_button.add_item('', 0)
-
+	_method_button.select(0)
+	
 	var idx: int = 1
 	for method: Dictionary in _calls.values():
+		method.index = idx
 		_method_button.add_item(method.name, idx)
 		if method.name == curr_method_name:
-			_method_button.selected = idx
+			_method_button.select(idx)
 		idx += 1
 
 
 func _set_method(method_name: String) -> bool:
-	if !_calls.has(method_name):
-		push_error("CallNode's selected method <%s> is not in calls library!" % method_name)
-		return false
-	_active_method = _calls[method_name]
+	if method_name.is_empty():
+		_active_method = {}
+	else:
+		if !_calls.has(method_name):
+			push_error("CallNode's selected method <%s> is not in calls library!" % method_name)
+			return false
+		_active_method = _calls[method_name]
+	
 	_reload_args_ui()
 	_reload_rets_ui()
 	reset_size()
 	return true
-
-
-func _clear_method() -> void:
-	_active_method = {}
-	_reload_args_ui()
-	_reload_rets_ui()
-	reset_size()
 
 
 # -------------------------------------------------------------------------------------------------
@@ -337,24 +330,33 @@ func clear_returns() -> void:
 # -------------------------------------------------------------------------------------------------
 # Signals
 # -------------------------------------------------------------------------------------------------
+# TODO: Add method to "bind" a "changed file" signal from script we are loading methods from.
 func _on_calls_script_changed() -> void:
 	pass
-	#_reload_library()
+	#_reload_library(_calls_script)
 	#_reload_method_ui()
 	#_reload_args_ui()
 
 
 func _on_method_selector_item_selected(index: int) -> void:
 	if index == -1:
-		_clear_method()
 		return
-
+	
+	# If active method was reselected, do nothing.
 	var method_name: String = _method_button.get_item_text(index)
-	if method_name.is_empty():
-		_clear_method()
+	if _active_method.is_empty():
+		if method_name.is_empty():
+			return
+	elif _active_method.name == _method_button.get_item_text(index):
 		return
-
-	_set_method(method_name)
+	
+	# Else, Select new Method
+	undo_redo.create_action('Selected Method <%s>' % method_name if !method_name.is_empty() else 'Cleared Method')
+	undo_redo.add_do_method(_method_button, 'select', index)
+	undo_redo.add_do_method(self, '_set_method', method_name)
+	undo_redo.add_undo_method(_method_button, 'select', _active_method.index if !_active_method.is_empty() else 0)
+	undo_redo.add_undo_method(self, '_set_method', _active_method.name if !_active_method.is_empty() else '')
+	undo_redo.commit_action()
 
 
 func _on_add_return_button_pressed() -> void:
