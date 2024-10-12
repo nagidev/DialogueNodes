@@ -24,9 +24,9 @@ var _arg: String = ''
 
 
 func _ready() -> void:
-	_resize_input_to_arg()
 	_input.text = ''
 	_reset_button.visible = false
+	_resize_input_to_arg()
 
 
 func set_call_node(call_node: GraphNode) -> void:
@@ -40,8 +40,8 @@ func get_arg() -> String:
 func set_arg(new_arg: String) -> void:
 	_arg = new_arg
 	_input.text = new_arg
-	_resize_input_to_arg()
 	_set_reset_button_visibility()
+	_resize_input_to_arg()
 	_call_node.reset_size.call_deferred()
 
 

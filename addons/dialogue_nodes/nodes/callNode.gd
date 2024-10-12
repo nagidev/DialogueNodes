@@ -385,6 +385,11 @@ func _on_method_selector_item_selected(index: int) -> void:
 	undo_redo.add_do_method(self, '_set_method', method_name)
 	undo_redo.add_undo_method(_method_button, 'select', _active_method.index if !_active_method.is_empty() else 0)
 	undo_redo.add_undo_method(self, '_set_method', _active_method.name if !_active_method.is_empty() else '')
+
+	if !_active_method.is_empty():
+		for arg_data: Dictionary in _active_method.args:
+			undo_redo.add_undo_method(self, 'set_argument', arg_data.name, get_argument(arg_data.name).get_arg())
+
 	undo_redo.commit_action()
 
 
