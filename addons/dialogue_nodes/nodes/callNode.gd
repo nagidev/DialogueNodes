@@ -198,6 +198,20 @@ func _set_method(method_name: String) -> bool:
 # -------------------------------------------------------------------------------------------------
 # Arguments
 # -------------------------------------------------------------------------------------------------
+func get_argument(arg_name: String) -> Control:
+	for arg: Node in _args_container.get_children():
+		if arg.arg_name == arg_name:
+			return arg as Control
+	return null
+
+
+func set_argument(arg_name: String, arg_value: String) -> bool:
+	var arg: Node = get_argument(arg_name)
+	if arg != null:
+		arg.set_arg(arg_value)
+	return arg != null
+
+
 func _reload_args_ui() -> void:
 	# If no active method, clear all arguments
 	if _active_method.is_empty():
@@ -240,6 +254,7 @@ func _reload_args_ui() -> void:
 func _add_argument(arg_data: Dictionary, arg: String = '', default_arg = null) -> Control:
 	var new_arg_ui: Control = _arg_scene.instantiate()
 	_args_container.add_child(new_arg_ui)
+	new_arg_ui.changed_value.connect(_on_changed_argument)
 	new_arg_ui.set_call_node(self)
 	new_arg_ui.set_data(
 		arg_data.name,
@@ -265,6 +280,19 @@ func _clear_arguments() -> void:
 # -------------------------------------------------------------------------------------------------
 # Returns
 # -------------------------------------------------------------------------------------------------
+func get_return(idx: int) -> Control:
+	if idx < 0 or idx >= _num_rets:
+		return null
+	return get_child(_ret_idx_start + idx) as Control
+
+
+func set_return(idx: int, ret_value: String) -> bool:
+	var ret: Control = get_return(idx)
+	if ret != null:
+		ret.set_ret(ret_value)
+	return ret != null
+
+
 func _reload_rets_ui() -> void:
 	# Reset the type hint on all existing returns.
 	for idx: int in range(_ret_idx_start, _ret_idx_start + _num_rets):
@@ -279,6 +307,7 @@ func _add_return() -> Control:
 	move_child(new_ret, _ret_button.get_index())
 	_num_rets += 1
 	
+	new_ret.changed_value.connect(_on_changed_return)
 	new_ret.requested_removal.connect(_on_return_requested_removal)
 	new_ret.set_call_node(self)
 	new_ret.set_type(_active_method.return.type if !_active_method.is_empty() else Variant.Type.TYPE_NIL)
@@ -328,7 +357,7 @@ func clear_returns() -> void:
 
 
 # -------------------------------------------------------------------------------------------------
-# Signals
+# Signals: CallNode
 # -------------------------------------------------------------------------------------------------
 # TODO: Add method to "bind" a "changed file" signal from script we are loading methods from.
 func _on_calls_script_changed() -> void:
@@ -350,7 +379,7 @@ func _on_method_selector_item_selected(index: int) -> void:
 	elif _active_method.name == _method_button.get_item_text(index):
 		return
 	
-	# Else, Select new Method
+	# Else, Select new Method.
 	undo_redo.create_action('Selected Method <%s>' % method_name if !method_name.is_empty() else 'Cleared Method')
 	undo_redo.add_do_method(_method_button, 'select', index)
 	undo_redo.add_do_method(self, '_set_method', method_name)
@@ -365,3 +394,24 @@ func _on_add_return_button_pressed() -> void:
 
 func _on_return_requested_removal(ret: Control) -> void:
 	_remove_return(ret)
+
+
+# -------------------------------------------------------------------------------------------------
+# Signals: Arguments
+# -------------------------------------------------------------------------------------------------
+func _on_changed_argument(arg: Control, old: String, new: String) -> void:
+	undo_redo.create_action('Edited Argument <%s> in <%s>' % [arg.arg_name, title])
+	undo_redo.add_do_method(self, 'set_argument', arg.arg_name, new)
+	undo_redo.add_undo_method(self, 'set_argument', arg.arg_name, old)
+	undo_redo.commit_action()
+
+
+# -------------------------------------------------------------------------------------------------
+# Signals: Returns
+# -------------------------------------------------------------------------------------------------
+func _on_changed_return(ret: Control, old: String, new: String) -> void:
+	var ret_idx: int = ret.get_index() - _ret_idx_start
+	undo_redo.create_action('Edited Return <%s> in <%s>' % [ret_idx, title])
+	undo_redo.add_do_method(self, 'set_return', ret_idx, new)
+	undo_redo.add_undo_method(self, 'set_return', ret_idx, old)
+	undo_redo.commit_action()

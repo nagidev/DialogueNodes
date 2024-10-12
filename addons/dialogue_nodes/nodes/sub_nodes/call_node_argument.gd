@@ -6,6 +6,8 @@ extends Container
 ## Represents an argument in a CallNode's method. Used to store the argument's data, as well as
 ## react to user editing based on said data.
 
+signal changed_value(arg: Control, old: String, new: String)
+
 @export_range(0.0, 30.0, 0.1) var _font_size_margin: float = 15.0
 
 var arg_name: String = ''
@@ -13,7 +15,7 @@ var type: Variant.Type = Variant.Type.TYPE_NIL
 var default_arg = null
 
 var _call_node: GraphNode = null
-var _arg: String = ""
+var _arg: String = ''
 
 @onready var _label: Label = %ArgumentLabel
 @onready var _input: TextEdit = %ArgumentTextEdit
@@ -37,7 +39,9 @@ func get_arg() -> String:
 func set_arg(new_arg: String) -> void:
 	_arg = new_arg
 	_input.text = new_arg
+	_resize_input_to_arg()
 	_set_reset_button_visibility()
+	_call_node.reset_size.call_deferred()
 
 
 func get_data() -> Dictionary:
@@ -63,16 +67,16 @@ func set_data(new_name: String, new_type: Variant.Type, argument: String, new_de
 		set_arg(str(new_default) if new_default != null else '')
 
 
-func _set_reset_button_visibility() -> void:
-	_reset_button.visible = _arg != (str(default_arg) if default_arg != null else '')
-
-
-func _validate_input_type() -> bool:
+func _is_string_valid_type(str: String) -> bool:
 	return (
 		type == Variant.Type.TYPE_NIL
 		or type == Variant.Type.TYPE_STRING
-		or typeof(str_to_var(_arg)) == type
+		or typeof(str_to_var(str)) == type
 	)
+
+
+func _set_reset_button_visibility() -> void:
+	_reset_button.visible = _arg != (str(default_arg) if default_arg != null else '')
 
 
 func _resize_input_to_arg() -> void:
@@ -94,22 +98,14 @@ func _resize_input_to_arg() -> void:
 	_input.custom_minimum_size.x = max_width + _font_size_margin
 
 
-func _on_argument_text_edit_text_changed() -> void:
-	_arg = _input.text
-	_resize_input_to_arg()
-	_set_reset_button_visibility()
-
-
 func _on_reset_button_pressed() -> void:
-	_input.text = _arg
-	_set_reset_button_visibility()
-	_call_node.reset_size.call_deferred()
+	changed_value.emit(self, _arg, var_to_str(default_arg) if default_arg != null else '')
 
 
 func _on_argument_text_edit_focus_exited() -> void:
-	if !_validate_input_type():
+	if !_is_string_valid_type(_input.text):
 		push_error(
 			'Argument <%s> with value <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
-			% [arg_name, _arg, _call_node.title, type_string(type)]
+			% [arg_name, _input.text, _call_node.title, type_string(type)]
 		)
-	_call_node.reset_size()
+	changed_value.emit(self, _arg, _input.text)

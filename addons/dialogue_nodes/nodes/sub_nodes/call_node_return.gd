@@ -6,15 +6,15 @@ extends Container
 ## Represents a possible return of a CallNode's method. Used mainly to manage itself and to
 ## pass interactions to the CallNode that owns it.
 
-@export_range(0.0, 30.0, 0.1) var _font_size_margin: float = 15.0
-
-signal text_changed(ret: Control, new_text: String)
+signal changed_value(arg: Control, old: String, new: String)
 signal requested_removal(ret: Control)
+
+@export_range(0.0, 30.0, 0.1) var _font_size_margin: float = 15.0
 
 var type: Variant.Type = Variant.Type.TYPE_NIL
 
 var _call_node: GraphNode = null
-var _ret: String = ""
+var _ret: String = ''
 
 @onready var _input: TextEdit = %ReturnTextEdit
 
@@ -33,6 +33,8 @@ func get_ret() -> String:
 func set_ret(new_ret: String) -> void:
 	_ret = new_ret
 	_input.text = new_ret
+	_resize_input_to_arg()
+	_call_node.reset_size.call_deferred()
 
 
 func set_type(new_type: Variant.Type) -> void:
@@ -40,11 +42,11 @@ func set_type(new_type: Variant.Type) -> void:
 	type = new_type
 
 
-func _validate_input_type() -> bool:
+func _is_string_valid_type(str: String) -> bool:
 	return (
 		type == Variant.Type.TYPE_NIL
 		or type == Variant.Type.TYPE_STRING
-		or typeof(str_to_var(_ret)) == type
+		or typeof(str_to_var(str)) == type
 	)
 
 
@@ -67,20 +69,14 @@ func _resize_input_to_arg() -> void:
 	_input.custom_minimum_size.x = max_width + _font_size_margin
 
 
-func _on_return_text_edit_text_changed() -> void:
-	_ret = _input.text
-	_resize_input_to_arg()
-	_input.text = _ret
-
-
 func _on_remove_button_pressed() -> void:
 	requested_removal.emit(self)
 
 
 func _on_return_text_edit_focus_exited() -> void:
-	if !_validate_input_type():
+	if !_is_string_valid_type(_input.text):
 		push_error(
 			'Return <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
-			% [_ret, _call_node.title, type_string(type)]
+			% [_input.text, _call_node.title, type_string(type)]
 		)
-	_call_node.reset_size()
+	changed_value.emit(self, _ret, _input.text)

@@ -33,10 +33,5 @@ size_flags_vertical = 4
 icon = ExtResource("2_h0t8n")
 flat = true
 
-[node name="TextTimer" type="Timer" parent="."]
-wait_time = 0.5
-one_shot = true
-
 [connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_focus_exited"]
-[connection signal="text_changed" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_text_changed"]
 [connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
