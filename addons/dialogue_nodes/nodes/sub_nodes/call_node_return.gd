@@ -6,11 +6,11 @@ extends Container
 ## Represents a possible return of a CallNode's method. Used mainly to manage itself and to
 ## pass interactions to the CallNode that owns it.
 
-@export var _line_edit_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/LineEdit.svg')
-@export var _text_edit_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/TextEdit.svg')
-
 signal text_changed(ret: Control, new_text: String)
 signal requested_removal(ret: Control)
+
+@export var _line_edit_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/LineEdit.svg')
+@export var _text_edit_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/TextEdit.svg')
 
 var type: Variant.Type = Variant.Type.TYPE_NIL
 
