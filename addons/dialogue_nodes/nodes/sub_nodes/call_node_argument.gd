@@ -67,6 +67,14 @@ func _set_reset_button_visibility() -> void:
 	_reset_button.visible = _arg != (str(default_arg) if default_arg != null else '')
 
 
+func _validate_input_type() -> bool:
+	return (
+		type == Variant.Type.TYPE_NIL
+		or type == Variant.Type.TYPE_STRING
+		or typeof(str_to_var(_arg)) == type
+	)
+
+
 func _resize_input_to_arg() -> void:
 	var font: Font = get_theme_default_font()
 	
@@ -84,14 +92,6 @@ func _resize_input_to_arg() -> void:
 			max_width = str_size
 	
 	_input.custom_minimum_size.x = max_width + _font_size_margin
-
-
-func _validate_input_type() -> bool:
-	return (
-		type == Variant.Type.TYPE_NIL
-		or type == Variant.Type.TYPE_STRING
-		or typeof(str_to_var(_arg)) == type
-	)
 
 
 func _on_argument_text_edit_text_changed() -> void:

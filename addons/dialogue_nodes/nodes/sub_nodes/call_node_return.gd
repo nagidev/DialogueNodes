@@ -6,6 +6,8 @@ extends Container
 ## Represents a possible return of a CallNode's method. Used mainly to manage itself and to
 ## pass interactions to the CallNode that owns it.
 
+@export_range(0.0, 30.0, 0.1) var _font_size_margin: float = 15.0
+
 signal text_changed(ret: Control, new_text: String)
 signal requested_removal(ret: Control)
 
@@ -46,8 +48,28 @@ func _validate_input_type() -> bool:
 	)
 
 
+func _resize_input_to_arg() -> void:
+	var font: Font = get_theme_default_font()
+	
+	var lines: PackedStringArray = []
+	if _input.text.is_empty():
+		lines = _input.placeholder_text.split("\n")
+	else:
+		for line_idx: int in _input.get_line_count():
+			lines.push_back(_input.get_line(line_idx))
+	
+	var max_width: int = -1
+	for line: String in lines:
+		var str_size: int = font.get_string_size(line).x
+		if str_size > max_width:
+			max_width = str_size
+	
+	_input.custom_minimum_size.x = max_width + _font_size_margin
+
+
 func _on_return_text_edit_text_changed() -> void:
 	_ret = _input.text
+	_resize_input_to_arg()
 	_input.text = _ret
 
 
