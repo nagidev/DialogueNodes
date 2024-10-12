@@ -1,25 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://djc2ggs14vbxc"]
+[gd_scene load_steps=3 format=3 uid="uid://djc2ggs14vbxc"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_return.gd" id="1_lcs7a"]
 [ext_resource type="Texture2D" uid="uid://b8o81rn8q8a43" path="res://addons/dialogue_nodes/icons/Remove.svg" id="1_t7mvg"]
-[ext_resource type="Texture2D" uid="uid://c1quecpfgc2t0" path="res://addons/dialogue_nodes/icons/LineEdit.svg" id="2_0a408"]
 
 [node name="CallNodeReturn" type="HBoxContainer"]
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("1_lcs7a")
 
-[node name="ReturnLineEdit" type="LineEdit" parent="."]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 4
-placeholder_text = "Type"
-expand_to_text_length = true
-
 [node name="ReturnTextEdit" type="TextEdit" parent="."]
 unique_name_in_owner = true
-visible = false
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -33,14 +23,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 alignment = 1
 
-[node name="SwapEditButton" type="Button" parent="VFlowContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-icon = ExtResource("2_0a408")
-flat = true
-
 [node name="RemoveButton" type="Button" parent="VFlowContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -48,8 +30,6 @@ size_flags_vertical = 4
 icon = ExtResource("1_t7mvg")
 flat = true
 
-[connection signal="focus_exited" from="ReturnLineEdit" to="." method="_on_return_input_focus_exited"]
-[connection signal="text_changed" from="ReturnLineEdit" to="." method="_on_return_line_edit_text_changed"]
+[connection signal="focus_exited" from="ReturnTextEdit" to="." method="_on_return_text_edit_focus_exited"]
 [connection signal="text_changed" from="ReturnTextEdit" to="." method="_on_return_text_edit_text_changed"]
-[connection signal="pressed" from="VFlowContainer/SwapEditButton" to="." method="_on_swap_edit_button_pressed"]
 [connection signal="pressed" from="VFlowContainer/RemoveButton" to="." method="_on_remove_button_pressed"]

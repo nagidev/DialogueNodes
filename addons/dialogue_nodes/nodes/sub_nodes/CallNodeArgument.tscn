@@ -16,7 +16,7 @@ text = "ArgName"
 
 [node name="ArgumentTextEdit" type="TextEdit" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(72, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -42,6 +42,6 @@ flat = true
 wait_time = 0.5
 one_shot = true
 
-[connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_any_argument_edit_focus_exited"]
+[connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_focus_exited"]
 [connection signal="text_changed" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_text_changed"]
 [connection signal="pressed" from="VFlowContainer/ResetButton" to="." method="_on_reset_button_pressed"]

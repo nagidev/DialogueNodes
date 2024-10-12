@@ -106,7 +106,7 @@ func _on_reset_button_pressed() -> void:
 	_call_node.reset_size.call_deferred()
 
 
-func _on_any_argument_edit_focus_exited() -> void:
+func _on_argument_text_edit_focus_exited() -> void:
 	if !_validate_input_type():
 		push_error(
 			'Argument <%s> with value <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
