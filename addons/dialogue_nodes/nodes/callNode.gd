@@ -198,15 +198,15 @@ func _set_method(method_name: String) -> bool:
 # -------------------------------------------------------------------------------------------------
 # Arguments
 # -------------------------------------------------------------------------------------------------
-func get_argument(arg_name: String) -> Control:
+func _get_argument(arg_name: String) -> Control:
 	for arg: Node in _args_container.get_children():
 		if arg.arg_name == arg_name:
 			return arg as Control
 	return null
 
 
-func set_argument(arg_name: String, arg_value: String) -> bool:
-	var arg: Node = get_argument(arg_name)
+func _set_argument(arg_name: String, arg_value: String) -> bool:
+	var arg: Node = _get_argument(arg_name)
 	if arg != null:
 		arg.set_arg(arg_value)
 	return arg != null
@@ -280,19 +280,6 @@ func _clear_arguments() -> void:
 # -------------------------------------------------------------------------------------------------
 # Returns
 # -------------------------------------------------------------------------------------------------
-func get_return(idx: int) -> Control:
-	if idx < 0 or idx >= _num_rets:
-		return null
-	return get_child(_ret_idx_start + idx) as Control
-
-
-func set_return(idx: int, ret_value: String) -> bool:
-	var ret: Control = get_return(idx)
-	if ret != null:
-		ret.set_ret(ret_value)
-	return ret != null
-
-
 func _reload_rets_ui() -> void:
 	# Reset the type hint on all existing returns.
 	for idx: int in range(_ret_idx_start, _ret_idx_start + _num_rets):
@@ -301,10 +288,23 @@ func _reload_rets_ui() -> void:
 			ret.set_type(_active_method.return.type if !_active_method.is_empty() else Variant.Type.TYPE_NIL)
 
 
-func _add_return() -> Control:
+func _get_return(idx: int) -> Control:
+	if idx < 0 or idx >= _num_rets:
+		return null
+	return get_child(_ret_idx_start + idx) as Control
+
+
+func _set_return(idx: int, ret_value: String) -> bool:
+	var ret: Control = _get_return(idx)
+	if ret != null:
+		ret.set_ret(ret_value)
+	return ret != null
+
+
+func _add_return(idx: int = _num_rets) -> Control:
 	var new_ret: Control = _ret_scene.instantiate()
 	add_child(new_ret)
-	move_child(new_ret, _ret_button.get_index())
+	move_child(new_ret, _ret_idx_start + idx)
 	_num_rets += 1
 	
 	new_ret.changed_value.connect(_on_changed_return)
@@ -349,6 +349,12 @@ func _remove_return(ret: Control) -> Control:
 	return ret
 
 
+func _remove_return_at(idx: int) -> void:
+	var ret: Node = _get_return(idx)
+	if ret != null:
+		_remove_return.call_deferred(ret)  # Needed deferred or Undo/Redo goes crazy.
+
+
 func clear_returns() -> void:
 	for idx: int in range(_ret_idx_start, _ret_idx_start + _num_rets):
 		var ret: Node = get_child(idx)
@@ -388,17 +394,9 @@ func _on_method_selector_item_selected(index: int) -> void:
 
 	if !_active_method.is_empty():
 		for arg_data: Dictionary in _active_method.args:
-			undo_redo.add_undo_method(self, 'set_argument', arg_data.name, get_argument(arg_data.name).get_arg())
+			undo_redo.add_undo_method(self, '_set_argument', arg_data.name, _get_argument(arg_data.name).get_arg())
 
 	undo_redo.commit_action()
-
-
-func _on_add_return_button_pressed() -> void:
-	_add_return()
-
-
-func _on_return_requested_removal(ret: Control) -> void:
-	_remove_return(ret)
 
 
 # -------------------------------------------------------------------------------------------------
@@ -406,17 +404,33 @@ func _on_return_requested_removal(ret: Control) -> void:
 # -------------------------------------------------------------------------------------------------
 func _on_changed_argument(arg: Control, old: String, new: String) -> void:
 	undo_redo.create_action('Edited Argument <%s> in <%s>' % [arg.arg_name, title])
-	undo_redo.add_do_method(self, 'set_argument', arg.arg_name, new)
-	undo_redo.add_undo_method(self, 'set_argument', arg.arg_name, old)
+	undo_redo.add_do_method(self, '_set_argument', arg.arg_name, new)
+	undo_redo.add_undo_method(self, '_set_argument', arg.arg_name, old)
 	undo_redo.commit_action()
 
 
 # -------------------------------------------------------------------------------------------------
 # Signals: Returns
 # -------------------------------------------------------------------------------------------------
+func _on_add_return_button_pressed() -> void:
+	undo_redo.create_action('Added Return on <%s>' % title)
+	undo_redo.add_do_method(self, '_add_return', _num_rets)
+	undo_redo.add_undo_method(self, '_remove_return_at', _num_rets)
+	undo_redo.commit_action()
+
+
+func _on_return_requested_removal(ret: Control) -> void:
+	var relative_idx: int = ret.get_index() - _ret_idx_start
+	undo_redo.create_action('Remove Return on <%s>' % title)
+	undo_redo.add_do_method(self, '_remove_return_at', relative_idx)
+	undo_redo.add_undo_method(self, '_add_return', relative_idx)
+	undo_redo.add_undo_method(self, '_set_return', relative_idx, ret.get_ret())
+	undo_redo.commit_action()
+
+
 func _on_changed_return(ret: Control, old: String, new: String) -> void:
 	var ret_idx: int = ret.get_index() - _ret_idx_start
 	undo_redo.create_action('Edited Return <%s> in <%s>' % [ret_idx, title])
-	undo_redo.add_do_method(self, 'set_return', ret_idx, new)
-	undo_redo.add_undo_method(self, 'set_return', ret_idx, old)
+	undo_redo.add_do_method(self, '_set_return', ret_idx, new)
+	undo_redo.add_undo_method(self, '_set_return', ret_idx, old)
 	undo_redo.commit_action()
