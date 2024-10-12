@@ -105,6 +105,8 @@ func _on_reset_button_pressed() -> void:
 
 
 func _on_argument_text_edit_focus_exited() -> void:
+	if _input.text == _arg:
+		return
 	if !_is_string_valid_type(_input.text):
 		push_error(
 			'Argument <%s> with value <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'

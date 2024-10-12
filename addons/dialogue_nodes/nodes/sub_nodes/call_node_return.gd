@@ -79,6 +79,8 @@ func _on_remove_button_pressed() -> void:
 
 
 func _on_return_text_edit_focus_exited() -> void:
+	if _input.text == _ret:
+		return
 	if !_is_string_valid_type(_input.text):
 		push_error(
 			'Return <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
