@@ -25,6 +25,7 @@ var _arg: String = ''
 
 func _ready() -> void:
 	_resize_input_to_arg()
+	_input.text = ''
 	_reset_button.visible = false
 
 

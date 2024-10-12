@@ -19,6 +19,10 @@ var _ret: String = ''
 @onready var _input: TextEdit = %ReturnTextEdit
 
 
+func _ready() -> void:
+	_input.text = ''
+
+
 func set_call_node(call_node: GraphNode) -> void:
 	if call_node != get_parent_control():
 		push_error('A CallNodeReturn MUST be a direct child of the CallNode is bound to!')
