@@ -245,11 +245,12 @@ func _process_call(dict: Dictionary):
 
 	var args: Array = []
 	for idx: int in dict.args.size():
-		args.push_back(
-			dict.args[idx]
-			if dict.method.args[idx].type == Variant.Type.TYPE_STRING
-			else str_to_var(dict.args[idx])
-		)
+		if dict.method.args[idx].type == Variant.Type.TYPE_STRING:  # If String, save it as is.
+			args.push_back(dict.args[idx])
+		elif !dict.args[idx].is_empty():  # If not String, parse it to Var.
+			args.push_back(str_to_var(dict.args[idx]))
+		else:  # If not String, but empty, parse the default value for argument Type.
+			args.push_back(type_convert('', dict.method.args[idx].type))
 
 	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
 	for idx: int in dict.rets:

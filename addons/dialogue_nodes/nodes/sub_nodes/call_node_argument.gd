@@ -72,6 +72,7 @@ func _is_string_valid_type(str: String) -> bool:
 	return (
 		type == Variant.Type.TYPE_NIL
 		or type == Variant.Type.TYPE_STRING
+		or str.is_empty()
 		or typeof(str_to_var(str)) == type
 	)
 
