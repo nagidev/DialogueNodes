@@ -312,22 +312,21 @@ func _add_return(idx: int = _num_rets) -> Control:
 	new_ret.set_call_node(self)
 	new_ret.set_type(_active_method.return.type if !_active_method.is_empty() else Variant.Type.TYPE_NIL)
 	
+	# Shift Default Return Connection
+	connection_shift_request.emit(name, _num_rets - 1, _num_rets)
+	
 	# Shift Return Connections
 	for i: int in range(_num_rets - 1, new_ret.get_index() - _ret_idx_start, -1):
 		connection_shift_request.emit(name, i - 1, i)
 	
-	# Shift Default Return Connection
-	set_slot(_ret_idx_start + _num_rets + 1, false, 0, base_color, true, 0, base_color)
-	connection_shift_request.emit(name, _num_rets - 1, _num_rets)
-	
 	_update_slots()
+	
 	return new_ret
 
 
 func _remove_return(ret: Control) -> Control:
 	# Shift Return Connections
 	var ret_idx: int = ret.get_index() - _ret_idx_start
-	disconnection_from_request.emit(name, ret_idx)
 	for i: int in range(ret_idx, _num_rets - 1):
 		connection_shift_request.emit(name, i + 1, i)
 	
@@ -421,6 +420,9 @@ func _on_add_return_button_pressed() -> void:
 
 func _on_return_requested_removal(ret: Control) -> void:
 	var relative_idx: int = ret.get_index() - _ret_idx_start
+	
+	disconnection_from_request.emit(name, relative_idx)
+	
 	undo_redo.create_action('Remove Return on <%s>' % title)
 	undo_redo.add_do_method(self, '_remove_return_at', relative_idx)
 	undo_redo.add_undo_method(self, '_add_return', relative_idx)
