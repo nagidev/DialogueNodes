@@ -18,12 +18,7 @@ text = "Default"
 placeholder_text = "Type"
 scroll_fit_content_height = true
 
-[node name="VFlowContainer" type="VFlowContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-alignment = 1
-
-[node name="RemoveButton" type="Button" parent="VFlowContainer"]
+[node name="RemoveButton" type="Button" parent="."]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -32,4 +27,4 @@ flat = true
 
 [connection signal="focus_exited" from="ReturnTextEdit" to="." method="_on_return_text_edit_focus_exited"]
 [connection signal="text_changed" from="ReturnTextEdit" to="." method="_on_return_text_edit_text_changed"]
-[connection signal="pressed" from="VFlowContainer/RemoveButton" to="." method="_on_remove_button_pressed"]
+[connection signal="pressed" from="RemoveButton" to="." method="_on_remove_button_pressed"]

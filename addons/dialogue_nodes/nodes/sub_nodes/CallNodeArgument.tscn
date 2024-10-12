@@ -24,12 +24,7 @@ text = "Default"
 placeholder_text = "Type"
 scroll_fit_content_height = true
 
-[node name="VFlowContainer" type="VFlowContainer" parent="."]
-layout_mode = 2
-size_flags_horizontal = 4
-alignment = 1
-
-[node name="ResetButton" type="Button" parent="VFlowContainer"]
+[node name="ResetButton" type="Button" parent="."]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -44,4 +39,4 @@ one_shot = true
 
 [connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_focus_exited"]
 [connection signal="text_changed" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_text_changed"]
-[connection signal="pressed" from="VFlowContainer/ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
