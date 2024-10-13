@@ -222,7 +222,8 @@ func attach_node_to_frame(element: StringName, frame: StringName) -> void:
 	frame_node.attach_node(element)
 	
 	var node: GraphElement = get_node(NodePath(element))
-	if node.get_titlebar_hbox().has_node('DetachButton'): return
+	if not is_instance_valid(node): return
+	elif node.get_titlebar_hbox().has_node('DetachButton'): return
 	var detach_button := Button.new()
 	detach_button.icon = detach_icon
 	detach_button.name = 'DetachButton'
@@ -241,6 +242,7 @@ func detach_node_from_frame(element: StringName, frame: StringName) -> void:
 	frame_node.detach_node(element)
 	
 	var node: GraphElement = get_node(NodePath(element))
+	if not is_instance_valid(node): return
 	var detach_button: Button = node.get_titlebar_hbox().get_node('DetachButton')
 	detach_button.pressed.disconnect(_on_graph_elements_unlinked_to_frame_request)
 	detach_button.queue_free()
@@ -394,8 +396,17 @@ func _on_delete_nodes_request(_nodes) -> void:
 		deselect_all_nodes()
 		return
 	
+	# detach nodes from frames (if any)
+	for node: GraphElement in selected_nodes:
+		var titlebar: HBoxContainer = node.get_titlebar_hbox()
+		if not titlebar.has_node('DetachButton'): continue
+		var detach_button: Button = titlebar.get_node('DetachButton')
+		if is_instance_valid(detach_button):
+			detach_button.pressed.emit()
+	
+	# delete nodes
 	undo_redo.create_action('Delete node(s)')
-	for node in selected_nodes:
+	for node: GraphElement in selected_nodes:
 		var id := int(node.name.split('_')[0])
 		var connections := []
 		
@@ -529,7 +540,7 @@ func _on_graph_elements_unlinked_to_frame_request(element: StringName, frame: St
 		detach_node_from_frame(element, frame)
 		return
 	
-	undo_redo.create_action('Attach to frame')
+	undo_redo.create_action('Detach from frame')
 	undo_redo.add_do_method(self, 'detach_node_from_frame', element, frame)
 	undo_redo.add_do_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_on_modified')
