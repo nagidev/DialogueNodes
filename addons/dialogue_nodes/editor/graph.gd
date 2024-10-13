@@ -15,8 +15,6 @@ signal run_requested(start_node_idx: int)
 	preload('res://addons/dialogue_nodes/nodes/ConditionNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn'),
-	preload('res://addons/dialogue_nodes/nodes/GraphFrame.tscn'),
-	preload('res://addons/dialogue_nodes/nodes/CallNode.tscn')
 	preload('res://addons/dialogue_nodes/nodes/GraphFrame.tscn')
 ]
 @export var detach_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/ExternalLink.svg')
@@ -536,5 +534,4 @@ func _on_graph_elements_unlinked_to_frame_request(element: StringName, frame: St
 	undo_redo.add_do_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, 'attach_node_to_frame', element, frame)
-	undo_redo.commit_action()
 	undo_redo.commit_action()
