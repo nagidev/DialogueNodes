@@ -126,6 +126,7 @@ func _proceed(node_name: String) -> void:
 		_process_condition,
 		_process_nest,
 		_process_fork,
+		func(): pass, # frame
 		_process_call
 	]
 	
@@ -242,23 +243,27 @@ func _process_call(dict: Dictionary):
 	if dict.method.is_empty():
 		_proceed(dict.default)
 		return
-
+	
 	var args: Array = []
 	for idx: int in dict.args.size():
+		var arg: String = _parse_variables(dict.args[idx]) if dict.args[idx].count('{{') > 0 else dict.args[idx]
 		if dict.method.args[idx].type == Variant.Type.TYPE_STRING:  # If String, save it as is.
-			args.push_back(dict.args[idx])
-		elif !dict.args[idx].is_empty():  # If not String, parse it to Var.
-			args.push_back(str_to_var(dict.args[idx]))
+			args.push_back(arg)
+		elif !arg.is_empty():  # If not String, parse it to Var.
+			args.push_back(str_to_var(arg))
 		else:  # If not String, but empty, parse the default value for argument Type.
 			args.push_back(type_convert('', dict.method.args[idx].type))
-
+	
 	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
 	for idx: int in dict.rets:
-		var ret_option = (
+		var ret_option = _parse_variables(
 			dict.rets[idx].value
-			if dict.method.return.type == Variant.Type.TYPE_STRING
-			else str_to_var(dict.rets[idx].value)
+			if dict.rets[idx].value.count('{{') > 0
+			else dict.rets[idx].value
 		)
+		if dict.method.return.type != Variant.Type.TYPE_STRING:
+			ret_option = str_to_var(dict.rets[idx].value)
+		
 		if typeof(ret_option) == typeof(ret) and ret_option == ret:
 			_proceed(dict.rets[idx].link)
 			return
