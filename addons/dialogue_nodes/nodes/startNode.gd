@@ -75,7 +75,7 @@ func data_to_tree(graph: GraphEdit, data: DialogueData, node_name := name) -> vo
 	elif not graph.has_node(NodePath(node_name)):
 		var type := int(node_name.split('_')[0])
 		var offset: Vector2 = data.nodes[node_name]['offset']
-		var node: GraphNode = graph.add_node(type, node_name, offset)
+		var node: GraphElement = graph.add_node(type, node_name, offset)
 		next_nodes = node._from_dict(data.nodes[node_name])
 	elif graph.has_node(NodePath(node_name)) and graph.request_port > -1:
 		graph.connect_node(graph.request_node, graph.request_port, node_name, 0)

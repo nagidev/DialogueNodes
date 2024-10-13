@@ -15,8 +15,10 @@ signal run_requested(start_node_idx: int)
 	preload('res://addons/dialogue_nodes/nodes/ConditionNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/GraphFrame.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/CallNode.tscn')
 ]
+@export var detach_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/ExternalLink.svg')
 
 @onready var popup_menu := $PopupMenu
 
@@ -24,6 +26,7 @@ const _duplicate_offset := Vector2(20, 20)
 
 var undo_redo: EditorUndoRedoManager
 var starts: Array[String] = []
+var frames: Array[StringName] = []
 var cursor_pos := Vector2.ZERO
 var selected_nodes := []
 var request_node := ''
@@ -58,7 +61,7 @@ func get_data() -> DialogueData:
 	# get stray nodes
 	data.strays.clear()
 	for node in get_children():
-		if node is GraphNode and not data.nodes.has(node.name):
+		if node is GraphElement and not data.nodes.has(node.name):
 			data.strays.append(node.name)
 			data.nodes[node.name] = node._to_dict(self)
 			data.nodes[node.name]['offset'] = node.position_offset
@@ -70,7 +73,7 @@ func load_data(data: DialogueData) -> void:
 	# clear graph
 	clear_connections()
 	for node in get_children():
-		if node is GraphNode:
+		if node is GraphElement:
 			node.queue_free()
 	request_node = ''
 	request_port = -1
@@ -91,6 +94,11 @@ func load_data(data: DialogueData) -> void:
 	request_port = -1
 	
 	update_slots_color()
+	
+	# call after loading hooks for nodes
+	for node in get_children():
+		if node.has_method('_after_loaded'):
+			node._after_loaded(self)
 
 
 func init_add_menu(add_menu: PopupMenu) -> void:
@@ -105,7 +113,7 @@ func init_add_menu(add_menu: PopupMenu) -> void:
 		add_menu.add_item(scene_name, i)
 
 
-func add_node(id: int, node_name := '', offset := cursor_pos) -> GraphNode:
+func add_node(id: int, node_name := '', offset := cursor_pos) -> GraphElement:
 	deselect_all_nodes()
 	
 	# create new node
@@ -136,11 +144,13 @@ func add_node(id: int, node_name := '', offset := cursor_pos) -> GraphNode:
 			new_node.set_ID('START' + new_node.name.split('_')[1])
 		1: # dialogue node
 			new_node._on_characters_updated(last_character_list)
+		8: # graph frame
+			add_to_frames(new_node.name)
 	
 	return new_node
 
 
-func connect_node_signals(node: GraphNode) -> void:
+func connect_node_signals(node: GraphElement) -> void:
 	var id := int(node.name.split('_')[0])
 	
 	node.dragged.connect(_on_node_dragged.bind(node))
@@ -153,12 +163,12 @@ func connect_node_signals(node: GraphNode) -> void:
 			characters_updated.connect(node._on_characters_updated)
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
-		7, 8: # fork node, call node
+		7, 9: # fork node, call node
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
 
 
-func disconnect_node_signals(node: GraphNode) -> void:
+func disconnect_node_signals(node: GraphElement) -> void:
 	var id := int(node.name.split('_')[0])
 	
 	node.dragged.disconnect(_on_node_dragged.bind(node))
@@ -171,7 +181,7 @@ func disconnect_node_signals(node: GraphNode) -> void:
 			characters_updated.disconnect(node._on_characters_updated)
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
-		7, 8: # fork node, call node
+		7, 9: # fork node, call node
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
 
@@ -206,8 +216,16 @@ func add_to_starts(node_name: String) -> void:
 
 
 func remove_from_starts(node_name: String) -> void:
-	if starts.has(node_name):
-		starts.erase(node_name)
+	starts.erase(node_name)
+
+
+func add_to_frames(node_name: StringName) -> void:
+	if not frames.has(node_name):
+		frames.append(node_name)
+
+
+func remove_from_frames(node_name: StringName) -> void:
+	frames.erase(node_name)
 
 
 func update_slots_color(nodes: Array = get_children()) -> void:
@@ -233,6 +251,35 @@ func update_slots_color(nodes: Array = get_children()) -> void:
 		if 'base_color' in node: node.base_color = base_color
 
 
+func attach_node_to_frame(element: StringName, frame: StringName) -> void:
+	attach_graph_element_to_frame(element, frame)
+	
+	var node: GraphNode = get_node(NodePath(element))
+	var detach_button := Button.new()
+	detach_button.icon = detach_icon
+	detach_button.name = 'DetachButton'
+	detach_button.flat = true
+	node.get_titlebar_hbox().add_child(detach_button, true)
+	detach_button.pressed.connect(
+		_on_graph_elements_unlinked_to_frame_request.bind(element, frame)
+	)
+	
+	var frame_node: GraphFrame = get_node(NodePath(frame))
+	frame_node.attach_node(element)
+
+
+func detach_node_from_frame(element: StringName, frame: StringName) -> void:
+	detach_graph_element_from_frame(element)
+	
+	var node: GraphNode = get_node(NodePath(element))
+	var detach_button: Button = node.get_titlebar_hbox().get_node('DetachButton')
+	detach_button.pressed.disconnect(_on_graph_elements_unlinked_to_frame_request)
+	detach_button.queue_free()
+	
+	var frame_node: GraphFrame = get_node(NodePath(frame))
+	frame_node.detach_node(element)
+
+
 func _on_add_menu_pressed(id: int) -> void:
 	if not undo_redo:
 		add_node(id)
@@ -241,7 +288,7 @@ func _on_add_menu_pressed(id: int) -> void:
 	_on_modified()
 	
 	var prev_connection := get_connections(request_node, request_port)
-	var new_node: GraphNode = add_node(id)
+	var new_node: GraphElement = add_node(id)
 	
 	undo_redo.create_action('Add graph node')
 	undo_redo.add_do_method(self, 'add_child', new_node)
@@ -271,17 +318,17 @@ func _on_add_menu_pressed(id: int) -> void:
 	update_slots_color([new_node])
 
 
-func _on_node_selected(node: GraphNode) -> void:
+func _on_node_selected(node: GraphElement) -> void:
 	if not selected_nodes.has(node):
 		selected_nodes.append(node)
 
 
-func _on_node_deselected(node: GraphNode) -> void:
+func _on_node_deselected(node: GraphElement) -> void:
 	if selected_nodes.has(node):
 		selected_nodes.erase(node)
 
 
-func _on_node_dragged(from: Vector2, to: Vector2, node: GraphNode) -> void:
+func _on_node_dragged(from: Vector2, to: Vector2, node: GraphElement) -> void:
 	if not undo_redo:
 		cursor_pos = to
 		return
@@ -306,7 +353,7 @@ func _on_duplicate_nodes_request() -> void:
 	
 	for node in nodes_to_duplicate:
 		var clone_id := int(node.name.split('_')[0])
-		var clone_node: GraphNode = add_node(clone_id)
+		var clone_node: GraphElement = add_node(clone_id)
 		clone_node._from_dict(node._to_dict(self))
 		clone_node.position_offset = node.position_offset + _duplicate_offset
 		if clone_id == 1:
@@ -452,7 +499,7 @@ func _on_characters_updated(character_list: Array[Character]) -> void:
 	characters_updated.emit(character_list)
 
 
-func _on_run_requested(node: GraphNode) -> void:
+func _on_run_requested(node: GraphElement) -> void:
 	var idx := starts.find(node.name)
 	if idx == -1: return
 	
@@ -461,3 +508,31 @@ func _on_run_requested(node: GraphNode) -> void:
 
 func _on_modified() -> void:
 	modified.emit()
+
+
+func _on_graph_elements_linked_to_frame_request(elements: Array, frame: StringName) -> void:
+	if not undo_redo:
+		for element_name: StringName in elements:
+			attach_node_to_frame(element_name, frame)
+		return
+	
+	undo_redo.create_action('Attach to frame')
+	for element_name: StringName in elements:
+		undo_redo.add_do_method(self, 'attach_node_to_frame', element_name, frame)
+		undo_redo.add_do_method(self, '_on_modified')
+		undo_redo.add_undo_method(self, '_on_modified')
+		undo_redo.add_undo_method(self, 'detach_node_from_frame', element_name, frame)
+	undo_redo.commit_action()
+
+
+func _on_graph_elements_unlinked_to_frame_request(element: StringName, frame: StringName) -> void:
+	if not undo_redo:
+		detach_node_from_frame(element, frame)
+		return
+	
+	undo_redo.create_action('Attach to frame')
+	undo_redo.add_do_method(self, 'detach_node_from_frame', element, frame)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, 'attach_node_to_frame', element, frame)
+	undo_redo.commit_action()
