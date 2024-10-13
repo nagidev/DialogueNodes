@@ -148,6 +148,7 @@ func _process_dialogue(dict: Dictionary) -> void:
 		speaker = characters[dict.speaker]
 	
 	var dialogue_text = _parse_variables(dict.dialogue)
+	dialogue_text = tr(dialogue_text)
 	
 	var option_texts: Array[String] = []
 	_option_links.clear()
