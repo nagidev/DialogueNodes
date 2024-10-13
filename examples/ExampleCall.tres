@@ -10,12 +10,12 @@ starts = {
 nodes = {
 "0_1": {
 "link": &"9_1",
-"offset": Vector2(-300, -220),
+"offset": Vector2(-640, -220),
 "start_id": "START"
 },
 "1_1": {
-"dialogue": "I will never roll a 1, as we ignore odd numbers.",
-"offset": Vector2(360, -300),
+"dialogue": "This will never happen, as the d6 dice ignore 1s, so it will never roll a 1.",
+"offset": Vector2(320, -460),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
@@ -27,60 +27,8 @@ nodes = {
 "speaker": "Announcer"
 },
 "1_2": {
-"dialogue": "I rolled 2!",
-"offset": Vector2(700, -300),
-"options": {
-0: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": ""
-}
-},
-"size": Vector2(300, 240),
-"speaker": "Announcer"
-},
-"1_3": {
-"dialogue": "I will never roll a 3, as we ignore odd numbers.",
-"offset": Vector2(1020, -300),
-"options": {
-0: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": ""
-}
-},
-"size": Vector2(300, 240),
-"speaker": "Announcer"
-},
-"1_4": {
-"dialogue": "I rolled 4!",
-"offset": Vector2(360, 0),
-"options": {
-0: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": ""
-}
-},
-"size": Vector2(300, 240),
-"speaker": "Announcer"
-},
-"1_5": {
-"dialogue": "I will never roll a 5, as we ignore odd numbers.",
-"offset": Vector2(700, 0),
-"options": {
-0: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": ""
-}
-},
-"size": Vector2(300, 240),
-"speaker": "Announcer"
-},
-"1_6": {
-"dialogue": "I rolled 6!",
-"offset": Vector2(1020, 0),
+"dialogue": "You rolled a 6 AND the roll you where aiming for, a 6 and a {{target_face}}!",
+"offset": Vector2(680, -180),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
@@ -92,8 +40,26 @@ nodes = {
 "speaker": "Announcer"
 },
 "1_7": {
-"dialogue": "I rolled something beyond 1-6. This is not your typical dice!",
-"offset": Vector2(360, 300),
+"dialogue": "You failed to roll any significant value... Want to try again?",
+"offset": Vector2(320, 180),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"9_1",
+"text": "Yeah!"
+},
+1: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": "Nah..."
+}
+},
+"size": Vector2(300, 289),
+"speaker": "Announcer"
+},
+"1_8": {
+"dialogue": "Lucky! You rolled the max value on both dice: 6 and {{dice_faces}}!",
+"offset": Vector2(320, -120),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
@@ -111,11 +77,14 @@ arguments, listing any possible outputs to
 determine where the node will connect to
 depending on what the method returns,
 with a default output if no return case matches.",
-"offset": Vector2(-500, -60),
+"offset": Vector2(-840, -60),
 "size": Vector2(380, 200)
 },
 "9_1": {
-"args": ["{ \"d6\": {\"faces\": 7, \"ignore\": [1,3,5]} }"],
+"args": ["{
+\"1d6\": {\"faces\": 6, \"ignore\": [1,3,5] },
+\"{{dice_name}}\": {\"faces\": {{dice_faces}}, \"ignore\": {{ignore_faces}} }
+}"],
 "default": &"1_7",
 "library": "res://addons/dialogue_nodes/editor/calls.gd",
 "method": {
@@ -141,43 +110,39 @@ with a default output if no return case matches.",
 "usage": 0
 }
 },
-"offset": Vector2(-60, -220),
+"offset": Vector2(-380, -220),
 "rets": {
 0: {
 "link": &"1_1",
-"value": "[1]"
+"value": "[1,1]"
 },
 1: {
-"link": &"1_2",
-"value": "[2]"
+"link": &"1_8",
+"value": "[6, {{dice_faces}}]"
 },
 2: {
-"link": &"1_3",
-"value": "[3]"
-},
-3: {
-"link": &"1_4",
-"value": "[4]"
-},
-4: {
-"link": &"1_5",
-"value": "[5]"
-},
-5: {
-"link": &"1_6",
-"value": "[6]"
+"link": &"1_2",
+"value": "[6, {{target_face}}]"
 }
 }
 }
 }
 variables = {
-"blue_pill": {
-"type": 1,
-"value": false
+"dice_faces": {
+"type": 2,
+"value": 8
 },
-"red_pill": {
-"type": 1,
-"value": false
+"dice_name": {
+"type": 4,
+"value": "d8"
+},
+"ignore_faces": {
+"type": 4,
+"value": "[1,2,3,4,5,6]"
+},
+"target_face": {
+"type": 4,
+"value": "7"
 }
 }
 strays = Array[String](["2_1"])

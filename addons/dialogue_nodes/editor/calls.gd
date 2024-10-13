@@ -43,4 +43,5 @@ static func roll_dice(dice: Dictionary) -> Array:
 		var result: int = roll_a_die(die_name, die.ignore if die.has("ignore") else [], die.faces)
 		if result != -1:
 			results.push_back(result)
+	print("Several dice where rolled, results are <%s>." % str(results))
 	return results
