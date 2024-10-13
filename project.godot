@@ -15,6 +15,11 @@ run/main_scene="res://examples/Demo1.tscn"
 config/features=PackedStringArray("4.3")
 config/icon="res://icon.svg"
 
+[editor]
+
+naming/scene_name_casing=1
+naming/script_name_casing=1
+
 [filesystem]
 
 import/blender/enabled=false

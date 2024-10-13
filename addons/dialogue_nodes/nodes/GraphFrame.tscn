@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpwycjf6645y8"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/graphFrame.gd" id="1_coo11"]
+
+[node name="GraphFrame" type="GraphFrame"]
+offset_right = 400.0
+offset_bottom = 200.0
+title = "Frame"
+tint_color_enabled = true
+tint_color = Color(0.133333, 0.133333, 0.133333, 1)
+script = ExtResource("1_coo11")
+
+[node name="InstructionLabel" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
+text = "Drag and drop nodes here to attach them."
+horizontal_alignment = 1

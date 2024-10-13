@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmqyuf4427yvx"
-path="res://.godot/imported/String.svg-1c6a0308cb207214657ca4357fc41681.ctex"
+uid="uid://cam6gkfl3jvgx"
+path="res://.godot/imported/Edit.svg-4cb8cc60868c75594ab936947270d1c4.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/icons/String.svg"
-dest_files=["res://.godot/imported/String.svg-1c6a0308cb207214657ca4357fc41681.ctex"]
+source_file="res://addons/dialogue_nodes/icons/Edit.svg"
+dest_files=["res://.godot/imported/Edit.svg-4cb8cc60868c75594ab936947270d1c4.ctex"]
 
 [params]
 
