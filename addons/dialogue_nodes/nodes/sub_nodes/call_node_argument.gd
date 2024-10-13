@@ -68,12 +68,17 @@ func set_data(new_name: String, new_type: Variant.Type, argument: String, new_de
 		set_arg(str(new_default) if new_default != null else '')
 
 
-func _is_string_valid_type(str: String) -> bool:
+func _validate_text_type() -> bool:
+	var var_parsed_text: String = (
+		_input.text
+		if _input.text.count("{{") <= 0
+		else _input.text  # TODO: Return Variable-Parsed text.
+	)
 	return (
 		type == Variant.Type.TYPE_NIL
 		or type == Variant.Type.TYPE_STRING
-		or str.is_empty()
-		or typeof(str_to_var(str)) == type
+		or var_parsed_text.is_empty()
+		or typeof(str_to_var(var_parsed_text)) == type
 	)
 
 
@@ -111,9 +116,16 @@ func _on_reset_button_pressed() -> void:
 func _on_argument_text_edit_focus_exited() -> void:
 	if _input.text == _arg:
 		return
-	if !_is_string_valid_type(_input.text):
+	
+	var invalid_vars: Array[String] = []  # TODO: Call method that returns vars that could not be parsed (Array[String]).
+	if !invalid_vars.is_empty():
 		push_error(
-			'Argument <%s> with value <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
+			'Argument <%s> with value <%s> in <%s> has invalid variables <%s>!'
+			% [arg_name, _input.text, _call_node.title, str(invalid_vars)]
+		)
+	if !_validate_text_type():
+		push_error(
+			'Argument <%s> with value <%s> in <%s> cannot be converted to the needed type <%s>!'
 			% [arg_name, _input.text, _call_node.title, type_string(type)]
 		)
 	changed_value.emit(self, _arg, _input.text)

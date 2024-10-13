@@ -46,12 +46,17 @@ func set_type(new_type: Variant.Type) -> void:
 	type = new_type
 
 
-func _is_string_valid_type(str: String) -> bool:
+func _validate_text_type() -> bool:
+	var var_parsed_text: String = (
+		_input.text
+		if _input.text.count("{{") <= 0
+		else _input.text  # TODO: Return Variable-Parsed text.
+	)
 	return (
 		type == Variant.Type.TYPE_NIL
 		or type == Variant.Type.TYPE_STRING
-		or str.is_empty()
-		or typeof(str_to_var(str)) == type
+		or var_parsed_text.is_empty()
+		or typeof(str_to_var(var_parsed_text)) == type
 	)
 
 
@@ -85,9 +90,16 @@ func _on_remove_button_pressed() -> void:
 func _on_return_text_edit_focus_exited() -> void:
 	if _input.text == _ret:
 		return
-	if !_is_string_valid_type(_input.text):
+	
+	var invalid_vars: Array[String] = []  # TODO: Call method that returns vars that could not be parsed (Array[String]).
+	if !invalid_vars.is_empty():
 		push_error(
-			'Return <%s> in CallNode <%s> cannot be converted to the needed type <%s>!'
+			'Return <%s> in <%s> has invalid variables <%s>!'
+			% [_input.text, _call_node.title, str(invalid_vars)]
+		)
+	if !_validate_text_type():
+		push_error(
+			'Return <%s> in <%s> cannot be converted to the needed type <%s>!'
 			% [_input.text, _call_node.title, type_string(type)]
 		)
 	changed_value.emit(self, _ret, _input.text)
