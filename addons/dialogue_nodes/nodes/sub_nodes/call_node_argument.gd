@@ -100,6 +100,10 @@ func _resize_input_to_arg() -> void:
 	_input.custom_minimum_size.x = max_width + _font_size_margin
 
 
+func _on_argument_text_edit_text_changed() -> void:
+	_resize_input_to_arg()
+
+
 func _on_reset_button_pressed() -> void:
 	changed_value.emit(self, _arg, var_to_str(default_arg) if default_arg != null else '')
 

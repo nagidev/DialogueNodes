@@ -37,7 +37,7 @@ func get_ret() -> String:
 func set_ret(new_ret: String) -> void:
 	_ret = new_ret
 	_input.text = new_ret
-	_resize_input_to_arg()
+	_resize_input_to_ret()
 	_call_node.reset_size.call_deferred()
 
 
@@ -55,7 +55,7 @@ func _is_string_valid_type(str: String) -> bool:
 	)
 
 
-func _resize_input_to_arg() -> void:
+func _resize_input_to_ret() -> void:
 	var font: Font = get_theme_default_font()
 	
 	var lines: PackedStringArray = []
@@ -72,6 +72,10 @@ func _resize_input_to_arg() -> void:
 			max_width = str_size
 	
 	_input.custom_minimum_size.x = max_width + _font_size_margin
+
+
+func _on_return_text_edit_text_changed() -> void:
+	_resize_input_to_ret()
 
 
 func _on_remove_button_pressed() -> void:
