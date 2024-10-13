@@ -256,13 +256,9 @@ func _process_call(dict: Dictionary):
 	
 	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
 	for idx: int in dict.rets:
-		var ret_option = _parse_variables(
-			dict.rets[idx].value
-			if dict.rets[idx].value.count('{{') > 0
-			else dict.rets[idx].value
-		)
+		var ret_option = _parse_variables(dict.rets[idx].value) if dict.rets[idx].value.count('{{') > 0 else dict.rets[idx].value
 		if dict.method.return.type != Variant.Type.TYPE_STRING:
-			ret_option = str_to_var(dict.rets[idx].value)
+			ret_option = str_to_var(ret_option)
 		
 		if typeof(ret_option) == typeof(ret) and ret_option == ret:
 			_proceed(dict.rets[idx].link)
