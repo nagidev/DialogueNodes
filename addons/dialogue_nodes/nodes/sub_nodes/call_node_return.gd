@@ -21,6 +21,7 @@ var _ret: String = ''
 
 func _ready() -> void:
 	_input.text = ''
+	_resize_input_to_ret()
 
 
 func set_call_node(call_node: GraphNode) -> void:
