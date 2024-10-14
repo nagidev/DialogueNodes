@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmqyuf4427yvx"
-path="res://.godot/imported/String.svg-1c6a0308cb207214657ca4357fc41681.ctex"
+uid="uid://crxveuh0kfe76"
+path="res://.godot/imported/Check.svg-7139546da8d0cb1ba62c827098afc0b1.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/icons/String.svg"
-dest_files=["res://.godot/imported/String.svg-1c6a0308cb207214657ca4357fc41681.ctex"]
+source_file="res://addons/dialogue_nodes/icons/Check.svg"
+dest_files=["res://.godot/imported/Check.svg-7139546da8d0cb1ba62c827098afc0b1.ctex"]
 
 [params]
 

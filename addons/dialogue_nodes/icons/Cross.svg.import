@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcywrsdekixjs"
-path="res://.godot/imported/Stop.svg-b908b162029d8a0ef1d84647ca7a1ff0.ctex"
+uid="uid://dohxi7xx2ff4b"
+path="res://.godot/imported/Cross.svg-9c9b7d786c84a01e8b55e7c04875e64b.ctex"
 metadata={
 "has_editor_variant": true,
 "vram_texture": false
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/dialogue_nodes/icons/Stop.svg"
-dest_files=["res://.godot/imported/Stop.svg-b908b162029d8a0ef1d84647ca7a1ff0.ctex"]
+source_file="res://addons/dialogue_nodes/icons/Cross.svg"
+dest_files=["res://.godot/imported/Cross.svg-9c9b7d786c84a01e8b55e7c04875e64b.ctex"]
 
 [params]
 

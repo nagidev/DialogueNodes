@@ -6,6 +6,8 @@
 offset_right = 400.0
 offset_bottom = 200.0
 title = "Frame"
+tint_color_enabled = true
+tint_color = Color(0.133333, 0.133333, 0.133333, 1)
 script = ExtResource("1_coo11")
 
 [node name="InstructionLabel" type="Label" parent="."]

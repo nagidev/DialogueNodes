@@ -150,6 +150,7 @@ func _process_dialogue(dict: Dictionary) -> void:
 		speaker = characters[dict.speaker]
 	
 	var dialogue_text = _parse_variables(dict.dialogue)
+	dialogue_text = tr(dialogue_text)
 	
 	var option_texts: Array[String] = []
 	_option_links.clear()
@@ -387,6 +388,10 @@ func _parse_variable_names(value: String) -> Array:
 # FIXME : Length calculation is borked when the value has [, ] unrelated to any bbcodes.
 # Updates all the [wait] bbcode tags in the given text to include additional info about the text
 func _update_wait_tags(node: RichTextLabel, value: String) -> String:
+	# Empty string freezes dialogues
+	if value == '':
+		value = ' '
+	
 	# add a wait if none present at beginning
 	if not value.begins_with('[wait'):
 		value = '[wait]' + value + '[/wait]'
