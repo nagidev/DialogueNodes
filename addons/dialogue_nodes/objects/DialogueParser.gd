@@ -359,6 +359,10 @@ func _parse_variable_names(value: String) -> Array:
 # FIXME : Length calculation is borked when the value has [, ] unrelated to any bbcodes.
 # Updates all the [wait] bbcode tags in the given text to include additional info about the text
 func _update_wait_tags(node: RichTextLabel, value: String) -> String:
+	# Empty string freezes dialogues
+	if value == '':
+		value = ' '
+	
 	# add a wait if none present at beginning
 	if not value.begins_with('[wait'):
 		value = '[wait]' + value + '[/wait]'
