@@ -26,7 +26,6 @@ const _duplicate_offset := Vector2(20, 20)
 
 var undo_redo: EditorUndoRedoManager
 var starts: Array[String] = []
-var frames: Array[StringName] = []
 var cursor_pos := Vector2.ZERO
 var selected_nodes := []
 var request_node := ''
@@ -144,8 +143,6 @@ func add_node(id: int, node_name := '', offset := cursor_pos) -> GraphElement:
 			new_node.set_ID('START' + new_node.name.split('_')[1])
 		1: # dialogue node
 			new_node._on_characters_updated(last_character_list)
-		8: # graph frame
-			add_to_frames(new_node.name)
 	
 	return new_node
 
@@ -273,35 +270,6 @@ func update_slots_color(nodes: Array = get_children()) -> void:
 			node.set_slot(i, enabled_left, 0, color_left, enabled_right, 0, color_right)
 		
 		if 'base_color' in node: node.base_color = base_color
-
-
-func attach_node_to_frame(element: StringName, frame: StringName) -> void:
-	attach_graph_element_to_frame(element, frame)
-	
-	var node: GraphNode = get_node(NodePath(element))
-	var detach_button := Button.new()
-	detach_button.icon = detach_icon
-	detach_button.name = 'DetachButton'
-	detach_button.flat = true
-	node.get_titlebar_hbox().add_child(detach_button, true)
-	detach_button.pressed.connect(
-		_on_graph_elements_unlinked_to_frame_request.bind(element, frame)
-	)
-	
-	var frame_node: GraphFrame = get_node(NodePath(frame))
-	frame_node.attach_node(element)
-
-
-func detach_node_from_frame(element: StringName, frame: StringName) -> void:
-	detach_graph_element_from_frame(element)
-	
-	var node: GraphNode = get_node(NodePath(element))
-	var detach_button: Button = node.get_titlebar_hbox().get_node('DetachButton')
-	detach_button.pressed.disconnect(_on_graph_elements_unlinked_to_frame_request)
-	detach_button.queue_free()
-	
-	var frame_node: GraphFrame = get_node(NodePath(frame))
-	frame_node.detach_node(element)
 
 
 func _on_add_menu_pressed(id: int) -> void:
