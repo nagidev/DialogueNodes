@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://djc2ggs14vbxc"]
+[gd_scene load_steps=4 format=3 uid="uid://djc2ggs14vbxc"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_return.gd" id="1_lcs7a"]
 [ext_resource type="Texture2D" uid="uid://b8o81rn8q8a43" path="res://addons/dialogue_nodes/icons/Remove.svg" id="1_t7mvg"]
+[ext_resource type="CodeHighlighter" uid="uid://dkf2orxmijq20" path="res://addons/dialogue_nodes/themes/node_code_highlighter.tres" id="2_rq5ec"]
 
 [node name="CallNodeReturn" type="HBoxContainer"]
 size_flags_horizontal = 3
@@ -10,12 +11,13 @@ script = ExtResource("1_lcs7a")
 
 [node name="ReturnTextEdit" type="TextEdit" parent="."]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 0)
+custom_minimum_size = Vector2(52, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 placeholder_text = "Type"
 scroll_fit_content_height = true
+syntax_highlighter = ExtResource("2_rq5ec")
 
 [node name="RemoveButton" type="Button" parent="."]
 layout_mode = 2

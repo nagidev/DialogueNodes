@@ -82,7 +82,7 @@ with a default output if no return case matches.",
 },
 "9_1": {
 "args": ["{
-\"1d6\": {\"faces\": 6, \"ignore\": [1,3,5] },
+\"d6\": {\"faces\": 6, \"ignore\": [1,3,5] },
 \"{{dice_name}}\": {\"faces\": {{dice_faces}}, \"ignore\": {{ignore_faces}} }
 }"],
 "default": &"1_7",
