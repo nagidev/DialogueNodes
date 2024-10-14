@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://cu71fiowdkvmr"]
+[gd_scene load_steps=6 format=3 uid="uid://cu71fiowdkvmr"]
 
 [ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/callNode.gd" id="1_hul2k"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="2_u8etb"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="2_w7ejb"]
+[ext_resource type="Texture2D" uid="uid://2mg38tjwdqxy" path="res://addons/dialogue_nodes/icons/GuiVisibilityHidden.svg" id="4_golf1"]
 [ext_resource type="Texture2D" uid="uid://cj0m8q8hgm0ed" path="res://addons/dialogue_nodes/icons/Add.svg" id="4_hca56"]
 
 [node name="CallNode" type="GraphNode"]
@@ -59,10 +61,15 @@ script = ExtResource("1_hul2k")
 [node name="MethodSetup" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="MethodSourceContainer" type="BoxContainer" parent="MethodSetup"]
+[node name="MethodLibraryContainer" type="VBoxContainer" parent="MethodSetup"]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 
-[node name="FilePath" type="LineEdit" parent="MethodSetup/MethodSourceContainer"]
+[node name="FileSelection" type="BoxContainer" parent="MethodSetup/MethodLibraryContainer"]
+layout_mode = 2
+
+[node name="FilePath" type="LineEdit" parent="MethodSetup/MethodLibraryContainer/FileSelection"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -70,14 +77,37 @@ theme_override_font_sizes/font_size = 12
 text = "res://addons/dialogue_nodes/editor/calls.gd"
 placeholder_text = "GDScript Resource"
 
-[node name="BrowseButton" type="Button" parent="MethodSetup/MethodSourceContainer"]
+[node name="BrowseButton" type="Button" parent="MethodSetup/MethodLibraryContainer/FileSelection"]
 layout_mode = 2
 size_flags_horizontal = 8
 icon = ExtResource("2_w7ejb")
 
-[node name="MethodSelector" type="OptionButton" parent="MethodSetup"]
+[node name="ReimportButton" type="Button" parent="MethodSetup/MethodLibraryContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "Reimport"
+icon = ExtResource("2_u8etb")
+
+[node name="HSeparator" type="HSeparator" parent="MethodSetup/MethodLibraryContainer"]
+layout_mode = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="MethodSetup"]
+layout_mode = 2
+
+[node name="MethodLibraryButton" type="Button" parent="MethodSetup/BoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+icon = ExtResource("4_golf1")
+icon_alignment = 1
+
+[node name="MethodSelector" type="OptionButton" parent="MethodSetup/BoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 allow_reselect = true
 
 [node name="ArgumentsSectionContainer" type="HBoxContainer" parent="MethodSetup"]
@@ -124,9 +154,11 @@ mode_overrides_title = false
 file_mode = 0
 filters = PackedStringArray("*.gd; GDScript Files")
 
-[connection signal="focus_exited" from="MethodSetup/MethodSourceContainer/FilePath" to="." method="_on_file_path_focus_exited"]
-[connection signal="text_submitted" from="MethodSetup/MethodSourceContainer/FilePath" to="." method="_on_file_path_text_submitted"]
-[connection signal="pressed" from="MethodSetup/MethodSourceContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
-[connection signal="item_selected" from="MethodSetup/MethodSelector" to="." method="_on_method_selector_item_selected"]
+[connection signal="focus_exited" from="MethodSetup/MethodLibraryContainer/FileSelection/FilePath" to="." method="_on_file_path_focus_exited"]
+[connection signal="text_submitted" from="MethodSetup/MethodLibraryContainer/FileSelection/FilePath" to="." method="_on_file_path_text_submitted"]
+[connection signal="pressed" from="MethodSetup/MethodLibraryContainer/FileSelection/BrowseButton" to="." method="_on_browse_button_pressed"]
+[connection signal="pressed" from="MethodSetup/MethodLibraryContainer/ReimportButton" to="." method="_on_reimport_button_pressed"]
+[connection signal="toggled" from="MethodSetup/BoxContainer/MethodLibraryButton" to="." method="_on_method_library_button_toggled"]
+[connection signal="item_selected" from="MethodSetup/BoxContainer/MethodSelector" to="." method="_on_method_selector_item_selected"]
 [connection signal="pressed" from="AddReturnButton" to="." method="_on_add_return_button_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

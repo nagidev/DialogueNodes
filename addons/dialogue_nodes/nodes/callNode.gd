@@ -12,6 +12,9 @@ extends GraphNode
 
 const DEFAULT_CALLS: String = 'res://addons/dialogue_nodes/editor/calls.gd'
 
+const HIDDEN_ICON: Texture2D = preload("res://addons/dialogue_nodes/icons/GuiVisibilityHidden.svg")
+const VISIBLE_ICON: Texture2D = preload("res://addons/dialogue_nodes/icons/GuiVisibilityVisible.svg")
+
 signal modified
 signal disconnection_from_request(from_node: String, from_port: int)
 signal connection_shift_request(from_node: String, old_port: int, new_port: int)
@@ -28,8 +31,12 @@ var _num_rets: int = 0
 var _arg_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeArgument.tscn')
 var _ret_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn')
 
+@onready var _method_library_container: Container = %MethodLibraryContainer
+@onready var _method_library_button: Button = %MethodLibraryButton
+
 @onready var _file_path: LineEdit = %FilePath
 @onready var _file_dialog: FileDialog = %FileDialog
+@onready var _reimport_button: Button = %ReimportButton
 
 @onready var _method_button: OptionButton = %MethodSelector
 @onready var _args_section_container: Container = %ArgumentsSectionContainer
@@ -155,6 +162,7 @@ func _set_library(path: String) -> bool:
 	if not ResourceLoader.exists(path, "Script"):
 		push_error("Cannot set <%s> as Method Library to <%s>. File path is invalid!" % [path, title])
 		_loaded_file = ''
+		_reimport_button.visible = false
 		_set_method('')
 		_reload_method_ui()
 		_reload_args_ui()
@@ -166,9 +174,24 @@ func _set_library(path: String) -> bool:
 	# Re-write Calls Library with new methods
 	for method: Dictionary in script.get_script_method_list():
 		_calls[method.name] = method
+	_reimport_button.visible = true
 	
 	_reload_method_ui()
 	_reload_args_ui()
+	return true
+
+
+func _is_script_equal(script_file: String) -> bool:
+	var script: Script = ResourceLoader.load(_loaded_file, "Script")
+	for method: Dictionary in script.get_script_method_list():
+		if (
+			not _calls.has(method.name)
+			or _calls[method.name].args != method.args
+			or _calls[method.name].default_args != method.default_args
+			or _calls[method.name].default_args != method.default_args
+			or _calls[method.name].return != method.return
+		):
+			return false
 	return true
 
 
@@ -228,6 +251,12 @@ func _set_method(method_name: String) -> bool:
 	_reload_rets_ui()
 	reset_size()
 	return true
+
+
+func _toggle_library_ui(toggled_on: bool) -> void:
+	_method_library_container.visible = toggled_on
+	_method_library_button.icon = VISIBLE_ICON if toggled_on else HIDDEN_ICON
+	reset_size()
 
 
 # -------------------------------------------------------------------------------------------------
@@ -399,6 +428,17 @@ func clear_returns() -> void:
 # -------------------------------------------------------------------------------------------------
 # Signals: Method Library
 # -------------------------------------------------------------------------------------------------
+func _on_method_library_button_toggled(toggled_on: bool) -> void:
+	if not undo_redo:
+		_toggle_library_ui(toggled_on)
+		return
+	
+	undo_redo.create_action('Set Method Visbility in <%s>' % title)
+	undo_redo.add_do_method(self, '_toggle_library_ui', toggled_on)
+	undo_redo.add_undo_method(self, '_toggle_library_ui', !toggled_on)
+	undo_redo.commit_action()
+
+
 func _on_browse_button_pressed() -> void:
 	_file_dialog.popup_centered()
 
@@ -415,12 +455,12 @@ func _on_file_path_focus_exited() -> void:
 	_request_library_change(_file_path.text)
 
 
-# TODO: Add method to "bind" a "changed file" signal from script we are loading methods from.
-func _on_calls_script_changed() -> void:
-	pass
-	#_reload_library(_calls_script)
-	#_reload_method_ui()
-	#_reload_args_ui()
+# NOTE: It would be ideal if this could be done automatically when the file is edited.
+# Maybe an Editor-wide "save" signal or EditorPlugin <resource_saved> signal could help.
+func _on_reimport_button_pressed() -> void:
+	if not _loaded_file.is_empty() and not _is_script_equal(_loaded_file):
+		print_debug("Reimported Method Library <%s> in <%s>." % [_loaded_file, title])
+		_set_library(_loaded_file)
 
 
 # -------------------------------------------------------------------------------------------------
