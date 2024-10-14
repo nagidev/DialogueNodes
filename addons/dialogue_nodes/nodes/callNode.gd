@@ -10,7 +10,7 @@ extends GraphNode
 ## [color=Yellow]Warning[/color]: All [i]Arguments[/i] and [i]Returns[/i] must be formatted
 ## so they can be converted to their appropriate types via [method @GlobalScope.str_to_var].
 
-const DEFAULT_CALLS: Script = preload('res://addons/dialogue_nodes/editor/calls.gd')
+const DEFAULT_CALLS: String = 'res://addons/dialogue_nodes/editor/calls.gd'
 
 signal modified
 signal disconnection_from_request(from_node: String, from_port: int)
@@ -20,13 +20,16 @@ var undo_redo: EditorUndoRedoManager
 
 var base_color: Color = Color.WHITE
 
-var _calls_script: Script = null
+var _loaded_file: String = DEFAULT_CALLS
 var _calls: Dictionary = {}
 var _active_method: Dictionary = {}
 var _num_rets: int = 0
 
 var _arg_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeArgument.tscn')
 var _ret_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nodes/CallNodeReturn.tscn')
+
+@onready var _file_path: LineEdit = %FilePath
+@onready var _file_dialog: FileDialog = %FileDialog
 
 @onready var _method_button: OptionButton = %MethodSelector
 @onready var _args_section_container: Container = %ArgumentsSectionContainer
@@ -42,8 +45,8 @@ var _ret_scene: PackedScene = preload('res://addons/dialogue_nodes/nodes/sub_nod
 # Core
 # -------------------------------------------------------------------------------------------------
 func _ready() -> void:
-	_reload_library(DEFAULT_CALLS)
-	_reload_method_ui()
+	_set_library(DEFAULT_CALLS)
+	
 	_reload_args_ui()
 	_reload_rets_ui()
 	_update_slots()
@@ -53,7 +56,7 @@ func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
 	
 	# Export Library
-	dict['library'] = _calls_script.resource_path
+	dict['library'] = _loaded_file
 	
 	# Export Method
 	dict['method'] = _active_method
@@ -95,7 +98,7 @@ func _to_dict(graph: GraphEdit) -> Dictionary:
 
 func _from_dict(dict: Dictionary) -> Array[String]:
 	# Import Library
-	_reload_library(load(dict['library']))
+	_set_library(dict['library'])
 	
 	# Import Method
 	_reload_method_ui()
@@ -145,18 +148,50 @@ func _update_slots() -> void:
 # -------------------------------------------------------------------------------------------------
 # Library
 # -------------------------------------------------------------------------------------------------
-func _reload_library(script: Script) -> bool:
-	if script == null:
-		push_error("Cannot reload CallNode's library with a NULL script!")
+func _set_library(path: String) -> bool:
+	_file_path.text = path
+	_calls.clear()
+	
+	if not ResourceLoader.exists(path, "Script"):
+		push_error("Cannot set <%s> as Method Library to <%s>. File path is invalid!" % [path, title])
+		_loaded_file = ''
+		_set_method('')
+		_reload_method_ui()
+		_reload_args_ui()
 		return false
 	
+	_loaded_file = path
+	var script: Script = ResourceLoader.load(path, "Script")
+	
 	# Re-write Calls Library with new methods
-	_calls.clear()
 	for method: Dictionary in script.get_script_method_list():
 		_calls[method.name] = method
 	
-	_calls_script = script
+	_reload_method_ui()
+	_reload_args_ui()
 	return true
+
+
+func _request_library_change(new_path: String) -> void:
+	if _loaded_file == new_path:
+		return
+	
+	if not undo_redo:
+		_set_library(new_path)
+		return
+	
+	undo_redo.create_action('CallNode Method Script Changed')
+	undo_redo.add_do_method(self, '_set_library', new_path)
+	undo_redo.add_do_method(self, '_on_modified')
+	
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_set_library', _loaded_file)
+	undo_redo.add_undo_method(_method_button, 'select', _active_method.index if !_active_method.is_empty() else 0)
+	undo_redo.add_undo_method(self, '_set_method', _active_method.name if !_active_method.is_empty() else '')
+	for arg: Node in _args_container.get_children():
+		undo_redo.add_undo_method(self, '_set_argument', arg.arg_name, arg.get_arg())
+	
+	undo_redo.commit_action()
 
 
 # -------------------------------------------------------------------------------------------------
@@ -246,7 +281,7 @@ func _reload_args_ui() -> void:
 	# Remove old arguments that do not exist in new method.
 	for outdated_arg: Node in _old_args.values():
 		outdated_arg.queue_free()
-
+	
 	# Show/Hide Arguments section based on prevailing arguments
 	_args_section_container.visible = _args_container.get_child_count() > 0
 
@@ -362,8 +397,24 @@ func clear_returns() -> void:
 
 
 # -------------------------------------------------------------------------------------------------
-# Signals: CallNode
+# Signals: Method Library
 # -------------------------------------------------------------------------------------------------
+func _on_browse_button_pressed() -> void:
+	_file_dialog.popup_centered()
+
+
+func _on_file_dialog_file_selected(path: String) -> void:
+	_request_library_change(path)
+
+
+func _on_file_path_text_submitted(new_text: String):
+	_request_library_change(new_text)
+
+
+func _on_file_path_focus_exited() -> void:
+	_request_library_change(_file_path.text)
+
+
 # TODO: Add method to "bind" a "changed file" signal from script we are loading methods from.
 func _on_calls_script_changed() -> void:
 	pass
@@ -372,6 +423,9 @@ func _on_calls_script_changed() -> void:
 	#_reload_args_ui()
 
 
+# -------------------------------------------------------------------------------------------------
+# Signals: Method
+# -------------------------------------------------------------------------------------------------
 func _on_method_selector_item_selected(index: int) -> void:
 	if index == -1:
 		return
@@ -402,8 +456,14 @@ func _on_method_selector_item_selected(index: int) -> void:
 # Signals: Arguments
 # -------------------------------------------------------------------------------------------------
 func _on_changed_argument(arg: Control, old: String, new: String) -> void:
+	if not undo_redo:
+		_set_argument(arg.arg_name, new)
+		return
+	
 	undo_redo.create_action('Edited Argument <%s> in <%s>' % [arg.arg_name, title])
 	undo_redo.add_do_method(self, '_set_argument', arg.arg_name, new)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_set_argument', arg.arg_name, old)
 	undo_redo.commit_action()
 
@@ -412,19 +472,30 @@ func _on_changed_argument(arg: Control, old: String, new: String) -> void:
 # Signals: Returns
 # -------------------------------------------------------------------------------------------------
 func _on_add_return_button_pressed() -> void:
+	if not undo_redo:
+		_add_return(_num_rets)
+		return
+	
 	undo_redo.create_action('Added Return on <%s>' % title)
 	undo_redo.add_do_method(self, '_add_return', _num_rets)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_remove_return_at', _num_rets)
 	undo_redo.commit_action()
 
 
 func _on_return_requested_removal(ret: Control) -> void:
 	var relative_idx: int = ret.get_index() - _ret_idx_start
-	
 	disconnection_from_request.emit(name, relative_idx)
+	
+	if not undo_redo:
+		_remove_return_at(relative_idx)
+		return
 	
 	undo_redo.create_action('Remove Return on <%s>' % title)
 	undo_redo.add_do_method(self, '_remove_return_at', relative_idx)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_add_return', relative_idx)
 	undo_redo.add_undo_method(self, '_set_return', relative_idx, ret.get_ret())
 	undo_redo.commit_action()
@@ -432,7 +503,18 @@ func _on_return_requested_removal(ret: Control) -> void:
 
 func _on_changed_return(ret: Control, old: String, new: String) -> void:
 	var ret_idx: int = ret.get_index() - _ret_idx_start
+	
+	if not undo_redo:
+		_set_return(ret_idx, new)
+		return
+	
 	undo_redo.create_action('Edited Return <%s> in <%s>' % [ret_idx, title])
 	undo_redo.add_do_method(self, '_set_return', ret_idx, new)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, '_set_return', ret_idx, old)
 	undo_redo.commit_action()
+
+
+func _on_modified() -> void:
+	modified.emit()

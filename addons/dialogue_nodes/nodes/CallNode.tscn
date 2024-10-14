@@ -59,16 +59,18 @@ script = ExtResource("1_hul2k")
 [node name="MethodSetup" type="VBoxContainer" parent="."]
 layout_mode = 2
 
-[node name="SourceContainer" type="HBoxContainer" parent="MethodSetup"]
-visible = false
+[node name="MethodSourceContainer" type="BoxContainer" parent="MethodSetup"]
 layout_mode = 2
 
-[node name="FilePath" type="LineEdit" parent="MethodSetup/SourceContainer"]
+[node name="FilePath" type="LineEdit" parent="MethodSetup/MethodSourceContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
+theme_override_font_sizes/font_size = 12
+text = "res://addons/dialogue_nodes/editor/calls.gd"
+placeholder_text = "GDScript Resource"
 
-[node name="BrowseButton" type="Button" parent="MethodSetup/SourceContainer"]
+[node name="BrowseButton" type="Button" parent="MethodSetup/MethodSourceContainer"]
 layout_mode = 2
 size_flags_horizontal = 8
 icon = ExtResource("2_w7ejb")
@@ -113,7 +115,18 @@ text = "Default Exit"
 horizontal_alignment = 2
 
 [node name="FileDialog" type="FileDialog" parent="."]
-size = Vector2i(800, 400)
+unique_name_in_owner = true
+auto_translate_mode = 1
+title = "Open a DialogueData Resource"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+mode_overrides_title = false
+file_mode = 0
+filters = PackedStringArray("*.gd; GDScript Files")
 
+[connection signal="focus_exited" from="MethodSetup/MethodSourceContainer/FilePath" to="." method="_on_file_path_focus_exited"]
+[connection signal="text_submitted" from="MethodSetup/MethodSourceContainer/FilePath" to="." method="_on_file_path_text_submitted"]
+[connection signal="pressed" from="MethodSetup/MethodSourceContainer/BrowseButton" to="." method="_on_browse_button_pressed"]
 [connection signal="item_selected" from="MethodSetup/MethodSelector" to="." method="_on_method_selector_item_selected"]
 [connection signal="pressed" from="AddReturnButton" to="." method="_on_add_return_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
