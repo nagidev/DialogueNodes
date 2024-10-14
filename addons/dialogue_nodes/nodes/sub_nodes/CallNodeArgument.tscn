@@ -8,7 +8,7 @@
 size_flags_horizontal = 3
 size_flags_vertical = 4
 script = ExtResource("1_mqq8d")
-_font_size_margin = 0.0
+invalid_color = Color(0.2, 0.08, 0.08, 1)
 
 [node name="ArgumentLabel" type="Label" parent="."]
 unique_name_in_owner = true

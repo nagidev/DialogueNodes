@@ -9,6 +9,10 @@ extends Container
 signal changed_value(arg: Control, old: String, new: String)
 signal requested_removal(ret: Control)
 
+# NOTE: Not a fan of this being defined here. Systematic default colors (Error, Warning, etc.)
+# should be customizable, but the default value should be "centralized" somewhere in the addon
+# so that all Nodes and such can refer to it. I'd recommend a custom Resource instance.
+@export var invalid_color = Color.DARK_RED
 @export_range(0.0, 30.0, 0.1) var _font_size_margin: float = 15.0
 
 var type: Variant.Type = Variant.Type.TYPE_NIL
@@ -39,12 +43,23 @@ func set_ret(new_ret: String) -> void:
 	_ret = new_ret
 	_input.text = new_ret
 	_resize_input_to_ret()
+	
+	if _validate_contents():
+		_input.remove_theme_color_override('background_color')
+	else:
+		_input.add_theme_color_override('background_color', invalid_color)
+	
 	_call_node.reset_size.call_deferred()
 
 
 func set_type(new_type: Variant.Type) -> void:
 	_input.placeholder_text = type_string(new_type) if new_type != Variant.Type.TYPE_NIL else ''
 	type = new_type
+	
+	if _validate_contents():
+		_input.remove_theme_color_override('background_color')
+	else:
+		_input.add_theme_color_override('background_color', invalid_color)
 
 
 func _validate_text_type() -> bool:
@@ -80,6 +95,23 @@ func _resize_input_to_ret() -> void:
 	_input.custom_minimum_size.x = max_width + _font_size_margin
 
 
+func _validate_contents() -> bool:
+	var invalid_vars: Array[String] = []  # TODO: Call method that returns vars that could not be parsed (Array[String]).
+	if !invalid_vars.is_empty():
+		push_error(
+			'Return <%s> in <%s> has invalid variables <%s>!'
+			% [_input.text, _call_node.title, str(invalid_vars)]
+		)
+		return false
+	if !_validate_text_type():
+		push_error(
+			'Return <%s> in <%s> cannot be converted to the needed type <%s>!'
+			% [_input.text, _call_node.title, type_string(type)]
+		)
+		return false
+	return true
+
+
 func _on_return_text_edit_text_changed() -> void:
 	_resize_input_to_ret()
 
@@ -91,16 +123,4 @@ func _on_remove_button_pressed() -> void:
 func _on_return_text_edit_focus_exited() -> void:
 	if _input.text == _ret:
 		return
-	
-	var invalid_vars: Array[String] = []  # TODO: Call method that returns vars that could not be parsed (Array[String]).
-	if !invalid_vars.is_empty():
-		push_error(
-			'Return <%s> in <%s> has invalid variables <%s>!'
-			% [_input.text, _call_node.title, str(invalid_vars)]
-		)
-	if !_validate_text_type():
-		push_error(
-			'Return <%s> in <%s> cannot be converted to the needed type <%s>!'
-			% [_input.text, _call_node.title, type_string(type)]
-		)
 	changed_value.emit(self, _ret, _input.text)
