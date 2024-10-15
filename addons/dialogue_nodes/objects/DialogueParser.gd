@@ -274,6 +274,7 @@ func _process_call(dict: Dictionary):
 			)
 		else:
 			ret = load(dict.library).callv(dict.method.name, args)
+			called = true
 	
 	# Take exit of first matching return, take default exit if none matches.
 	for idx: int in dict.rets:
