@@ -245,6 +245,7 @@ func _process_call(dict: Dictionary):
 		_proceed(dict.default)
 		return
 	
+	# List all args in their correspondent types into an Array.
 	var args: Array = []
 	for idx: int in dict.args.size():
 		var arg: String = _parse_variables(dict.args[idx]) if dict.args[idx].count('{{') > 0 else dict.args[idx]
@@ -255,7 +256,18 @@ func _process_call(dict: Dictionary):
 		else:  # If not String, but empty, parse the default value for argument Type.
 			args.push_back(type_convert('', dict.method.args[idx].type))
 	
-	var ret = (load(dict.library) as Script).callv(dict.method.name, args)
+	# Call method with given Args. Prioritize autoload with matching script, otherwise, call from Script.
+	var ret = null
+	if !Engine.is_editor_hint():
+		for child: Node in get_tree().root.get_children():
+			var script: Script = child.get_script()
+			if script != null and script.resource_path == dict.library:
+				ret = child.callv(dict.method.name, args)
+				break
+	if ret == null:
+		ret = (load(dict.library) as Script).callv(dict.method.name, args)
+	
+	# Take exit of first matching return, take default exit if none matches.
 	for idx: int in dict.rets:
 		var ret_option = _parse_variables(dict.rets[idx].value) if dict.rets[idx].value.count('{{') > 0 else dict.rets[idx].value
 		if dict.method.return.type != Variant.Type.TYPE_STRING:

@@ -3,12 +3,27 @@ extends GraphNode
 ##
 ## Call Node
 ##
-## This Node calls a function from an expandable library of callables to determine which Node
-## output to take based on what the method returned.
-## The library, a static object called [DialogueCalls], is expected to be expanded by the user.
+## This Node calls a method from a [Script] with the given parameters and matching the returned
+## value to a list of given values, exiting the Node through the first matching value found.
+## A default Script [code]calls.gd[/code] exists,
+## but it is expected from the user to customize it or create more scripts to refer to.
+## [br][br]
+## While in-game, CallNode's will search [code]root[/code]'s children,
+## looking for a [Node] (an Autoload, most likely) that holds an instance of its assigned [Script].
+## If none is found, a [Script] instance is loaded instead,
+## although in the second case only [color=Indian_Red][i]static[/i][/color] methods can be used.
 ## [br][br]
 ## [color=Yellow]Warning[/color]: All [i]Arguments[/i] and [i]Returns[/i] must be formatted
 ## so they can be converted to their appropriate types via [method @GlobalScope.str_to_var].
+## [br][br]
+## [color=Yellow]Warning[/color]: If more than one child of [code]root[/code] has an instance
+## of the same [Script], only the first one will ever be used by CallNodes!
+## I.e., if [i]Autoloads[/i] share scripts, only the first one loaded will be used by CallNodes.
+
+# NOTE: The current implementation does not allow for multiple Autoloads using the same Script.
+# I considered it a very niche use-case, so I ignored it, specially since there's seemingly
+# no easy way to read Godot's Autoload list to place on a [OptionButton] listing them.
+# However, it could still be integrated, but there would be no easy way to warn of potential bugs.
 
 const DEFAULT_CALLS: String = 'res://addons/dialogue_nodes/editor/calls.gd'
 
