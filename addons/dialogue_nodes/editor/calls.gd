@@ -1,14 +1,14 @@
 @tool
-extends Script
 ##
 ## Default Method Database for CallNodes
 ##
-## Method database for all function calls made from DialogueCalls.
-## This script is expected to be expanded by the user, customized to their needs.
-## Alternativelly, the user may create new scripts to call methods from.
+## Default method library for all function calls made from CallNodes.
+## This script is expected to be expanded by the user and customized to their needs.
+## Alternativelly, the user may create new [Script] files to call methods from.
 ## [br][br]
 ## [color=Yellow]Warning[/color]: [Array] and [Dictionary] arguments [b]cannot[/b] have default values.
-## It is recommended they Static Typing is not used to specify their contents either.
+## It is recommended that Static Typing is not used to specify their contents either,
+## e.g. [code]Array[int][/code].
 
 
 static func print_text(text: String) -> void:

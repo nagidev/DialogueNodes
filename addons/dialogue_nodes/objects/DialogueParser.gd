@@ -256,16 +256,24 @@ func _process_call(dict: Dictionary):
 		else:  # If not String, but empty, parse the default value for argument Type.
 			args.push_back(type_convert('', dict.method.args[idx].type))
 	
-	# Call method with given Args. Prioritize autoload with matching script, otherwise, call from Script.
+	# Call method. Prioritize calling from matching Autoload, otherwise call from Script instance.
+	var called: bool = false  # Methods that return void assign NULL, so this is needed.
 	var ret = null
-	if !Engine.is_editor_hint():
+	if not Engine.is_editor_hint():
 		for child: Node in get_tree().root.get_children():
 			var script: Script = child.get_script()
 			if script != null and script.resource_path == dict.library:
 				ret = child.callv(dict.method.name, args)
+				called = true
 				break
-	if ret == null:
-		ret = (load(dict.library) as Script).callv(dict.method.name, args)
+	if not called:
+		if not (dict.method.flags & MethodFlags.METHOD_FLAG_STATIC):
+			push_warning(
+				"There's no root child (Autoload) to call non-static method <%s> from! Returning NULL..."
+				% dict.method.name
+			)
+		else:
+			ret = load(dict.library).callv(dict.method.name, args)
 	
 	# Take exit of first matching return, take default exit if none matches.
 	for idx: int in dict.rets:
