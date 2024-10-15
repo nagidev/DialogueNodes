@@ -15,7 +15,8 @@ signal run_requested(start_node_idx: int)
 	preload('res://addons/dialogue_nodes/nodes/ConditionNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/NestNode.tscn'),
 	preload('res://addons/dialogue_nodes/nodes/ForkNode.tscn'),
-	preload('res://addons/dialogue_nodes/nodes/GraphFrame.tscn')
+	preload('res://addons/dialogue_nodes/nodes/GraphFrame.tscn'),
+	preload('res://addons/dialogue_nodes/nodes/CallNode.tscn')
 ]
 @export var detach_icon: Texture2D = preload('res://addons/dialogue_nodes/icons/ExternalLink.svg')
 
@@ -159,7 +160,7 @@ func connect_node_signals(node: GraphElement) -> void:
 			characters_updated.connect(node._on_characters_updated)
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
-		7: # fork node
+		7, 9: # fork node, call node
 			node.disconnection_from_request.connect(_on_disconnection_from_request)
 			node.connection_shift_request.connect(_on_connection_shift_request)
 
@@ -177,7 +178,7 @@ func disconnect_node_signals(node: GraphElement) -> void:
 			characters_updated.disconnect(node._on_characters_updated)
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
-		7: # fork node
+		7, 9: # fork node, call node
 			node.disconnection_from_request.disconnect(_on_disconnection_from_request)
 			node.connection_shift_request.disconnect(_on_connection_shift_request)
 

@@ -125,7 +125,9 @@ func _proceed(node_name: String) -> void:
 		_process_set,
 		_process_condition,
 		_process_nest,
-		_process_fork
+		_process_fork,
+		func(): pass, # frame
+		_process_call
 	]
 	
 	var id := int(node_name.split('_')[0])
@@ -236,6 +238,54 @@ func _process_fork(dict : Dictionary) -> void:
 			result = forks[i].link
 			break
 	_proceed(result)
+
+
+func _process_call(dict: Dictionary):
+	if dict.method.is_empty():
+		_proceed(dict.default)
+		return
+	
+	# List all args in their correspondent types into an Array.
+	var args: Array = []
+	for idx: int in dict.args.size():
+		var arg: String = _parse_variables(dict.args[idx]) if dict.args[idx].count('{{') > 0 else dict.args[idx]
+		if dict.method.args[idx].type == Variant.Type.TYPE_STRING:  # If String, save it as is.
+			args.push_back(arg)
+		elif !arg.is_empty():  # If not String, parse it to Var.
+			args.push_back(str_to_var(arg))
+		else:  # If not String, but empty, parse the default value for argument Type.
+			args.push_back(type_convert('', dict.method.args[idx].type))
+	
+	# Call method. Prioritize calling from matching Autoload, otherwise call from Script instance.
+	var called: bool = false  # Methods that return void assign NULL, so this is needed.
+	var ret = null
+	if not Engine.is_editor_hint():
+		for child: Node in get_tree().root.get_children():
+			var script: Script = child.get_script()
+			if script != null and script.resource_path == dict.library:
+				ret = child.callv(dict.method.name, args)
+				called = true
+				break
+	if not called:
+		if not (dict.method.flags & MethodFlags.METHOD_FLAG_STATIC):
+			push_warning(
+				"There's no root child (Autoload) to call non-static method <%s> from! Returning NULL..."
+				% dict.method.name
+			)
+		else:
+			ret = load(dict.library).callv(dict.method.name, args)
+			called = true
+	
+	# Take exit of first matching return, take default exit if none matches.
+	for idx: int in dict.rets:
+		var ret_option = _parse_variables(dict.rets[idx].value) if dict.rets[idx].value.count('{{') > 0 else dict.rets[idx].value
+		if dict.method.return.type != Variant.Type.TYPE_STRING:
+			ret_option = str_to_var(ret_option)
+		
+		if typeof(ret_option) == typeof(ret) and ret_option == ret:
+			_proceed(dict.rets[idx].link)
+			return
+	_proceed(dict.default)
 
 
 # Checks the condition based on dict.value1, dict.value2 and dict.operator
