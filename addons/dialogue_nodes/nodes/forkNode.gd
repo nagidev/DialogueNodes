@@ -1,5 +1,5 @@
 @tool
-extends GraphNode
+extends BaseDialogueNode
 ##
 ## Fork Node
 ##
@@ -7,18 +7,14 @@ extends GraphNode
 ## bottom) to be valid is used to exit, with a default option with no conditions always last.
 
 
-signal modified
-signal disconnection_from_request(from_node: String, from_port: int)
-signal connection_shift_request(from_node: String, old_port: int, new_port: int)
-
 @onready var fork_title: LineEdit = $ForkTitle
 @onready var add_button: Button = $AddButton
 
 const ForkItemScene := preload('res://addons/dialogue_nodes/nodes/sub_nodes/ForkItem.tscn')
 
-var undo_redo: EditorUndoRedoManager
 var forks: Array[Control] = []
 var base_color: Color = Color.WHITE
+var last_variable_list: Array[String]
 
 
 func _to_dict(graph: GraphEdit) -> Dictionary:
@@ -104,6 +100,9 @@ func add_item(new_item: BoxContainer, to_idx := -1) -> void:
 	set_slot(old_default_slot + 1, false, 0, base_color, true, 0, base_color)
 	connection_shift_request.emit(name, forks.size() - 1, forks.size())
 	update_slots()
+	
+	# add variables to dropdown
+	new_item.update_variables(last_variable_list)
 
 
 func remove_item(item: BoxContainer) -> void:
@@ -160,3 +159,9 @@ func _on_item_deleted(item: BoxContainer) -> void:
 func _on_modified() -> void:
 	reset_size()
 	modified.emit()
+
+	
+func _on_variables_updated(variables_list: Array[String]) -> void:
+	last_variable_list = variables_list
+	for fork in forks:
+		fork.update_variables(variables_list)

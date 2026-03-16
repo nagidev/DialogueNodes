@@ -19,7 +19,6 @@ var undo_redo : EditorUndoRedoManager :
 			condition_list.undo_redo = undo_redo
 var condition_popup_offset := 50
 
-
 func get_condition() -> Array[Dictionary]:
 	return condition_list._to_dict()
 
@@ -66,3 +65,7 @@ func _on_condition_panel_hide() -> void:
 func _on_modified() -> void:
 	condition_panel.size.y = 0
 	modified.emit()
+
+func update_variables(variables_list: Array[String]) -> void:
+	condition_list.update_variables(variables_list)
+	

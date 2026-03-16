@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://b6bki2h32l6i3"]
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://b6bki2h32l6i3"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_lqpsg"]
+[ext_resource type="Script" uid="uid://eit47g61t72a" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_lqpsg"]
 
 [resource]
 script = ExtResource("1_lqpsg")
@@ -8,12 +8,12 @@ starts = {
 "START": &"0_1"
 }
 nodes = {
-"0_1": {
+&"0_1": {
 "link": &"1_1",
 "offset": Vector2(-220, -140),
 "start_id": "START"
 },
-"1_1": {
+&"1_1": {
 "dialogue": "Which pill will you take?",
 "offset": Vector2(60, -140),
 "options": {
@@ -36,7 +36,7 @@ nodes = {
 "size": Vector2(320, 360),
 "speaker": "Morpheus"
 },
-"1_2": {
+&"1_2": {
 "dialogue": "Do you have the doctor's prescription for the pill?",
 "offset": Vector2(460, -200),
 "options": {
@@ -46,10 +46,10 @@ nodes = {
 "text": "Uh..."
 }
 },
-"size": Vector2(300, 256),
+"size": Vector2(300, 273),
 "speaker": "Morpheus"
 },
-"1_3": {
+&"1_3": {
 "dialogue": "You shouldn't take pills from strangers, you know!",
 "offset": Vector2(460, 240),
 "options": {
@@ -59,10 +59,10 @@ nodes = {
 "text": "Oh..."
 }
 },
-"size": Vector2(300, 256),
+"size": Vector2(300, 273),
 "speaker": "Morpheus"
 },
-"1_6": {
+&"1_6": {
 "dialogue": "So. Do you feel like a little guy in a blue world? All day and all night and everything you'll see will be blue, like you, inside and outside.",
 "offset": Vector2(1520, 220),
 "options": {
@@ -75,7 +75,7 @@ nodes = {
 "size": Vector2(300, 260),
 "speaker": "Morpheus"
 },
-"1_7": {
+&"1_7": {
 "dialogue": "Without prescription I can't let you take the pill, sorry.",
 "offset": Vector2(1520, -100),
 "options": {
@@ -88,7 +88,7 @@ nodes = {
 "size": Vector2(300, 240),
 "speaker": "Morpheus"
 },
-"1_8": {
+&"1_8": {
 "dialogue": "So, do you need anything else or are you going to keep wasting my time?",
 "offset": Vector2(1520, 580),
 "options": {
@@ -101,7 +101,7 @@ nodes = {
 "size": Vector2(300, 240),
 "speaker": "Morpheus"
 },
-"2_1": {
+&"2_1": {
 "comment": "A Fork allows you to guide the flow of dialogue to
 a bunch of different options, given a condition for
 each one. Options are evaluated in order and one
@@ -111,36 +111,40 @@ as a fallback in case no other option is valid.",
 "offset": Vector2(-440, 40),
 "size": Vector2(380, 200)
 },
-"4_1": {
+&"4_1": {
+"cur_variable": 1,
 "link": &"7_1",
 "offset": Vector2(820, 0),
 "type": 0,
 "value": "true",
 "variable": "red_pill"
 },
-"4_2": {
+&"4_2": {
+"cur_variable": 0,
 "link": &"7_1",
 "offset": Vector2(860, 420),
 "type": 0,
 "value": "true",
 "variable": "blue_pill"
 },
-"7_1": {
+&"7_1": {
 "default": &"1_8",
 "fork_title": "Pills Fork",
 "forks": {
 0: {
 "condition": Array[Dictionary]([{
+"cur_variable": 1,
 "operator": 0,
-"value1": "{{red_pill}}",
+"value1": "red_pill",
 "value2": "true"
 }]),
 "link": &"1_7"
 },
 1: {
 "condition": Array[Dictionary]([{
+"cur_variable": 0,
 "operator": 0,
-"value1": "{{blue_pill}}",
+"value1": "blue_pill",
 "value2": "true"
 }]),
 "link": &"1_6"
@@ -160,4 +164,3 @@ variables = {
 }
 }
 strays = Array[String](["2_1"])
-characters = ""

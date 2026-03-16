@@ -16,7 +16,7 @@ signal delete_requested
 		if is_instance_valid(delete_button):
 			delete_button.visible = show_delete
 
-@onready var value1: LineEdit = $MainContainer/Value1
+@onready var value1: OptionButton = $MainContainer/Value1
 @onready var operator: OptionButton = $MainContainer/Operator
 @onready var value2: LineEdit = $MainContainer/Value2
 @onready var timer: Timer = $Timer
@@ -26,7 +26,7 @@ signal delete_requested
 
 var undo_redo: EditorUndoRedoManager
 var cur_condition := {}
-
+var cur_variable := -1
 
 func _to_dict() -> Dictionary:
 	if is_empty():
@@ -34,10 +34,11 @@ func _to_dict() -> Dictionary:
 		return {}
 	
 	var dict:= {
-		'value1': value1.text,
+		'cur_variable': value1.selected,
 		'operator': operator.selected,
 		'value2': value2.text
 	}
+
 	
 	if not is_last:
 		dict['combiner'] = combiner.selected
@@ -58,8 +59,9 @@ func _from_dict(dict: Dictionary) -> void:
 	else:
 		reset_button.show()
 	
-	if value1.text != dict['value1']:
-		value1.text = dict['value1']
+	if cur_variable != int(dict['cur_variable']):
+		cur_variable = int(dict['cur_variable'])
+		value1.selected = cur_variable
 	if operator.selected != dict['operator']:
 		operator.selected = dict['operator']
 	if value2.text != dict['value2']:
@@ -69,7 +71,7 @@ func _from_dict(dict: Dictionary) -> void:
 
 
 func is_empty() -> bool:
-	return (value1.text == '') and (operator.selected == 0) and (value2.text == '')
+	return (value1.selected == -1) and (operator.selected == 0) and (value2.text == '')
 
 
 func _on_condition_changing(_a=0) -> void:
@@ -109,3 +111,17 @@ func _on_delete_button_pressed() -> void:
 
 func _on_modified() -> void:
 	modified.emit()
+
+
+func _on_variables_updated(variable_list: Array) -> void:
+	value1.clear()
+		
+	for variable_name in variable_list:
+		value1.add_item(variable_name)
+	
+	if variable_list.size() > 0:
+		if cur_variable > variable_list.size():
+			cur_variable = 0
+		value1.select(cur_variable)
+	else:
+		value1.select(-1)

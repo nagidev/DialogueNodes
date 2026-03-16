@@ -1,8 +1,6 @@
 @tool
-extends GraphNode
+extends BaseDialogueNode
 
-
-signal modified
 signal run_requested
 
 @onready var run_button := $HBoxContainer/RunButton
@@ -11,7 +9,6 @@ signal run_requested
 @onready var timer := $Timer
 @onready var resize_timer: Timer = $ResizeTimer
 
-var undo_redo: EditorUndoRedoManager
 var last_size := size
 
 
@@ -116,10 +113,6 @@ func _on_run_pressed() -> void:
 		run_button.release_focus()
 	else:
 		printerr(title, ' has no start_id!')
-
-
-func _on_modified() -> void:
-	modified.emit()
 
 
 func _on_resize(_new_size) -> void:

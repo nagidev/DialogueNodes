@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://c77r4qmw3a416"]
+[gd_scene format=3 uid="uid://c77r4qmw3a416"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/graph.gd" id="1_7isyk"]
+[ext_resource type="Script" uid="uid://bq3nf71nxg68u" path="res://addons/dialogue_nodes/editor/graph.gd" id="1_7isyk"]
 
-[node name="Graph" type="GraphEdit"]
+[node name="Graph" type="GraphEdit" unique_id=2061932758]
 custom_minimum_size = Vector2(400, 0)
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,9 +15,10 @@ zoom_min = 0.5
 zoom_max = 2.0
 script = ExtResource("1_7isyk")
 
-[node name="PopupMenu" type="PopupMenu" parent="."]
+[node name="PopupMenu" type="PopupMenu" parent="." unique_id=1182686483]
 item_count = 9
 item_0/text = "StartNode"
+item_0/id = 0
 item_1/text = "DialogueNode"
 item_1/id = 1
 item_2/text = "CommentNode"

@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://cbu4k4hs8fk5s"]
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://cbu4k4hs8fk5s"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+[ext_resource type="Script" uid="uid://eit47g61t72a" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
@@ -8,12 +8,12 @@ starts = {
 "START": &"0_1"
 }
 nodes = {
-"0_1": {
+&"0_1": {
 "link": &"1_1",
 "offset": Vector2(0, 0),
 "start_id": "START"
 },
-"1_1": {
+&"1_1": {
 "dialogue": "You can store and use variables from your dialogue tree.
 Like: You have {{COINS}} coins!",
 "offset": Vector2(220, 0),
@@ -27,7 +27,7 @@ Like: You have {{COINS}} coins!",
 "size": Vector2(300, 241),
 "speaker": "Greg"
 },
-"1_2": {
+&"1_2": {
 "dialogue": "What would you like to try?",
 "offset": Vector2(700, 0),
 "options": {
@@ -47,10 +47,10 @@ Like: You have {{COINS}} coins!",
 "text": "Nothing"
 }
 },
-"size": Vector2(300, 308),
+"size": Vector2(300, 343),
 "speaker": "Greg"
 },
-"1_3": {
+&"1_3": {
 "dialogue": "Setting COINS to 5.
 Current value: {{COINS}}
 ",
@@ -65,9 +65,9 @@ Current value: {{COINS}}
 "size": Vector2(300, 241),
 "speaker": "Greg"
 },
-"1_4": {
+&"1_4": {
 "dialogue": "New value: {{COINS}}",
-"offset": Vector2(1700, 0),
+"offset": Vector2(1720, 20),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
@@ -75,28 +75,23 @@ Current value: {{COINS}}
 "text": ""
 }
 },
-"size": Vector2(300, 241),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
-"1_5": {
+&"1_5": {
 "dialogue": "You can even use the set node perform arithematic operations on values.",
-"offset": Vector2(2040, 0),
+"offset": Vector2(2093.86, 105.836),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
 "link": &"1_2",
-"text": "Got it!"
-},
-1: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": "Bye"
+"text": ""
 }
 },
-"size": Vector2(300, 275),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
-"1_6": {
+&"1_6": {
 "dialogue": "You can use the condition node to show dialogues based on a condition.",
 "offset": Vector2(1040, 280),
 "options": {
@@ -109,7 +104,7 @@ Current value: {{COINS}}
 "size": Vector2(300, 241),
 "speaker": "Greg"
 },
-"1_7": {
+&"1_7": {
 "dialogue": "Like right now you have more than 5 coins!",
 "offset": Vector2(1720, 380),
 "options": {
@@ -119,10 +114,10 @@ Current value: {{COINS}}
 "text": ""
 }
 },
-"size": Vector2(300, 241.001),
+"size": Vector2(300, 241.00098),
 "speaker": "Greg"
 },
-"1_8": {
+&"1_8": {
 "dialogue": "I can tell you don't have more than 5 coins...",
 "offset": Vector2(1720, 640),
 "options": {
@@ -135,7 +130,7 @@ Current value: {{COINS}}
 "size": Vector2(300, 241),
 "speaker": "Greg"
 },
-"1_9": {
+&"1_9": {
 "dialogue": "Feel free to look at the example files to learn how to do it yourself!",
 "offset": Vector2(2080, 520),
 "options": {
@@ -150,20 +145,22 @@ Current value: {{COINS}}
 "text": "Bye"
 }
 },
-"size": Vector2(300, 275),
+"size": Vector2(300, 308),
 "speaker": "Greg"
 },
-"4_1": {
+&"4_1": {
+"cur_variable": 0,
 "link": &"1_4",
 "offset": Vector2(1360, 140),
 "type": 0,
 "value": "5",
 "variable": "COINS"
 },
-"5_1": {
+&"5_1": {
 "condition": Array[Dictionary]([{
+"cur_variable": 0,
 "operator": 2,
-"value1": "{{COINS}}",
+"value1": "COINS",
 "value2": "5"
 }]),
 "false": &"1_8",
@@ -177,5 +174,3 @@ variables = {
 "value": 10
 }
 }
-strays = Array[String]([])
-characters = ""

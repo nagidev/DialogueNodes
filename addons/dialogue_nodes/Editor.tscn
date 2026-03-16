@@ -1,20 +1,20 @@
-[gd_scene load_steps=20 format=3 uid="uid://bqscglixmr4bd"]
+[gd_scene format=3 uid="uid://bqscglixmr4bd"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/editor.gd" id="1_3rdab"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/characters.gd" id="1_k6kh1"]
+[ext_resource type="Script" uid="uid://cqgf3n60ju4vf" path="res://addons/dialogue_nodes/editor/editor.gd" id="1_3rdab"]
+[ext_resource type="Script" uid="uid://siwktbrhha2i" path="res://addons/dialogue_nodes/editor/characters.gd" id="1_k6kh1"]
 [ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="2_1rash"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/editor/files.gd" id="2_7c672"]
+[ext_resource type="Script" uid="uid://o2us2dv8xby4" path="res://addons/dialogue_nodes/editor/files.gd" id="2_7c672"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="3_lyina"]
 [ext_resource type="Texture2D" uid="uid://cc1ufhyvste6m" path="res://addons/dialogue_nodes/icons/Forward.svg" id="5_x76rf"]
 [ext_resource type="Texture2D" uid="uid://bnlg07ckbg0w" path="res://addons/dialogue_nodes/icons/Back.svg" id="6_onucw"]
 [ext_resource type="FontFile" uid="uid://dv4rnn0ml62q3" path="res://addons/dialogue_nodes/themes/Poppins-Bold.ttf" id="8_bfbn1"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="8_njjsn"]
+[ext_resource type="Script" uid="uid://b1pjspi1h8amj" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="8_njjsn"]
 [ext_resource type="FontFile" uid="uid://bhtf12vvs2yjq" path="res://addons/dialogue_nodes/themes/Poppins-BoldItalic.ttf" id="9_wsvtm"]
 [ext_resource type="FontFile" uid="uid://bcg26eik2m2o8" path="res://addons/dialogue_nodes/themes/Poppins-Italic.ttf" id="10_ffgcm"]
 [ext_resource type="FontFile" uid="uid://b1bq3eoec0j1b" path="res://addons/dialogue_nodes/themes/Poppins-Regular.ttf" id="11_4inri"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="11_8juv3"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="12_c8yxi"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="13_debg3"]
+[ext_resource type="Script" uid="uid://bsoctnc26xumr" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="11_8juv3"]
+[ext_resource type="Script" uid="uid://m31i3axecagx" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="12_c8yxi"]
+[ext_resource type="Script" uid="uid://blmdt7v8bd0nl" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="13_debg3"]
 
 [sub_resource type="Theme" id="Theme_iaxpe"]
 default_font = ExtResource("8_bfbn1")
@@ -32,7 +32,7 @@ script = ExtResource("13_debg3")
 [sub_resource type="RichTextEffect" id="RichTextEffect_vxsx5"]
 script = ExtResource("11_8juv3")
 
-[node name="Editor" type="Control"]
+[node name="Editor" type="Control" unique_id=1769542403]
 custom_minimum_size = Vector2(0, 300)
 layout_mode = 3
 anchors_preset = 15
@@ -43,7 +43,7 @@ grow_vertical = 2
 size_flags_vertical = 3
 script = ExtResource("1_3rdab")
 
-[node name="Main" type="VBoxContainer" parent="."]
+[node name="Main" type="VBoxContainer" parent="." unique_id=192602062]
 layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -51,16 +51,17 @@ offset_left = 4.0
 offset_right = -4.0
 size_flags_vertical = 3
 
-[node name="ToolBar" type="HBoxContainer" parent="Main"]
+[node name="ToolBar" type="HBoxContainer" parent="Main" unique_id=1681561598]
 layout_mode = 2
 
-[node name="FileMenu" type="MenuButton" parent="Main/ToolBar"]
+[node name="FileMenu" type="MenuButton" parent="Main/ToolBar" unique_id=1404282272]
 layout_mode = 2
 keep_pressed_outside = true
 text = "File"
 switch_on_hover = true
 item_count = 8
 popup/item_0/text = "New Tree"
+popup/item_0/id = 0
 popup/item_1/text = "Open..."
 popup/item_1/id = 1
 popup/item_2/id = 6
@@ -76,7 +77,7 @@ popup/item_6/id = 4
 popup/item_7/text = "Close All"
 popup/item_7/id = 5
 
-[node name="AddMenu" type="MenuButton" parent="Main/ToolBar"]
+[node name="AddMenu" type="MenuButton" parent="Main/ToolBar" unique_id=1282858678]
 visible = false
 layout_mode = 2
 keep_pressed_outside = true
@@ -84,6 +85,7 @@ text = "Add Node"
 switch_on_hover = true
 item_count = 6
 popup/item_0/text = "StartNode"
+popup/item_0/id = 0
 popup/item_1/text = "DialogueNode"
 popup/item_1/id = 1
 popup/item_2/text = "CommentNode"
@@ -95,14 +97,14 @@ popup/item_4/id = 4
 popup/item_5/text = "ConditionNode"
 popup/item_5/id = 5
 
-[node name="RunMenu" type="MenuButton" parent="Main/ToolBar"]
+[node name="RunMenu" type="MenuButton" parent="Main/ToolBar" unique_id=685862479]
 visible = false
 layout_mode = 2
 keep_pressed_outside = true
 text = "Run"
 switch_on_hover = true
 
-[node name="DebugMenu" type="MenuButton" parent="Main/ToolBar"]
+[node name="DebugMenu" type="MenuButton" parent="Main/ToolBar" unique_id=1624011210]
 layout_mode = 2
 focus_mode = 2
 keep_pressed_outside = true
@@ -111,20 +113,21 @@ switch_on_hover = true
 item_count = 2
 popup/item_0/text = "Print Debug Messages"
 popup/item_0/checkable = 1
+popup/item_0/id = 0
 popup/item_1/text = "Skip option condition checks"
 popup/item_1/checkable = 1
 popup/item_1/id = 1
 
-[node name="Workspace" type="HSplitContainer" parent="Main"]
+[node name="Workspace" type="HSplitContainer" parent="Main" unique_id=2113676108]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="SidePanel" type="VSplitContainer" parent="Main/Workspace"]
+[node name="SidePanel" type="VSplitContainer" parent="Main/Workspace" unique_id=1684439089]
 clip_contents = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 
-[node name="Files" type="ItemList" parent="Main/Workspace/SidePanel" node_paths=PackedStringArray("editor", "workspace", "data_container")]
+[node name="Files" type="ItemList" parent="Main/Workspace/SidePanel" unique_id=685765063 node_paths=PackedStringArray("editor", "workspace", "data_container")]
 custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 size_flags_vertical = 3
@@ -134,9 +137,10 @@ editor = NodePath("../../../..")
 workspace = NodePath("../..")
 data_container = NodePath("../Data")
 
-[node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/SidePanel/Files"]
+[node name="PopupMenu" type="PopupMenu" parent="Main/Workspace/SidePanel/Files" unique_id=1023808359]
 item_count = 4
 item_0/text = "Save"
+item_0/id = 0
 item_1/text = "Save As"
 item_1/id = 1
 item_2/text = "Close"
@@ -144,13 +148,13 @@ item_2/id = 2
 item_3/text = "Close All"
 item_3/id = 3
 
-[node name="NewDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files"]
+[node name="NewDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files" unique_id=1881285980]
 title = "Create a file"
 size = Vector2i(600, 400)
 mode_overrides_title = false
 filters = PackedStringArray("*.tres; Dialogue File")
 
-[node name="OpenDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files"]
+[node name="OpenDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files" unique_id=1716012427]
 title = "Open a file"
 size = Vector2i(600, 400)
 ok_button_text = "Open"
@@ -158,51 +162,51 @@ mode_overrides_title = false
 file_mode = 0
 filters = PackedStringArray("*.tres; Dialogue File")
 
-[node name="SaveDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files"]
+[node name="SaveDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Files" unique_id=1518473345]
 title = "Save a file"
 size = Vector2i(600, 400)
 mode_overrides_title = false
 filters = PackedStringArray("*.tres; Dialogue File")
 
-[node name="ConfirmationDialog" type="AcceptDialog" parent="Main/Workspace/SidePanel/Files"]
+[node name="ConfirmationDialog" type="AcceptDialog" parent="Main/Workspace/SidePanel/Files" unique_id=364137546]
 position = Vector2i(0, 24)
 size = Vector2i(400, 109)
 dialog_text = "The file/s contains unsaved changes. Are you sure you want to close the file/s?"
 dialog_autowrap = true
 
-[node name="Data" type="VBoxContainer" parent="Main/Workspace/SidePanel"]
+[node name="Data" type="VBoxContainer" parent="Main/Workspace/SidePanel" unique_id=608982163]
 visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Characters" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data"]
+[node name="Characters" type="VBoxContainer" parent="Main/Workspace/SidePanel/Data" unique_id=1359072775]
 layout_mode = 2
 script = ExtResource("1_k6kh1")
 editor_path = NodePath("../../../../..")
 
-[node name="Title" type="Label" parent="Main/Workspace/SidePanel/Data/Characters"]
+[node name="Title" type="Label" parent="Main/Workspace/SidePanel/Data/Characters" unique_id=1616378993]
 layout_mode = 2
 text = "Characters"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Main/Workspace/SidePanel/Data/Characters"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Main/Workspace/SidePanel/Data/Characters" unique_id=1514161418]
 layout_mode = 2
 
-[node name="ResetButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+[node name="ResetButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer" unique_id=2029116131]
 visible = false
 layout_mode = 2
 icon = ExtResource("2_1rash")
 flat = true
 
-[node name="FilePath" type="TextEdit" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+[node name="FilePath" type="TextEdit" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer" unique_id=2138549946]
 layout_mode = 2
 size_flags_horizontal = 3
 scroll_fit_content_height = true
 
-[node name="LoadButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer"]
+[node name="LoadButton" type="Button" parent="Main/Workspace/SidePanel/Data/Characters/HBoxContainer" unique_id=531195719]
 layout_mode = 2
 icon = ExtResource("3_lyina")
 
-[node name="OpenDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Data/Characters"]
+[node name="OpenDialog" type="FileDialog" parent="Main/Workspace/SidePanel/Data/Characters" unique_id=1340800947]
 title = "Open a File"
 initial_position = 1
 size = Vector2i(600, 400)
@@ -210,11 +214,11 @@ ok_button_text = "Open"
 file_mode = 0
 filters = PackedStringArray("*.tres; CharacterList resource")
 
-[node name="Statusbar" type="HBoxContainer" parent="Main"]
+[node name="Statusbar" type="HBoxContainer" parent="Main" unique_id=2131479590]
 custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 
-[node name="PanelToggle" type="TextureButton" parent="Main/Statusbar"]
+[node name="PanelToggle" type="TextureButton" parent="Main/Statusbar" unique_id=555343483]
 layout_mode = 2
 toggle_mode = true
 button_pressed = true
@@ -222,7 +226,7 @@ texture_normal = ExtResource("5_x76rf")
 texture_pressed = ExtResource("6_onucw")
 stretch_mode = 3
 
-[node name="VersionNumber" type="LinkButton" parent="Main/Statusbar"]
+[node name="VersionNumber" type="LinkButton" parent="Main/Statusbar" unique_id=1439006207]
 layout_mode = 2
 size_flags_horizontal = 10
 size_flags_vertical = 4
@@ -230,7 +234,7 @@ theme_override_colors/font_color = Color(0.533333, 0.533333, 0.533333, 1)
 text = "1.3.0"
 underline = 1
 
-[node name="DialogueBackground" type="Panel" parent="."]
+[node name="DialogueBackground" type="Panel" parent="." unique_id=1342131754]
 visible = false
 modulate = Color(0, 0, 0, 0.501961)
 layout_mode = 1
@@ -240,7 +244,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DialogueBox" type="Panel" parent="."]
+[node name="DialogueBox" type="Panel" parent="." unique_id=1949671345]
 visible = false
 layout_mode = 1
 anchors_preset = 8

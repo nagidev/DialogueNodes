@@ -1,8 +1,5 @@
 @tool
-extends GraphNode
-
-
-signal modified
+extends BaseDialogueNode
 
 @onready var path: LineEdit = $BoxContainer/FilePath
 @onready var file_path: String = path.text
@@ -11,9 +8,6 @@ signal modified
 @onready var open_dialog: FileDialog = $OpenDialog
 @onready var path_timer: Timer = $PathTimer
 @onready var id_timer: Timer = $IDTimer
-
-var undo_redo: EditorUndoRedoManager
-
 
 func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
@@ -90,5 +84,3 @@ func _on_id_timer_timeout() -> void:
 	undo_redo.commit_action()
 
 
-func _on_modified() -> void:
-	modified.emit()

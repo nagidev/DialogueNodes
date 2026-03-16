@@ -1,12 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://3ofh51q0vhmg"]
+[gd_scene format=3 uid="uid://3ofh51q0vhmg"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/conditionNode.gd" id="1"]
+[ext_resource type="Script" uid="uid://d2nw04tfxftpo" path="res://addons/dialogue_nodes/nodes/conditionNode.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://d2m5p53k8qhhp" path="res://addons/dialogue_nodes/nodes/sub_nodes/ConditionList.tscn" id="2_exmrd"]
 
-[node name="ConditionNode" type="GraphNode"]
+[node name="ConditionNode" type="GraphNode" unique_id=487491103]
 custom_minimum_size = Vector2(300, 0)
 offset_right = 300.0
 offset_bottom = 110.0
+resizable = true
 title = "ConditionNode"
 slot/0/left_enabled = true
 slot/0/left_type = 0
@@ -37,15 +38,15 @@ slot/2/right_icon = null
 slot/2/draw_stylebox = true
 script = ExtResource("1")
 
-[node name="ConditionList" parent="." instance=ExtResource("2_exmrd")]
+[node name="ConditionList" parent="." unique_id=1891729365 instance=ExtResource("2_exmrd")]
 layout_mode = 2
 
-[node name="TrueLabel" type="Label" parent="."]
+[node name="TrueLabel" type="Label" parent="." unique_id=1619860644]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
 text = "True"
 
-[node name="FalseLabel" type="Label" parent="."]
+[node name="FalseLabel" type="Label" parent="." unique_id=358675198]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.666667, 0.666667, 0.666667, 1)
 text = "False"

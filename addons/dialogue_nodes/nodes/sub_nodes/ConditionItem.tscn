@@ -16,11 +16,10 @@ script = ExtResource("1_ycxn0")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Value1" type="LineEdit" parent="MainContainer"]
+[node name="Value1" type="OptionButton" parent="MainContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "The property to set the value of."
-placeholder_text = "Value"
 metadata/last_value = ""
 
 [node name="Operator" type="OptionButton" parent="MainContainer"]
@@ -81,7 +80,7 @@ layout_mode = 2
 wait_time = 0.5
 one_shot = true
 
-[connection signal="text_changed" from="MainContainer/Value1" to="." method="_on_condition_changing"]
+[connection signal="item_selected" from="MainContainer/Value1" to="." method="_on_condition_changing"]
 [connection signal="item_selected" from="MainContainer/Operator" to="." method="_on_condition_changing"]
 [connection signal="text_changed" from="MainContainer/Value2" to="." method="_on_condition_changing"]
 [connection signal="item_selected" from="SideContainer/Combiner" to="." method="_on_condition_changing"]

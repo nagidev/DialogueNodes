@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://b4os1qum2hx0x"]
+[gd_resource type="Resource" script_class="DialogueData" format=3 uid="uid://b4os1qum2hx0x"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
+[ext_resource type="Script" uid="uid://eit47g61t72a" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1"]
 
 [resource]
 script = ExtResource("1")
@@ -8,12 +8,12 @@ starts = {
 "START": &"0_1"
 }
 nodes = {
-"0_1": {
+&"0_1": {
 "link": &"1_1",
 "offset": Vector2(0, 0),
 "start_id": "START"
 },
-"1_1": {
+&"1_1": {
 "dialogue": "You can trigger a signal from your dialogue.
 Additionally you can pass a value with the signal and use it in your code.",
 "offset": Vector2(220, 0),
@@ -29,10 +29,10 @@ Additionally you can pass a value with the signal and use it in your code.",
 "text": "Got it, bye!"
 }
 },
-"size": Vector2(307.167, 307),
+"size": Vector2(307.167, 308),
 "speaker": "Greg"
 },
-"1_2": {
+&"1_2": {
 "dialogue": "The signal triggered the code in the demo to create an explosion.",
 "offset": Vector2(800, 0),
 "options": {
@@ -47,15 +47,12 @@ Additionally you can pass a value with the signal and use it in your code.",
 "text": "Got it!"
 }
 },
-"size": Vector2(300, 307),
+"size": Vector2(300, 308),
 "speaker": "Greg"
 },
-"3_1": {
+&"3_1": {
 "link": &"1_2",
 "offset": Vector2(560, 0),
 "signalValue": "explode"
 }
 }
-variables = {}
-strays = Array[String]([])
-characters = ""

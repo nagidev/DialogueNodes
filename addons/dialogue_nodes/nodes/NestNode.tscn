@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://qhs1fcypr3p8"]
+[gd_scene format=3 uid="uid://qhs1fcypr3p8"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/nestNode.gd" id="1_qag2c"]
+[ext_resource type="Script" uid="uid://bdwal42iydwgf" path="res://addons/dialogue_nodes/nodes/nestNode.gd" id="1_qag2c"]
 [ext_resource type="Texture2D" uid="uid://buayifvickq2l" path="res://addons/dialogue_nodes/icons/Folder.svg" id="1_qkdnt"]
 
-[node name="NestNode" type="GraphNode"]
+[node name="NestNode" type="GraphNode" unique_id=1617532347]
 offset_right = 254.0
 offset_bottom = 169.0
 title = "NestNode"
@@ -45,29 +45,29 @@ slot/3/right_icon = null
 slot/3/draw_stylebox = true
 script = ExtResource("1_qag2c")
 
-[node name="FileLabel" type="Label" parent="."]
+[node name="FileLabel" type="Label" parent="." unique_id=701085341]
 layout_mode = 2
 text = "DialogueData"
 
-[node name="BoxContainer" type="BoxContainer" parent="."]
+[node name="BoxContainer" type="BoxContainer" parent="." unique_id=1868618275]
 layout_mode = 2
 
-[node name="FilePath" type="LineEdit" parent="BoxContainer"]
+[node name="FilePath" type="LineEdit" parent="BoxContainer" unique_id=201961773]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="BrowseButton" type="Button" parent="BoxContainer"]
+[node name="BrowseButton" type="Button" parent="BoxContainer" unique_id=861308722]
 layout_mode = 2
 icon = ExtResource("1_qkdnt")
 
-[node name="IDLabel" type="Label" parent="."]
+[node name="IDLabel" type="Label" parent="." unique_id=1826992104]
 layout_mode = 2
 text = "ID"
 
-[node name="ID" type="LineEdit" parent="."]
+[node name="ID" type="LineEdit" parent="." unique_id=578814111]
 layout_mode = 2
 
-[node name="OpenDialog" type="FileDialog" parent="."]
+[node name="OpenDialog" type="FileDialog" parent="." unique_id=1484063510]
 title = "Open a DialogueData Resource"
 size = Vector2i(600, 400)
 ok_button_text = "Open"
@@ -75,11 +75,11 @@ mode_overrides_title = false
 file_mode = 0
 filters = PackedStringArray("*.tres; DialogueData resource")
 
-[node name="PathTimer" type="Timer" parent="."]
+[node name="PathTimer" type="Timer" parent="." unique_id=54620616]
 wait_time = 0.5
 one_shot = true
 
-[node name="IDTimer" type="Timer" parent="."]
+[node name="IDTimer" type="Timer" parent="." unique_id=1869754949]
 wait_time = 0.5
 one_shot = true
 

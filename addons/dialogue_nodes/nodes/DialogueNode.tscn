@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://b60fa8vcjuoo6"]
+[gd_scene format=3 uid="uid://b60fa8vcjuoo6"]
 
-[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" id="1"]
+[ext_resource type="Script" uid="uid://cs4f7dmkcuyqk" path="res://addons/dialogue_nodes/nodes/dialogueNode.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://dla76qr5vqp1r" path="res://addons/dialogue_nodes/icons/Character.svg" id="2_n0qww"]
 [ext_resource type="Texture2D" uid="uid://dps8mwnnuc5nm" path="res://addons/dialogue_nodes/icons/DistractionFree.svg" id="4_tpc70"]
 [ext_resource type="PackedScene" uid="uid://blp6ulybtwgcj" path="res://addons/dialogue_nodes/nodes/sub_nodes/DialogueNodeOption.tscn" id="4_y6bt4"]
@@ -14,10 +14,11 @@ color_regions = {
 "[ ]": Color(0.647059, 0.937255, 0.67451, 1)
 }
 
-[node name="DialogueNode" type="GraphNode" node_paths=PackedStringArray("resize_timer", "custom_speaker_timer", "dialogue_timer")]
+[node name="DialogueNode" type="GraphNode" unique_id=710966291 node_paths=PackedStringArray("resize_timer", "custom_speaker_timer", "dialogue_timer")]
 custom_minimum_size = Vector2(300, 240)
+offset_top = -1.0
 offset_right = 300.0
-offset_bottom = 240.0
+offset_bottom = 239.0
 theme_override_constants/separation = 4
 resizable = true
 title = "Dialogue"
@@ -71,44 +72,44 @@ resize_timer = NodePath("DialogueContainer/ResizeTimer")
 custom_speaker_timer = NodePath("SpeakerContainer/CustomSpeakerTimer")
 dialogue_timer = NodePath("DialogueContainer/DialogueTimer")
 
-[node name="SpeakerLabel" type="Label" parent="."]
+[node name="SpeakerLabel" type="Label" parent="." unique_id=1821729645]
 layout_mode = 2
 text = "Speaker"
 
-[node name="SpeakerContainer" type="HBoxContainer" parent="."]
+[node name="SpeakerContainer" type="HBoxContainer" parent="." unique_id=920496564]
 layout_mode = 2
 
-[node name="CustomSpeaker" type="LineEdit" parent="SpeakerContainer"]
+[node name="CustomSpeaker" type="LineEdit" parent="SpeakerContainer" unique_id=1649543897]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Speaker" type="OptionButton" parent="SpeakerContainer"]
+[node name="Speaker" type="OptionButton" parent="SpeakerContainer" unique_id=373292955]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 fit_to_longest_item = false
 
-[node name="CharacterToggle" type="Button" parent="SpeakerContainer"]
+[node name="CharacterToggle" type="Button" parent="SpeakerContainer" unique_id=1131418771]
 unique_name_in_owner = true
 layout_mode = 2
 toggle_mode = true
 icon = ExtResource("2_n0qww")
 
-[node name="CustomSpeakerTimer" type="Timer" parent="SpeakerContainer"]
+[node name="CustomSpeakerTimer" type="Timer" parent="SpeakerContainer" unique_id=717014119]
 wait_time = 0.5
 one_shot = true
 
-[node name="DialogueLabel" type="Label" parent="."]
+[node name="DialogueLabel" type="Label" parent="." unique_id=74173988]
 layout_mode = 2
 text = "Dialogue"
 
-[node name="DialogueContainer" type="HBoxContainer" parent="."]
+[node name="DialogueContainer" type="HBoxContainer" parent="." unique_id=1174499403]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Dialogue" type="TextEdit" parent="DialogueContainer"]
+[node name="Dialogue" type="TextEdit" parent="DialogueContainer" unique_id=205206571]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -117,27 +118,27 @@ wrap_mode = 1
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 highlight_all_occurrences = true
 
-[node name="ExpandButton" type="Button" parent="DialogueContainer"]
+[node name="ExpandButton" type="Button" parent="DialogueContainer" unique_id=117288879]
 layout_mode = 2
 icon = ExtResource("4_tpc70")
 
-[node name="DialoguePanel" type="PopupPanel" parent="DialogueContainer"]
+[node name="DialoguePanel" type="PopupPanel" parent="DialogueContainer" unique_id=1789471703]
 unique_name_in_owner = true
 initial_position = 1
 size = Vector2i(800, 600)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="DialogueContainer/DialoguePanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="DialogueContainer/DialoguePanel" unique_id=166462111]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 4.0
 offset_top = 4.0
-offset_right = -4.0
-offset_bottom = -4.0
+offset_right = 796.0
+offset_bottom = 596.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DialogueExpanded" type="TextEdit" parent="DialogueContainer/DialoguePanel/VBoxContainer"]
+[node name="DialogueExpanded" type="TextEdit" parent="DialogueContainer/DialoguePanel/VBoxContainer" unique_id=1119104286]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 91)
 layout_mode = 2
@@ -147,22 +148,22 @@ wrap_mode = 1
 syntax_highlighter = SubResource("CodeHighlighter_btpy8")
 highlight_all_occurrences = true
 
-[node name="CenterContainer" type="CenterContainer" parent="DialogueContainer/DialoguePanel/VBoxContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="DialogueContainer/DialoguePanel/VBoxContainer" unique_id=1239968]
 layout_mode = 2
 
-[node name="CloseButton" type="Button" parent="DialogueContainer/DialoguePanel/VBoxContainer/CenterContainer"]
+[node name="CloseButton" type="Button" parent="DialogueContainer/DialoguePanel/VBoxContainer/CenterContainer" unique_id=269766273]
 layout_mode = 2
 text = "Close"
 
-[node name="DialogueTimer" type="Timer" parent="DialogueContainer"]
+[node name="DialogueTimer" type="Timer" parent="DialogueContainer" unique_id=163843085]
 wait_time = 0.5
 one_shot = true
 
-[node name="ResizeTimer" type="Timer" parent="DialogueContainer"]
+[node name="ResizeTimer" type="Timer" parent="DialogueContainer" unique_id=1284237921]
 wait_time = 0.5
 one_shot = true
 
-[node name="Option1" parent="." instance=ExtResource("4_y6bt4")]
+[node name="Option1" parent="." unique_id=1604330917 instance=ExtResource("4_y6bt4")]
 layout_mode = 2
 
 [connection signal="resize_request" from="." to="." method="_on_resize"]

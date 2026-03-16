@@ -52,6 +52,7 @@ func load_data(path: String) -> void:
 ## Setter for [member data].
 func set_data(new_data: DialogueData) -> void:
 	data = new_data
+	if not data: return
 	_data.clear()
 	_characters.clear()
 	_nest_links.clear()
@@ -117,6 +118,7 @@ func _proceed(node_name: String) -> void:
 			stop()
 		return
 	
+	# ADD NEW FUNCTIONS HERE
 	var process_functions := [
 		_process_start,
 		_process_dialogue,
@@ -178,6 +180,9 @@ func _process_set(dict: Dictionary) -> void:
 	
 	var type = typeof(variables[dict.variable])
 	var value = dict.value
+	if value.count("{{"):
+		value = _parse_variables(value)
+	
 	var operator = dict.type
 	
 	# set datatype of value
@@ -219,7 +224,6 @@ func _process_set(dict: Dictionary) -> void:
 	variable_changed.emit(dict.variable, variables[dict.variable])
 	_proceed(dict.link)
 
-
 # Processes the condition node data (dict).
 func _process_condition(dict: Dictionary) -> void:
 	var result = _check_condition(dict['condition'])
@@ -250,8 +254,7 @@ func _check_condition(conditions: Array) -> bool:
 		var value2 = dict.value2
 		
 		# get variables if needed
-		if value1.count('{{') > 0:
-			value1 = _parse_variables(value1)
+		value1 = str(variables[value1])
 		if value2.count('{{') > 0:
 			value2 = _parse_variables(value2)
 		
@@ -359,10 +362,6 @@ func _parse_variable_names(value: String) -> Array:
 # FIXME : Length calculation is borked when the value has [, ] unrelated to any bbcodes.
 # Updates all the [wait] bbcode tags in the given text to include additional info about the text
 func _update_wait_tags(node: RichTextLabel, value: String) -> String:
-	# Empty string freezes dialogues
-	if value == '':
-		value = ' '
-	
 	# add a wait if none present at beginning
 	if not value.begins_with('[wait'):
 		value = '[wait]' + value + '[/wait]'

@@ -1,13 +1,9 @@
 @tool
-extends GraphNode
-
-
-signal modified
+extends BaseDialogueNode
 
 @onready var value := $SignalValue
 @onready var timer := $Timer
 
-var undo_redo: EditorUndoRedoManager
 var last_value := ''
 
 
@@ -49,6 +45,3 @@ func _on_timer_timeout() -> void:
 	undo_redo.add_undo_method(self, 'set_value', last_value)
 	undo_redo.commit_action()
 
-
-func _on_modified() -> void:
-	modified.emit()

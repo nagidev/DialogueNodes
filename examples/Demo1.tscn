@@ -1,18 +1,20 @@
-[gd_scene load_steps=19 format=3 uid="uid://bwk7tjlhnu23j"]
+[gd_scene format=3 uid="uid://bwk7tjlhnu23j"]
 
 [ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="1_qerq3"]
-[ext_resource type="Script" path="res://examples/demo.gd" id="2_5ddyy"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="3_vce48"]
+[ext_resource type="Script" uid="uid://55uxrdsy8rex" path="res://examples/demo.gd" id="2_5ddyy"]
+[ext_resource type="Script" uid="uid://eit47g61t72a" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="3_vce48"]
 [ext_resource type="Resource" uid="uid://dj818hys8f3u8" path="res://examples/ExampleBasic.tres" id="3_yex7d"]
 [ext_resource type="Resource" uid="uid://btriowhsx04c2" path="res://examples/ExampleBBCodes.tres" id="4_ay03t"]
 [ext_resource type="Resource" uid="uid://bjme2drtas671" path="res://examples/ExampleBranching.tres" id="5_ifbb7"]
 [ext_resource type="Resource" uid="uid://c303qivlsn30t" path="res://examples/ExampleCharacters.tres" id="6_arg21"]
 [ext_resource type="Resource" uid="uid://b4os1qum2hx0x" path="res://examples/ExampleSignals.tres" id="7_18syg"]
 [ext_resource type="Resource" uid="uid://cbu4k4hs8fk5s" path="res://examples/ExampleVariables.tres" id="8_4fu3f"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_s4y1y"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="10_wwm1y"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="11_iuh66"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="12_cnev0"]
+[ext_resource type="Script" uid="uid://b1pjspi1h8amj" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="9_s4y1y"]
+[ext_resource type="Resource" uid="uid://b6bki2h32l6i3" path="res://examples/ExampleFork.tres" id="10_2mtm5"]
+[ext_resource type="Script" uid="uid://m31i3axecagx" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="10_wwm1y"]
+[ext_resource type="Resource" uid="uid://bio6clng2q0ur" path="res://examples/ExampleVariableDropdowns.tres" id="11_48mo8"]
+[ext_resource type="Script" uid="uid://blmdt7v8bd0nl" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="11_iuh66"]
+[ext_resource type="Script" uid="uid://bsoctnc26xumr" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="12_cnev0"]
 
 [sub_resource type="Curve" id="1"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.67805, 0.0, 0, 0]
@@ -31,7 +33,7 @@ script = ExtResource("11_iuh66")
 [sub_resource type="RichTextEffect" id="RichTextEffect_j1cit"]
 script = ExtResource("12_cnev0")
 
-[node name="Demo" type="Control"]
+[node name="Demo" type="Control" unique_id=1995597851]
 texture_filter = 1
 layout_mode = 3
 anchors_preset = 15
@@ -41,9 +43,9 @@ grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_qerq3")
 script = ExtResource("2_5ddyy")
-demos = Array[ExtResource("3_vce48")]([ExtResource("3_yex7d"), ExtResource("4_ay03t"), ExtResource("5_ifbb7"), ExtResource("6_arg21"), ExtResource("7_18syg"), ExtResource("8_4fu3f")])
+demos = Array[ExtResource("3_vce48")]([ExtResource("3_yex7d"), ExtResource("4_ay03t"), ExtResource("5_ifbb7"), ExtResource("6_arg21"), ExtResource("7_18syg"), ExtResource("8_4fu3f"), ExtResource("10_2mtm5"), ExtResource("11_48mo8")])
 
-[node name="DemoSelector" type="OptionButton" parent="."]
+[node name="DemoSelector" type="OptionButton" parent="." unique_id=656082638]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -57,7 +59,7 @@ offset_bottom = -26.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="StartButton" type="Button" parent="."]
+[node name="StartButton" type="Button" parent="." unique_id=528190993]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -72,7 +74,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Start Demo"
 
-[node name="Locale" type="OptionButton" parent="."]
+[node name="Locale" type="OptionButton" parent="." unique_id=1611886713]
 layout_mode = 0
 offset_left = 32.0
 offset_top = 32.0
@@ -81,10 +83,11 @@ offset_bottom = 64.0
 selected = 0
 item_count = 2
 popup/item_0/text = "en"
+popup/item_0/id = 0
 popup/item_1/text = "ja"
 popup/item_1/id = 1
 
-[node name="Particles" type="CPUParticles2D" parent="."]
+[node name="Particles" type="CPUParticles2D" parent="." unique_id=1127509605]
 position = Vector2(600, 200.498)
 emitting = false
 amount = 64
@@ -108,7 +111,7 @@ color_ramp = SubResource("Gradient_fvoor")
 hue_variation_min = -1.0
 hue_variation_max = 1.0
 
-[node name="DialogueBox" type="Panel" parent="."]
+[node name="DialogueBox" type="Panel" parent="." unique_id=278120127]
 visible = false
 layout_mode = 1
 anchors_preset = 7

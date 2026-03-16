@@ -1,11 +1,7 @@
 @tool
-extends GraphNode
+extends BaseDialogueNode
 
-
-signal modified
 signal character_list_requested(dialogue_node: GraphNode)
-signal disconnection_from_request(from_node: String, from_port: int)
-signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 
 @export var max_options := 4
 @export var resize_timer: Timer
@@ -19,7 +15,6 @@ signal connection_shift_request(from_node: String, old_port: int, new_port: int)
 @onready var dialogue_panel := %DialoguePanel
 @onready var dialogue_expanded := %DialogueExpanded
 
-var undo_redo: EditorUndoRedoManager
 var last_size := size
 var last_custom_speaker := ''
 var cur_speaker := -1
@@ -399,5 +394,6 @@ func _on_option_focus_exited(option: BoxContainer) -> void:
 		empty_option = null
 
 
-func _on_modified() -> void:
-	modified.emit()
+func _on_variables_updated(variables_list: Array[String]) -> void:
+	for option in options:
+		option.update_variables(variables_list)

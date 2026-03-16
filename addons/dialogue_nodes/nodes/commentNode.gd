@@ -1,14 +1,10 @@
 @tool
-extends GraphNode
-
-
-signal modified
+extends BaseDialogueNode
 
 @onready var text_edit := $TextEdit
 @onready var resize_timer := $ResizeTimer
 @onready var text_timer := $TextTimer
 
-var undo_redo : EditorUndoRedoManager
 var last_size := size
 var last_text := ''
 
@@ -75,6 +71,3 @@ func _on_text_timer_timeout() -> void:
 	undo_redo.add_undo_method(self, 'set_text', last_text)
 	undo_redo.commit_action()
 
-
-func _on_modified() -> void:
-	modified.emit()
