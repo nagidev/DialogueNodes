@@ -8,8 +8,6 @@
 [ext_resource type="Script" uid="uid://by8fmhpldj46a" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="4_x7bn6"]
 [ext_resource type="AudioStream" uid="uid://bin1ei6yesmjv" path="res://examples/voice.ogg" id="7_au5ch"]
 [ext_resource type="Script" uid="uid://bsoctnc26xumr" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="8_2keth"]
-[ext_resource type="Theme" uid="uid://dq18l0hyb3bqt" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="9_gu6c4"]
-[ext_resource type="Script" uid="uid://djd61d4k2mchi" path="res://addons/dialogue_nodes/objects/DialogueBubble.gd" id="10_wtf1w"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_c6wh6"]
 script = ExtResource("2_435yb")
@@ -18,15 +16,6 @@ script = ExtResource("2_435yb")
 script = ExtResource("3_xlyqn")
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_fu5un"]
-script = ExtResource("8_2keth")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_0fx0h"]
-script = ExtResource("2_435yb")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_avjft"]
-script = ExtResource("3_xlyqn")
-
-[sub_resource type="RichTextEffect" id="RichTextEffect_ictbc"]
 script = ExtResource("8_2keth")
 
 [node name="Demo2" type="Control" unique_id=1916500132]
@@ -75,26 +64,5 @@ custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_c6wh6"), Sub
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=625467606]
 stream = ExtResource("7_au5ch")
-
-[node name="DialogueBubble" type="RichTextLabel" parent="." unique_id=1142920630 node_paths=PackedStringArray("follow_node")]
-clip_contents = false
-layout_mode = 0
-offset_left = 621.0
-offset_top = 197.0
-offset_right = 761.0
-offset_bottom = 220.0
-theme = ExtResource("9_gu6c4")
-bbcode_enabled = true
-text = "Sample dialogue."
-fit_content = true
-autowrap_mode = 0
-custom_effects = [SubResource("RichTextEffect_0fx0h"), SubResource("RichTextEffect_avjft"), SubResource("RichTextEffect_ictbc")]
-script = ExtResource("10_wtf1w")
-follow_node = NodePath("../Node2D")
-dialogue_custom_effects = [SubResource("RichTextEffect_0fx0h"), SubResource("RichTextEffect_avjft"), SubResource("RichTextEffect_ictbc")]
-metadata/_custom_type_script = "uid://djd61d4k2mchi"
-
-[node name="Node2D" type="Node2D" parent="." unique_id=671780461]
-position = Vector2(531, 267)
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
