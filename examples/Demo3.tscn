@@ -1,12 +1,12 @@
-[gd_scene load_steps=23 format=3 uid="uid://dhwoh3ay4mp3c"]
+[gd_scene format=3 uid="uid://dhwoh3ay4mp3c"]
 
-[ext_resource type="Script" path="res://examples/demo3.gd" id="1_2a8yf"]
+[ext_resource type="Script" uid="uid://dgrcn171ydt0s" path="res://examples/demo3.gd" id="1_2a8yf"]
 [ext_resource type="AudioStream" uid="uid://bin1ei6yesmjv" path="res://examples/voice.ogg" id="2_bjs48"]
 [ext_resource type="Theme" uid="uid://dq18l0hyb3bqt" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="3_201t6"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="4_tmfyu"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="5_vs72k"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="6_pkic0"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBubble.gd" id="7_wf6dy"]
+[ext_resource type="Script" uid="uid://m31i3axecagx" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="4_tmfyu"]
+[ext_resource type="Script" uid="uid://blmdt7v8bd0nl" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="5_vs72k"]
+[ext_resource type="Script" uid="uid://bsoctnc26xumr" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="6_pkic0"]
+[ext_resource type="Script" uid="uid://djd61d4k2mchi" path="res://addons/dialogue_nodes/objects/DialogueBubble.gd" id="7_wf6dy"]
 [ext_resource type="Resource" uid="uid://cwtdfv6yke8ri" path="res://examples/ExampleBubble.tres" id="8_qbppo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xk202"]
@@ -58,47 +58,47 @@ script = ExtResource("5_vs72k")
 [sub_resource type="RichTextEffect" id="RichTextEffect_oo7i8"]
 script = ExtResource("6_pkic0")
 
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1508374011]
 script = ExtResource("1_2a8yf")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=5306689]
 transform = Transform3D(-0.970995, 0.126469, 0.202912, 0.148113, 0.984374, 0.0952352, -0.187697, 0.122527, -0.974555, 0, 0, 0)
 light_color = Color(1, 0.878551, 0.784915, 1)
 shadow_enabled = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=692439572]
 environment = SubResource("Environment_80dc1")
 
-[node name="Floor" type="MeshInstance3D" parent="."]
+[node name="Floor" type="MeshInstance3D" parent="." unique_id=1005676583]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.06069, 0)
 mesh = SubResource("BoxMesh_s62kf")
 
-[node name="Greg" type="MeshInstance3D" parent="."]
+[node name="Greg" type="MeshInstance3D" parent="." unique_id=1061495028]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.59386, 0, -2.1098)
 mesh = SubResource("SphereMesh_ck5hd")
 
-[node name="Clara" type="MeshInstance3D" parent="."]
+[node name="Clara" type="MeshInstance3D" parent="." unique_id=144994965]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3228, 1.21788, -1.67157)
 mesh = SubResource("SphereMesh_ruvw0")
 
-[node name="Binkle" type="MeshInstance3D" parent="."]
+[node name="Binkle" type="MeshInstance3D" parent="." unique_id=1441422640]
 transform = Transform3D(0.958628, -0.264975, 0.104022, 0.180335, 0.848039, 0.498306, -0.220253, -0.458932, 0.860738, -0.716, -2, -4.783)
 mesh = SubResource("PrismMesh_jeho0")
 
-[node name="Camera3D" type="Camera3D" parent="."]
+[node name="Camera3D" type="Camera3D" parent="." unique_id=499378244]
 transform = Transform3D(0.993087, 0.0320453, -0.112922, 0, 0.962013, 0.273002, 0.117381, -0.271115, 0.955363, 0.157186, 1.15744, 1.00156)
 
-[node name="FocusPoint" type="Node3D" parent="."]
+[node name="FocusPoint" type="Node3D" parent="." unique_id=319810278]
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="FocusPoint"]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="FocusPoint" unique_id=365122355]
 stream = ExtResource("2_bjs48")
 panning_strength = 5.0
 
-[node name="DialogueBubble" type="RichTextLabel" parent="."]
+[node name="DialogueBubble" type="RichTextLabel" parent="." unique_id=43789136 node_paths=PackedStringArray("follow_node")]
 clip_contents = false
 offset_left = 493.0
 offset_top = 338.0
-offset_right = 633.0
+offset_right = 625.0
 offset_bottom = 361.0
 theme = ExtResource("3_201t6")
 bbcode_enabled = true
@@ -108,6 +108,7 @@ autowrap_mode = 0
 custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffect_el6u0"), SubResource("RichTextEffect_oo7i8")]
 script = ExtResource("7_wf6dy")
 data = ExtResource("8_qbppo")
+follow_node = NodePath("../FocusPoint")
 dialogue_custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffect_el6u0"), SubResource("RichTextEffect_oo7i8")]
 
 [connection signal="dialogue_processed" from="DialogueBubble" to="." method="_on_dialogue_processed"]

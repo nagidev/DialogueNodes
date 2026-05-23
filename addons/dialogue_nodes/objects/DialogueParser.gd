@@ -51,20 +51,24 @@ func load_data(path: String) -> void:
 
 ## Setter for [member data].
 func set_data(new_data: DialogueData) -> void:
+	# TODO : find out why empty data is being sent when adding file from inspector
 	data = new_data
 	_data.clear()
 	_characters.clear()
 	_nest_links.clear()
-	
 	variables.clear()
-	for var_name in data.variables:
-		variables[var_name] = data.variables[var_name].value
-	
 	characters.clear()
-	if not data.characters.ends_with('.tres'): return
-	var character_list = ResourceLoader.load(data.characters, '', ResourceLoader.CACHE_MODE_IGNORE)
-	if not character_list is CharacterList: return
-	characters = character_list.characters
+	
+	if not data: return
+	
+	if data.get('variables'):
+		for var_name in data.variables:
+			variables[var_name] = data.variables[var_name].value
+	
+	if data.characters.ends_with('.tres'):
+		var character_list = ResourceLoader.load(data.characters, '', ResourceLoader.CACHE_MODE_IGNORE)
+		if character_list is CharacterList:
+			characters = character_list.characters
 
 
 ## Starts processing the dialogue data set in [member data], starting with the Start Node with its ID set to [param start_id].

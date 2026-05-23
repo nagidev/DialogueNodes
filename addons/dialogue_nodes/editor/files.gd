@@ -283,7 +283,9 @@ func get_current_metadata() -> Dictionary:
 
 func _on_empty_clicked(at_pos: Vector2, mouse_button_index: int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_RIGHT:
-		var pop_pos := at_pos + global_position + Vector2(get_window().position)
+		var pop_pos := at_pos + global_position
+		if not EditorInterface.get_editor_settings().get_setting("interface/editor/single_window_mode"):
+			pop_pos += Vector2(get_window().position)
 		popup_menu.popup(Rect2(pop_pos, popup_menu.size))
 
 

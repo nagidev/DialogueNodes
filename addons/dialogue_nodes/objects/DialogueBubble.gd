@@ -206,6 +206,7 @@ func _ready() -> void:
 
 
 func _process(delta) -> void:
+	# TODO : fix position calculation code
 	if Engine.is_editor_hint(): return
 	if not _running: return
 	if not follow_node: return

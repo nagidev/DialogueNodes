@@ -1,13 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://dexedy1bup8vh"]
+[gd_scene format=3 uid="uid://dexedy1bup8vh"]
 
 [ext_resource type="Theme" uid="uid://dc6c1peo4pfyr" path="res://addons/dialogue_nodes/themes/bubbly.theme" id="1_fbp1s"]
-[ext_resource type="Script" path="res://examples/audioDemo.gd" id="2_2jvcg"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="2_435yb"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="3_xlyqn"]
+[ext_resource type="Script" uid="uid://bb7futwdjdhtn" path="res://examples/audioDemo.gd" id="2_2jvcg"]
+[ext_resource type="Script" uid="uid://m31i3axecagx" path="res://addons/dialogue_nodes/objects/bbcodeWait.gd" id="2_435yb"]
+[ext_resource type="Script" uid="uid://blmdt7v8bd0nl" path="res://addons/dialogue_nodes/objects/bbcodeGhost.gd" id="3_xlyqn"]
 [ext_resource type="Resource" uid="uid://c4ay241u6mexj" path="res://examples/ExampleAudio.tres" id="4_1tepv"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="4_x7bn6"]
+[ext_resource type="Script" uid="uid://by8fmhpldj46a" path="res://addons/dialogue_nodes/objects/DialogueBox.gd" id="4_x7bn6"]
 [ext_resource type="AudioStream" uid="uid://bin1ei6yesmjv" path="res://examples/voice.ogg" id="7_au5ch"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="8_2keth"]
+[ext_resource type="Script" uid="uid://bsoctnc26xumr" path="res://addons/dialogue_nodes/objects/bbcodeMatrix.gd" id="8_2keth"]
+[ext_resource type="Theme" uid="uid://dq18l0hyb3bqt" path="res://addons/dialogue_nodes/themes/bubblyClean.theme" id="9_gu6c4"]
+[ext_resource type="Script" uid="uid://djd61d4k2mchi" path="res://addons/dialogue_nodes/objects/DialogueBubble.gd" id="10_wtf1w"]
 
 [sub_resource type="RichTextEffect" id="RichTextEffect_c6wh6"]
 script = ExtResource("2_435yb")
@@ -18,7 +20,16 @@ script = ExtResource("3_xlyqn")
 [sub_resource type="RichTextEffect" id="RichTextEffect_fu5un"]
 script = ExtResource("8_2keth")
 
-[node name="Demo2" type="Control"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_0fx0h"]
+script = ExtResource("2_435yb")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_avjft"]
+script = ExtResource("3_xlyqn")
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_ictbc"]
+script = ExtResource("8_2keth")
+
+[node name="Demo2" type="Control" unique_id=1916500132]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,7 +39,7 @@ grow_vertical = 2
 theme = ExtResource("1_fbp1s")
 script = ExtResource("2_2jvcg")
 
-[node name="Button" type="Button" parent="."]
+[node name="Button" type="Button" parent="." unique_id=1528214344]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -43,7 +54,7 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Talk"
 
-[node name="DialogueBox" type="Panel" parent="."]
+[node name="DialogueBox" type="Panel" parent="." unique_id=1411825524]
 visible = false
 layout_mode = 1
 anchors_preset = 7
@@ -62,7 +73,28 @@ data = ExtResource("4_1tepv")
 start_id = "START"
 custom_effects = Array[RichTextEffect]([SubResource("RichTextEffect_c6wh6"), SubResource("RichTextEffect_pyhwf"), SubResource("RichTextEffect_fu5un")])
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=625467606]
 stream = ExtResource("7_au5ch")
+
+[node name="DialogueBubble" type="RichTextLabel" parent="." unique_id=1142920630 node_paths=PackedStringArray("follow_node")]
+clip_contents = false
+layout_mode = 0
+offset_left = 621.0
+offset_top = 197.0
+offset_right = 761.0
+offset_bottom = 220.0
+theme = ExtResource("9_gu6c4")
+bbcode_enabled = true
+text = "Sample dialogue."
+fit_content = true
+autowrap_mode = 0
+custom_effects = [SubResource("RichTextEffect_0fx0h"), SubResource("RichTextEffect_avjft"), SubResource("RichTextEffect_ictbc")]
+script = ExtResource("10_wtf1w")
+follow_node = NodePath("../Node2D")
+dialogue_custom_effects = [SubResource("RichTextEffect_0fx0h"), SubResource("RichTextEffect_avjft"), SubResource("RichTextEffect_ictbc")]
+metadata/_custom_type_script = "uid://djd61d4k2mchi"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=671780461]
+position = Vector2(531, 267)
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

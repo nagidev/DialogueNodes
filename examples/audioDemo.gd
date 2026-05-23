@@ -12,7 +12,7 @@ func _on_button_pressed():
 	dialogue_box.start()
 
 
-func _on_char_displayed(idx):
+func _on_char_displayed(_idx):
 	# you can use the idx parameter to check the index of the character displayed
 	
 	# we'll just play an AudioStreamPlayer for this example
