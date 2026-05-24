@@ -14,13 +14,14 @@ var undo_redo: EditorUndoRedoManager
 var last_variable: String
 var last_type: int
 var last_value: String
-
+var cur_variable := -1
 
 func _to_dict(graph: GraphEdit) -> Dictionary:
 	var dict := {}
 	var connections: Array = graph.get_connections(name)
 	
-	dict['variable'] = variable.text
+	dict['cur_variable'] = cur_variable
+	dict['variable'] = graph.last_variable_list[cur_variable]
 	dict['type'] = type.selected
 	dict['value'] = value.text
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
@@ -29,7 +30,7 @@ func _to_dict(graph: GraphEdit) -> Dictionary:
 
 
 func _from_dict(dict: Dictionary) -> Array[String]:
-	variable.text = dict['variable']
+	cur_variable = dict['cur_variable']
 	type.selected = dict['type']
 	value.text = dict['value']
 	
@@ -99,3 +100,32 @@ func _on_value_timer_timeout() -> void:
 
 func _on_modified() -> void:
 	modified.emit()
+
+func _on_variables_updated(variables_list: Array[String]) -> void:
+	variable.clear()
+	
+	for variable_name in variables_list:
+		variable.add_item(variable_name)
+	
+	if variables_list.size() > 0:
+		if cur_variable > variables_list.size():
+			cur_variable = 0
+		variable.select(cur_variable)
+	else:
+		variable.select(-1)
+
+func _on_variable_selected(idx: int) -> void:
+	if not undo_redo: 
+		cur_variable = idx
+		variable.select(idx)
+		_on_modified()
+		return
+	
+	undo_redo.create_action('Set variable')
+	undo_redo.add_do_property(self, 'cur_variable', idx)
+	undo_redo.add_do_method(variable, 'select', idx)
+	undo_redo.add_do_method(self, '_on_modified')
+	undo_redo.add_undo_method(self, '_on_modified')
+	undo_redo.add_undo_property(self, 'cur_variable', cur_variable)
+	undo_redo.add_undo_method(variable, 'select', cur_variable)
+	undo_redo.commit_action()

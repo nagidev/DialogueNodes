@@ -39,3 +39,6 @@ func _from_dict(dict: Dictionary) -> Array[String]:
 func _on_modified() -> void:
 	reset_size()
 	modified.emit()
+
+func _on_variables_updated(variables_list: Array[String]) -> void:
+	condition_list.update_variables(variables_list)

@@ -1,0 +1,352 @@
+[gd_resource type="Resource" script_class="DialogueData" load_steps=2 format=3 uid="uid://bio6clng2q0ur"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/objects/DialogueData.gd" id="1_65t76"]
+
+[resource]
+script = ExtResource("1_65t76")
+starts = {
+"START": &"0_1"
+}
+nodes = {
+"0_1": {
+"link": &"1_1",
+"offset": Vector2(-482, -262),
+"start_id": "START"
+},
+"1_1": {
+"dialogue": "Want to help me make sure my variable dropdowns work?",
+"offset": Vector2(-260, -340),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_3",
+"text": "Sure!"
+},
+1: {
+"condition": Array[Dictionary]([]),
+"link": &"1_2",
+"text": "No"
+}
+},
+"size": Vector2(300, 289),
+"speaker": "Greg"
+},
+"1_10": {
+"dialogue": "You went right. It was a bit of a climb, but you made it.",
+"offset": Vector2(2797.34, 603.409),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_11",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_11": {
+"dialogue": "As you can see in the dialog file, forks work the same as dialogue option filters (and conditional nodes).",
+"offset": Vector2(3171.61, 465.188),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_8",
+"text": "Go back the way you came"
+},
+1: {
+"condition": Array[Dictionary]([]),
+"link": &"5_1",
+"text": "Try to leave"
+}
+},
+"size": Vector2(320, 256),
+"speaker": "Greg"
+},
+"1_12": {
+"dialogue": "You're looking a little broke there. Have 5 coins for your troubles.",
+"offset": Vector2(4020, 380),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"4_5",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_13": {
+"dialogue": "You finished the game with {{COINS}} coins!",
+"offset": Vector2(4740, 620),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": ""
+},
+"1_14": {
+"dialogue": "Goodbye, thanks for playing",
+"offset": Vector2(4023.35, 724.968),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_13",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_15": {
+"dialogue": "Wow, you sure are adventurous.",
+"offset": Vector2(2780, -20),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_11",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_2": {
+"dialogue": "Okay, bye then",
+"offset": Vector2(78.59, -45.2401),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": "END",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_3": {
+"dialogue": "You currently have {{COINS}} coins. [br]Variables can still be accessed using the old method, using double curly braces.",
+"offset": Vector2(100, -460),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"4_1",
+"text": "Double my coins!"
+},
+1: {
+"condition": Array[Dictionary]([{
+"cur_variable": 0,
+"operator": 4,
+"value1": "COINS",
+"value2": "{{TOLL}}"
+}]),
+"link": &"4_4",
+"text": "Pay the toll (10 coins)"
+}
+},
+"size": Vector2(300, 320),
+"speaker": "Greg"
+},
+"1_4": {
+"dialogue": "Sure thing buddy. Now you have {{COINS}} coins.",
+"offset": Vector2(780, -420),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_3",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_5": {
+"dialogue": "Wow, you have enough money to pay the toll! You now have {{COINS}} coins.[br]If you look inside the filter rule for this option, you'll see that it uses both the dropdown menu and double curly brace methods.",
+"offset": Vector2(720, -60),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_6",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_6": {
+"dialogue": "Only the leftmost input fields were changed into OptionButtons, so to use variables on the right, you'll need the old method.",
+"offset": Vector2(1040, 80),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_7",
+"text": "Why?"
+},
+1: {
+"condition": Array[Dictionary]([]),
+"link": &"1_8",
+"text": "Neat"
+}
+},
+"size": Vector2(300, 289),
+"speaker": "Greg"
+},
+"1_7": {
+"dialogue": "In my personal projects, I found I was mostly comparing variables to literal values, as opposed to other variables.",
+"offset": Vector2(1360, -80),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_8",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"1_8": {
+"dialogue": "Up ahead you see a fork in the road.",
+"offset": Vector2(1480, 260),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"4_3",
+"text": "Go right"
+},
+1: {
+"condition": Array[Dictionary]([]),
+"link": &"4_2",
+"text": "Go left"
+}
+},
+"size": Vector2(300, 289),
+"speaker": "Greg"
+},
+"1_9": {
+"dialogue": "You went left. It was a beautiful, scenic route.",
+"offset": Vector2(2800, 300),
+"options": {
+0: {
+"condition": Array[Dictionary]([]),
+"link": &"1_11",
+"text": ""
+}
+},
+"size": Vector2(300, 240),
+"speaker": "Greg"
+},
+"4_1": {
+"cur_variable": 0,
+"link": &"1_4",
+"offset": Vector2(440, -420),
+"type": 3,
+"value": "2",
+"variable": "COINS"
+},
+"4_2": {
+"cur_variable": 2,
+"link": &"7_1",
+"offset": Vector2(1840, 500),
+"type": 0,
+"value": "true",
+"variable": "WENT_LEFT"
+},
+"4_3": {
+"cur_variable": 3,
+"link": &"7_1",
+"offset": Vector2(1840, 300),
+"type": 0,
+"value": "true",
+"variable": "WENT_RIGHT"
+},
+"4_4": {
+"cur_variable": 0,
+"link": &"1_5",
+"offset": Vector2(420, -180),
+"type": 2,
+"value": "{{TOLL}}",
+"variable": "COINS"
+},
+"4_5": {
+"cur_variable": 0,
+"link": &"1_13",
+"offset": Vector2(4360, 440),
+"type": 1,
+"value": "5",
+"variable": "COINS"
+},
+"5_1": {
+"condition": Array[Dictionary]([{
+"cur_variable": 0,
+"operator": 5,
+"value1": "COINS",
+"value2": "0"
+}]),
+"false": &"1_14",
+"offset": Vector2(3680, 460),
+"true": &"1_12"
+},
+"7_1": {
+"default": "END",
+"fork_title": "Fork in the road",
+"forks": {
+0: {
+"condition": Array[Dictionary]([{
+"combiner": 1,
+"cur_variable": 2,
+"operator": 0,
+"value1": "WENT_LEFT",
+"value2": "true"
+}, {
+"cur_variable": 3,
+"operator": 0,
+"value1": "WENT_RIGHT",
+"value2": "true"
+}]),
+"link": &"1_15"
+},
+1: {
+"condition": Array[Dictionary]([{
+"cur_variable": 2,
+"operator": 0,
+"value1": "WENT_LEFT",
+"value2": "true"
+}]),
+"link": &"1_9"
+},
+2: {
+"condition": Array[Dictionary]([{
+"cur_variable": 3,
+"operator": 0,
+"value1": "WENT_RIGHT",
+"value2": "true"
+}]),
+"link": &"1_10"
+}
+},
+"offset": Vector2(2260, 380)
+}
+}
+variables = {
+"COINS": {
+"type": 2,
+"value": 5
+},
+"TOLL": {
+"type": 2,
+"value": 10
+},
+"WENT_LEFT": {
+"type": 1,
+"value": false
+},
+"WENT_RIGHT": {
+"type": 1,
+"value": false
+}
+}
+strays = Array[String]([])
+characters = ""

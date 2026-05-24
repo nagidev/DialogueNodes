@@ -401,3 +401,8 @@ func _on_option_focus_exited(option: BoxContainer) -> void:
 
 func _on_modified() -> void:
 	modified.emit()
+
+
+func _on_variables_updated(variables_list: Array[String]) -> void:
+	for option in options:
+		option.update_variables(variables_list)

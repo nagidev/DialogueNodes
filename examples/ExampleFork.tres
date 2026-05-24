@@ -112,6 +112,7 @@ as a fallback in case no other option is valid.",
 "size": Vector2(380, 200)
 },
 "4_1": {
+"cur_variable": 1,
 "link": &"7_1",
 "offset": Vector2(820, 0),
 "type": 0,
@@ -119,6 +120,7 @@ as a fallback in case no other option is valid.",
 "variable": "red_pill"
 },
 "4_2": {
+"cur_variable": 0,
 "link": &"7_1",
 "offset": Vector2(860, 420),
 "type": 0,
@@ -131,16 +133,18 @@ as a fallback in case no other option is valid.",
 "forks": {
 0: {
 "condition": Array[Dictionary]([{
+"cur_variable": 1,
 "operator": 0,
-"value1": "{{red_pill}}",
+"value1": "red_pill",
 "value2": "true"
 }]),
 "link": &"1_7"
 },
 1: {
 "condition": Array[Dictionary]([{
+"cur_variable": 0,
 "operator": 0,
-"value1": "{{blue_pill}}",
+"value1": "blue_pill",
 "value2": "true"
 }]),
 "link": &"1_6"

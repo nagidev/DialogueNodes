@@ -52,3 +52,6 @@ func _on_modified() -> void:
 	filter_button.text = '' if condition_list.is_empty() else '*'
 	filter_panel.size.y = 0
 	modified.emit()
+
+func update_variables(variable_list: Array[String]) -> void:
+	condition_list.update_variables(variable_list)

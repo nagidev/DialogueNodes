@@ -47,7 +47,7 @@ Like: You have {{COINS}} coins!",
 "text": "Nothing"
 }
 },
-"size": Vector2(300, 308),
+"size": Vector2(300, 322),
 "speaker": "Greg"
 },
 "1_3": {
@@ -67,7 +67,7 @@ Current value: {{COINS}}
 },
 "1_4": {
 "dialogue": "New value: {{COINS}}",
-"offset": Vector2(1700, 0),
+"offset": Vector2(1720, 20),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
@@ -75,25 +75,20 @@ Current value: {{COINS}}
 "text": ""
 }
 },
-"size": Vector2(300, 241),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
 "1_5": {
 "dialogue": "You can even use the set node perform arithematic operations on values.",
-"offset": Vector2(2040, 0),
+"offset": Vector2(2093.86, 105.836),
 "options": {
 0: {
 "condition": Array[Dictionary]([]),
 "link": &"1_2",
-"text": "Got it!"
-},
-1: {
-"condition": Array[Dictionary]([]),
-"link": "END",
-"text": "Bye"
+"text": ""
 }
 },
-"size": Vector2(300, 275),
+"size": Vector2(300, 240),
 "speaker": "Greg"
 },
 "1_6": {
@@ -150,10 +145,11 @@ Current value: {{COINS}}
 "text": "Bye"
 }
 },
-"size": Vector2(300, 275),
+"size": Vector2(300, 289),
 "speaker": "Greg"
 },
 "4_1": {
+"cur_variable": 0,
 "link": &"1_4",
 "offset": Vector2(1360, 140),
 "type": 0,
@@ -162,8 +158,9 @@ Current value: {{COINS}}
 },
 "5_1": {
 "condition": Array[Dictionary]([{
+"cur_variable": 0,
 "operator": 2,
-"value1": "{{COINS}}",
+"value1": "COINS",
 "value2": "5"
 }]),
 "false": &"1_8",

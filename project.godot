@@ -19,6 +19,10 @@ run/main_scene="res://examples/Demo1.tscn"
 config/features=PackedStringArray("4.6")
 config/icon="res://icon.svg"
 
+[dotnet]
+
+project/assembly_name="DialogueNodes"
+
 [editor]
 
 naming/scene_name_casing=1

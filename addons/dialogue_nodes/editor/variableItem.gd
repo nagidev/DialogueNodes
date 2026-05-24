@@ -4,6 +4,7 @@ extends HBoxContainer
 
 signal modified
 signal delete_requested(node: BoxContainer)
+signal name_updated(new_name: String, old_name: String)
 
 @onready var var_name := $Name
 @onready var type := $Type
@@ -37,7 +38,9 @@ func get_var_name() -> String:
 func set_var_name(new_name: String) -> void:
 	if new_name != var_name.text:
 		var_name.text = new_name
+	name_updated.emit(new_name, last_set_name)
 	last_set_name = var_name.text
+
 
 
 func get_value():
@@ -109,6 +112,7 @@ func load_data(new_name: String, data: Dictionary) -> void:
 
 func _on_name_changed(new_text: String) -> void:
 	if not undo_redo:
+		set_var_name(new_text)
 		return
 	
 	undo_redo.create_action('Set variable name')
@@ -117,6 +121,7 @@ func _on_name_changed(new_text: String) -> void:
 	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, 'set_var_name', last_set_name)
 	undo_redo.commit_action()
+	
 
 
 func _on_type_changed(new_idx: int) -> void:

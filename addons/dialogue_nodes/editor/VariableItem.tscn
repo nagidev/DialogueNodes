@@ -19,18 +19,14 @@ placeholder_text = "Variable Name"
 
 [node name="Type" type="OptionButton" parent="."]
 layout_mode = 2
-item_count = 4
 selected = 0
-popup/item_0/text = ""
+item_count = 4
 popup/item_0/icon = ExtResource("2_7c0mf")
 popup/item_0/id = 4
-popup/item_1/text = ""
 popup/item_1/icon = ExtResource("3_o0u21")
 popup/item_1/id = 2
-popup/item_2/text = ""
 popup/item_2/icon = ExtResource("4_xgufq")
 popup/item_2/id = 3
-popup/item_3/text = ""
 popup/item_3/icon = ExtResource("5_fyv4x")
 popup/item_3/id = 1
 

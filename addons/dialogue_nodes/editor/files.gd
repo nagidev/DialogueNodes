@@ -247,17 +247,23 @@ func switch_file(idx: int, ensure_path := '') -> void:
 			data_container.get_node('Characters').characters_updated.disconnect(cur_metadata['graph']._on_characters_updated)
 			workspace.remove_child(cur_metadata['graph'])
 		if data_container.has_node('Variables'):
+			data_container.get_node('Variables').variables_updated.disconnect(cur_metadata['graph']._on_variables_updated)
 			data_container.remove_child(cur_metadata['variables'])
+
 		cur_metadata['characters'] = data_container.get_node('Characters').get_data()
 		set_item_metadata(cur_idx, cur_metadata)
 	
 	# add new nodes
 	data_container.get_node('Characters').characters_updated.connect(new_metadata['graph']._on_characters_updated)
+	new_metadata['variables'].variables_updated.connect(new_metadata['graph']._on_variables_updated)
 	workspace.add_child(new_metadata['graph'])
 	data_container.get_node('Characters').load_data(new_metadata['characters'])
+	
 	editor.add_menu.get_popup().id_pressed.connect(new_metadata['graph']._on_add_menu_pressed)
 	data_container.add_child(new_metadata['variables'])
 	
+	# update variable dropdowns
+	new_metadata['graph']._on_variables_updated(new_metadata["variables"].variable_list)
 	cur_idx = idx
 	select(idx)
 	
