@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://bskh1vm7i45nw"]
+
+[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/sub_nodes/call_node_argument.gd" id="1_mqq8d"]
+[ext_resource type="CodeHighlighter" uid="uid://dkf2orxmijq20" path="res://addons/dialogue_nodes/themes/node_code_highlighter.tres" id="2_bcsls"]
+[ext_resource type="Texture2D" uid="uid://cf5ef41yo6jl6" path="res://addons/dialogue_nodes/icons/Reload.svg" id="2_h0t8n"]
+
+[node name="CallNodeArgument" type="HBoxContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 4
+script = ExtResource("1_mqq8d")
+invalid_color = Color(0.2, 0.08, 0.08, 1)
+
+[node name="ArgumentLabel" type="Label" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+text = "ArgName"
+
+[node name="ArgumentTextEdit" type="TextEdit" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(37, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+placeholder_text = "Type"
+scroll_fit_content_height = true
+syntax_highlighter = ExtResource("2_bcsls")
+highlight_all_occurrences = true
+
+[node name="ResetButton" type="Button" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("2_h0t8n")
+flat = true
+
+[connection signal="focus_exited" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_focus_exited"]
+[connection signal="text_changed" from="ArgumentTextEdit" to="." method="_on_argument_text_edit_text_changed"]
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
