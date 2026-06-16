@@ -98,7 +98,7 @@ panning_strength = 5.0
 clip_contents = false
 offset_left = 493.0
 offset_top = 338.0
-offset_right = 625.0
+offset_right = 633.0
 offset_bottom = 361.0
 theme = ExtResource("3_201t6")
 bbcode_enabled = true
@@ -109,6 +109,8 @@ custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffe
 script = ExtResource("7_wf6dy")
 data = ExtResource("8_qbppo")
 follow_node = NodePath("../FocusPoint")
+bubble_offset = 150
+tail_offset = 100
 dialogue_custom_effects = [SubResource("RichTextEffect_akgkw"), SubResource("RichTextEffect_el6u0"), SubResource("RichTextEffect_oo7i8")]
 
 [connection signal="dialogue_processed" from="DialogueBubble" to="." method="_on_dialogue_processed"]
