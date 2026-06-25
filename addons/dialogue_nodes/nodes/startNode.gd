@@ -21,6 +21,7 @@ func _to_dict(graph: GraphEdit) -> Dictionary:
 	
 	dict['start_id'] = start_id
 	dict['link'] = connections[0]['to_node'] if connections.size() > 0 else 'END'
+	dict['size'] = size
 	
 	return dict
 
@@ -28,6 +29,17 @@ func _to_dict(graph: GraphEdit) -> Dictionary:
 func _from_dict(dict: Dictionary) -> Array[String]:
 	start_id = dict['start_id']
 	ID.text = start_id
+	
+	# set size of node
+	if dict.has('size'):
+		var new_size: Vector2
+		if dict['size'] is Vector2:
+			new_size = dict['size']
+		else: # for dialogue files created before v1.0.2
+			new_size = Vector2( float(dict['size']['x']), float(dict['size']['y']) )
+		size = new_size
+		last_size = size
+	
 	return [dict['link']]
 
 

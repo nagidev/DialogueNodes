@@ -11,6 +11,7 @@ nodes = {
 &"0_1": {
 "link": &"1_1",
 "offset": Vector2(0, 0),
+"size": Vector2(172, 86),
 "start_id": "START"
 },
 &"1_1": {

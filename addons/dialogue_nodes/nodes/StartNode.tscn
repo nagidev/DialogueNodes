@@ -1,9 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3p0644abxxbm"]
+[gd_scene format=3 uid="uid://c3p0644abxxbm"]
 
 [ext_resource type="Texture2D" uid="uid://bucad3kf5mxvp" path="res://addons/dialogue_nodes/icons/Play.svg" id="1"]
-[ext_resource type="Script" path="res://addons/dialogue_nodes/nodes/startNode.gd" id="2"]
+[ext_resource type="Script" uid="uid://c7mb1lo1ujtqa" path="res://addons/dialogue_nodes/nodes/startNode.gd" id="2"]
 
-[node name="StartNode" type="GraphNode"]
+[node name="StartNode" type="GraphNode" unique_id=791637640]
 custom_minimum_size = Vector2(0, 86)
 offset_right = 180.0
 offset_bottom = 60.0
@@ -20,30 +20,30 @@ slot/0/right_icon = null
 slot/0/draw_stylebox = true
 script = ExtResource("2")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1133915108]
 layout_mode = 2
 
-[node name="RunButton" type="Button" parent="HBoxContainer"]
+[node name="RunButton" type="Button" parent="HBoxContainer" unique_id=1498427401]
 layout_mode = 2
 tooltip_text = "Run this tree."
 icon = ExtResource("1")
 flat = true
 
-[node name="IDLabel" type="Label" parent="HBoxContainer"]
+[node name="IDLabel" type="Label" parent="HBoxContainer" unique_id=1202781195]
 layout_mode = 2
 text = "ID"
 
-[node name="ID" type="LineEdit" parent="HBoxContainer"]
+[node name="ID" type="LineEdit" parent="HBoxContainer" unique_id=1878805519]
 layout_mode = 2
 size_flags_horizontal = 3
 tooltip_text = "Required field.
 The ID is used to identify each tree in a dialogue tree."
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=1756298586]
 wait_time = 0.5
 one_shot = true
 
-[node name="ResizeTimer" type="Timer" parent="."]
+[node name="ResizeTimer" type="Timer" parent="." unique_id=304229723]
 wait_time = 0.5
 one_shot = true
 
