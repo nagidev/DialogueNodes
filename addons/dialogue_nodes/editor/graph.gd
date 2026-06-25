@@ -40,6 +40,10 @@ func _ready() -> void:
 	if not Engine.is_editor_hint(): return
 	editor_settings = EditorInterface.get_editor_settings()
 	editor_settings.settings_changed.connect(update_slots_color)
+	
+	if ProjectSettings.has_setting('dialogue_nodes/graph_zoom_max'):
+		_on_settings_changed()
+		ProjectSettings.settings_changed.connect(_on_settings_changed)
 
 
 func _input(_event) -> void:
@@ -546,3 +550,9 @@ func _on_graph_elements_unlinked_to_frame_request(element: StringName, frame: St
 	undo_redo.add_undo_method(self, '_on_modified')
 	undo_redo.add_undo_method(self, 'attach_node_to_frame', element, frame)
 	undo_redo.commit_action()
+
+
+func _on_settings_changed() -> void:
+	if ProjectSettings.has_setting('dialogue_nodes/graph_zoom_max'):
+		zoom_max = ProjectSettings.get_setting('dialogue_nodes/graph_zoom_max')
+		zoom_min = ProjectSettings.get_setting('dialogue_nodes/graph_zoom_min')

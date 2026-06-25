@@ -7,12 +7,20 @@ const DialogueBoxScene := preload('res://addons/dialogue_nodes/objects/DialogueB
 const DialogueBubbleScene := preload('res://addons/dialogue_nodes/objects/DialogueBubble.gd')
 const DialogueBoxIcon := preload('res://addons/dialogue_nodes/icons/DialogueBox.svg')
 const DialogueBubbleIcon := preload('res://addons/dialogue_nodes/icons/DialogueBubble.svg')
+const SettingProps := [
+	{ 'name': 'dialogue_nodes/graph_zoom_max', 'type': TYPE_FLOAT, 'hint': PROPERTY_HINT_RANGE, 'hint_string': '0.1, 10.0, 0.01', 'default_value': 2.0 },
+	{ 'name': 'dialogue_nodes/graph_zoom_min', 'type': TYPE_FLOAT, 'hint': PROPERTY_HINT_RANGE, 'hint_string': '0.01, 1.0, 0.01', 'default_value': 0.2 },
+]
 
 var editor: Control
 
 
 func _enter_tree() -> void:
 	editor = EditorScene.instantiate()
+	
+	# set settings
+	for setting_prop in SettingProps:
+		initialize_setting(setting_prop)
 	
 	# add editor to main viewport
 	get_editor_interface().get_editor_main_screen().add_child(editor)
@@ -77,3 +85,11 @@ func _edit(object) -> void:
 func _save_external_data() -> void:
 	if is_instance_valid(editor):
 		editor.files.save_all()
+
+
+func initialize_setting(setting_props: Dictionary) -> void:
+	if not ProjectSettings.has_setting(setting_props['name']):
+		ProjectSettings.set_setting(setting_props['name'], setting_props['default_value'])
+	
+	ProjectSettings.add_property_info(setting_props)
+	ProjectSettings.set_initial_value(setting_props['name'], setting_props['default_value'])
