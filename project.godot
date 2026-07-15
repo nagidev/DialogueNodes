@@ -16,7 +16,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 config/name="DialogueNodes"
 run/main_scene="res://examples/Demo1.tscn"
-config/features=PackedStringArray("4.6")
+config/features=PackedStringArray("4.7")
 config/icon="res://icon.svg"
 
 [editor]

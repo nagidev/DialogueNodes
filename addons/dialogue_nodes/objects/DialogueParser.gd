@@ -392,6 +392,9 @@ func _update_wait_tags(node: RichTextLabel, value: String) -> String:
 				var img_tag := value.findn('[img', idx)
 				var img_tag_end := value.findn('[/img]', idx)
 				
+				var lb_tag := value.findn('[lb]', idx)
+				var rb_tag := value.findn('[rb]', idx)
+				
 				if open_tag_start == idx:
 					var start_idx := char_idx + 1
 					waits.push_back({ 'at': open_tag_end, 'start': start_idx })
@@ -403,6 +406,12 @@ func _update_wait_tags(node: RichTextLabel, value: String) -> String:
 					idx = end_tag + insert_text.length() + 7
 				elif img_tag == idx:
 					idx = img_tag_end + 6
+				elif lb_tag == idx or rb_tag == idx:
+					idx += 4
+					char_idx += 1
+					char_count += 1
+					if waits.size():
+						waits[-1]['last'] = char_count - 1
 				else:
 					idx = open_tag_end + 1
 			'\n':

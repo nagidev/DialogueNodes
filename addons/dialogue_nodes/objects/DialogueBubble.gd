@@ -245,9 +245,11 @@ func _process(delta) -> void:
 	
 	var dir: Vector2 = follow_pos.direction_to(position + size * 0.5)
 	var perp := dir.rotated(PI * 0.5)
-	tail.polygon[0] = follow_pos - position + dir * tail_offset
-	tail.polygon[1] = size * 0.5 + perp * (size.y * 0.4 + tail_base)
-	tail.polygon[2] = size * 0.5 - perp * (size.y * 0.4 + tail_base)
+	tail.set_polygon([
+		follow_pos - position + dir * tail_offset,
+		size * 0.5 + perp * (size.y * 0.4 + tail_base),
+		size * 0.5 - perp * (size.y * 0.4 + tail_base)
+		])
 
 
 func _input(_event) -> void:
