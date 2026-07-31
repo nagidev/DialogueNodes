@@ -89,9 +89,14 @@ func load_data(data: DialogueData) -> void:
 		request_port = -1
 	
 	# add strays
-	var _start_node = get_node(starts[0])
+	var _start_node = add_node(0)
 	for node_name in data.strays:
 		_start_node.data_to_tree(self, data, node_name)
+	deselect_all_nodes()
+	disconnect_node_signals(_start_node)
+	remove_child(_start_node)
+	remove_from_starts(_start_node.name)
+	_start_node.queue_free()
 	request_node = ''
 	request_port = -1
 	
